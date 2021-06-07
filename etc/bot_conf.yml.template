@@ -1,0 +1,5 @@
+Token: t
+ChatId: c
+ServerUrl: u
+SecretKey: mysecretkey
+NoAuth: false
