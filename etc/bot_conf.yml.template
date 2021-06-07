@@ -1,5 +1,7 @@
 Token: t
 ChatId: c
 ServerUrl: u
+ServerCertPath: c
+ServerKeyPath: k
 SecretKey: mysecretkey
 NoAuth: false

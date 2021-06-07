@@ -8,12 +8,14 @@ import (
 )
 
 const (
-	ConfPath  = "ConfPath"
-	Token     = "Token"
-	ChatId    = "ChatId"
-	ServerUrl = "ServerUrl"
-	SecretKey = "SecretKey"
-	NoAuth    = "NoAuth"
+	ConfPath       = "ConfPath"
+	Token          = "Token"
+	ChatId         = "ChatId"
+	ServerUrl      = "ServerUrl"
+	ServerCertPath = "ServerCertPath"
+	ServerKeyPath  = "ServerKeyPath"
+	SecretKey      = "SecretKey"
+	NoAuth         = "NoAuth"
 )
 
 func NewConfiguration() (Configuration, error) {
@@ -28,6 +30,8 @@ func NewConfiguration() (Configuration, error) {
 	conf.SetDefault(Token, "")
 	conf.SetDefault(ChatId, "")
 	conf.SetDefault(ServerUrl, "::")
+	conf.SetDefault(ServerCertPath, "")
+	conf.SetDefault(ServerKeyPath, "")
 	conf.SetDefault(SecretKey, "")
 	conf.SetDefault(NoAuth, true)
 	if confPath != "" {

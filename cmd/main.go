@@ -19,5 +19,6 @@ func main() {
 		panic(err)
 	}
 	handler := internal.NewHandler(conf, notifier)
-	panic(http.ListenAndServe(conf.GetString(internal.ServerUrl), handler))
+	panic(http.ListenAndServeTLS(conf.GetString(internal.ServerUrl), conf.GetString(internal.ServerCertPath),
+		conf.GetString(internal.ServerKeyPath), handler))
 }

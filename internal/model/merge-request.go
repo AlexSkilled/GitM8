@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 const (
 	MRStateOpened = "opened"
 	MRStateClosed = "closed"
@@ -49,8 +47,8 @@ type MergeRequest struct {
 		AuthorID        int         `json:"author_id"`
 		AssigneeID      int         `json:"assignee_id"`
 		Title           string      `json:"title" faker:"sentence"`
-		CreatedAt       time.Time   `json:"created_at"`
-		UpdatedAt       time.Time   `json:"updated_at"`
+		CreatedAt       Datetime    `json:"created_at" faker:"datetime"`
+		UpdatedAt       Datetime    `json:"updated_at" faker:"datetime"`
 		MilestoneID     interface{} `json:"milestone_id" faker:"-"`
 		State           string      `json:"state" faker:"oneof: opened, closed, locked, merged"`
 		MergeStatus     string      `json:"merge_status"`
@@ -90,10 +88,10 @@ type MergeRequest struct {
 			HTTPURL           string      `json:"http_url"`
 		} `json:"target"`
 		LastCommit struct {
-			ID        string    `json:"id"`
-			Message   string    `json:"message"`
-			Timestamp time.Time `json:"timestamp"`
-			URL       string    `json:"url"`
+			ID        string   `json:"id"`
+			Message   string   `json:"message"`
+			Timestamp Datetime `json:"timestamp" faker:"datetime"`
+			URL       string   `json:"url"`
 			Author    struct {
 				Name  string `json:"name"`
 				Email string `json:"email"`
@@ -109,16 +107,16 @@ type MergeRequest struct {
 		} `json:"assignee"`
 	} `json:"object_attributes"`
 	Labels []struct {
-		ID          int       `json:"id"`
-		Title       string    `json:"title"`
-		Color       string    `json:"color"`
-		ProjectID   int       `json:"project_id"`
-		CreatedAt   time.Time `json:"created_at"`
-		UpdatedAt   time.Time `json:"updated_at"`
-		Template    bool      `json:"template"`
-		Description string    `json:"description"`
-		Type        string    `json:"type"`
-		GroupID     int       `json:"group_id"`
+		ID          int      `json:"id"`
+		Title       string   `json:"title"`
+		Color       string   `json:"color"`
+		ProjectID   int      `json:"project_id"`
+		CreatedAt   Datetime `json:"created_at" faker:"datetime"`
+		UpdatedAt   Datetime `json:"updated_at" faker:"datetime"`
+		Template    bool     `json:"template"`
+		Description string   `json:"description"`
+		Type        string   `json:"type"`
+		GroupID     int      `json:"group_id"`
 	} `json:"labels"`
 	Changes struct {
 		UpdatedByID struct {
@@ -131,28 +129,28 @@ type MergeRequest struct {
 		} `json:"updated_at"`
 		Labels struct {
 			Previous []struct {
-				ID          int       `json:"id"`
-				Title       string    `json:"title"`
-				Color       string    `json:"color"`
-				ProjectID   int       `json:"project_id"`
-				CreatedAt   time.Time `json:"created_at"`
-				UpdatedAt   time.Time `json:"updated_at"`
-				Template    bool      `json:"template"`
-				Description string    `json:"description"`
-				Type        string    `json:"type"`
-				GroupID     int       `json:"group_id"`
+				ID          int      `json:"id"`
+				Title       string   `json:"title"`
+				Color       string   `json:"color"`
+				ProjectID   int      `json:"project_id"`
+				CreatedAt   Datetime `json:"created_at" faker:"datetime"`
+				UpdatedAt   Datetime `json:"updated_at" faker:"datetime"`
+				Template    bool     `json:"template"`
+				Description string   `json:"description"`
+				Type        string   `json:"type"`
+				GroupID     int      `json:"group_id"`
 			} `json:"previous"`
 			Current []struct {
-				ID          int       `json:"id"`
-				Title       string    `json:"title"`
-				Color       string    `json:"color"`
-				ProjectID   int       `json:"project_id"`
-				CreatedAt   time.Time `json:"created_at"`
-				UpdatedAt   time.Time `json:"updated_at"`
-				Template    bool      `json:"template"`
-				Description string    `json:"description"`
-				Type        string    `json:"type"`
-				GroupID     int       `json:"group_id"`
+				ID          int      `json:"id"`
+				Title       string   `json:"title"`
+				Color       string   `json:"color"`
+				ProjectID   int      `json:"project_id"`
+				CreatedAt   Datetime `json:"created_at" faker:"datetime"`
+				UpdatedAt   Datetime `json:"updated_at" faker:"datetime"`
+				Template    bool     `json:"template"`
+				Description string   `json:"description"`
+				Type        string   `json:"type"`
+				GroupID     int      `json:"group_id"`
 			} `json:"current"`
 		} `json:"labels"`
 	} `json:"changes"`

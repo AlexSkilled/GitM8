@@ -1,7 +1,5 @@
 package model
 
-import "time"
-
 const (
 	PLStatusCreated            = "created"
 	PLStatusWaitingForResource = "waiting_for_resource"
@@ -68,10 +66,10 @@ type Pipeline struct {
 		DefaultBranch     string      `json:"default_branch"`
 	} `json:"project"`
 	Commit struct {
-		ID        string    `json:"id"`
-		Message   string    `json:"message"`
-		Timestamp time.Time `json:"timestamp"`
-		URL       string    `json:"url"`
+		ID        string   `json:"id"`
+		Message   string   `json:"message"`
+		Timestamp Datetime `json:"timestamp" faker:"datetime"`
+		URL       string   `json:"url"`
 		Author    struct {
 			Name  string `json:"name"`
 			Email string `json:"email"`
