@@ -14,7 +14,6 @@ import (
 const (
 	EventHeaderKey     = "X-Gitlab-Event"
 	TokenHeaderKey     = "X-Gitlab-Token"
-	ForwardedForKey    = "X-Forwarded-For"
 	MergeRequestHeader = "Merge Request Hook"
 	PipelineHeader     = "Pipeline Hook"
 )
@@ -68,9 +67,6 @@ func (h Handler) authenticate(header http.Header) bool {
 	if h.conf.GetBool(NoAuth) {
 		return true
 	}
-	forwardedFor := header.Get(ForwardedForKey)
-	logrus.Infof("Попытка подключения, IP адрес клиента (прокси): %s", forwardedFor)
-	getAllHeaders(header)
 	token := header.Get(TokenHeaderKey)
 	parsedT, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -87,14 +83,6 @@ func (h Handler) authenticate(header http.Header) bool {
 		return false
 	}
 	return true
-}
-
-func getAllHeaders(header http.Header) {
-	for name, values := range header {
-		for _, value := range values {
-			logrus.Infof("Ключ заголовка: %s значение: %s", name, value)
-		}
-	}
 }
 
 var _ http.Handler = (*Handler)(nil)
