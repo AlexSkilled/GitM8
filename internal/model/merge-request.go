@@ -1,10 +1,13 @@
 package model
 
 const (
-	MRStateOpened = "opened"
-	MRStateClosed = "closed"
-	MRStateLocked = "locked"
-	MRStateMerged = "merged"
+	MRStateOpened    = "opened"
+	MRStateClosed    = "closed"
+	MRStateLocked    = "locked"
+	MRStateMerged    = "merged"
+	MRActionApproved = "approved"
+	MRActionUpdate   = "update"
+	MRActionOpen     = "open"
 )
 
 type MergeRequest struct {
@@ -39,6 +42,13 @@ type MergeRequest struct {
 		Description string `json:"description"`
 		Homepage    string `json:"homepage"`
 	} `json:"repository"`
+	Assignees []struct {
+		ID        int    `json:"id"`
+		Name      string `json:"name" faker:"name"`
+		Username  string `json:"username"`
+		AvatarURL string `json:"avatar_url"`
+		Email     string `json:"email"`
+	} `json:"assignees"`
 	ObjectAttributes struct {
 		ID              int         `json:"id"`
 		TargetBranch    string      `json:"target_branch" faker:"word"`
@@ -99,7 +109,7 @@ type MergeRequest struct {
 		} `json:"last_commit"`
 		WorkInProgress bool   `json:"work_in_progress"`
 		URL            string `json:"url" faker:"url"`
-		Action         string `json:"action"`
+		Action         string `json:"action" faker:"oneof: approved, update, open"`
 		Assignee       struct {
 			Name      string `json:"name" faker:"name"`
 			Username  string `json:"username"`

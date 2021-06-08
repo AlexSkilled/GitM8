@@ -15,6 +15,7 @@ const (
 	BlueLargeCircle   = 0x1F535
 	BlackLargeCircle  = 0x26AB
 	GreenLargeCircle  = 0x1F7E2
+	WhiteCheckMark    = 0x2705
 )
 
 func getEmoji(rune rune) string {
