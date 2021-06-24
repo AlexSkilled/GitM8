@@ -13,7 +13,7 @@ func main() {
 		logrus.Errorln("Ошибка при конфигурации приложения.")
 		panic(err)
 	}
-	notifier, err := internal.NewNotifier(conf)
+	notifier, err := internal.NewBot(conf)
 	if err != nil {
 		logrus.Errorln("Ошибка при подключении к Telegram API.")
 		panic(err)

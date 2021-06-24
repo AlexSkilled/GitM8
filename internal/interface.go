@@ -8,6 +8,10 @@ type Notifier interface {
 	Notify(payload string) error
 }
 
+type UpdateWatcher interface {
+	Polling()
+}
+
 type Configuration interface {
 	GetBool(string) bool
 	GetInt(string) int
