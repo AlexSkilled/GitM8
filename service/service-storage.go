@@ -2,13 +2,12 @@ package service
 
 import "gitlab-tg-bot/data"
 
-type Holder struct {
-	User  UserService
-	Pipes PipeService
+type Storage struct {
+	User UserService
 }
 
-func NewStorage(holder data.ProviderStorage) Holder {
-	return Holder{
+func NewStorage(holder data.ProviderStorage) Storage {
+	return Storage{
 		User: NewUserService(holder),
 	}
 }

@@ -2,30 +2,36 @@ package entity
 
 import "gitlab-tg-bot/internal/model"
 
-type UserGitlab struct {
-	Id int32
+type GitlabUsers []GitlabUser
 
-	UserId         int32
-	UserName       string
-	UserTgUsername string
-	UserTgId       int64
-
-	Email   string
-	Token   string
-	BaseUrl string
+func (u *GitlabUsers) ToModel() []model.GitlabUser {
+	out := make([]model.GitlabUser, len(*u))
+	for i, item := range *u {
+		out[i] = item.ToModel()
+	}
+	return out
 }
 
-func (u *UserGitlab) ToModel() model.UserGitlab {
-	return model.UserGitlab{
-		Id: u.Id,
-		User: model.User{
-			Id:         u.UserId,
-			Name:       u.UserName,
-			TgUsername: u.UserTgUsername,
-			TgId:       u.UserTgId,
-		},
+type GitlabUser struct {
+	Id     int32
+	UserId int32
+	Email  string
+	Token  string
+	Domain string
+}
+
+func (u *GitlabUser) ToModel() model.GitlabUser {
+	return model.GitlabUser{
+		Id:     u.Id,
 		Email:  u.Email,
 		Token:  u.Token,
-		Domain: u.BaseUrl,
+		Domain: u.Domain,
 	}
+}
+
+func (u *GitlabUser) FromModel(id int32, user model.GitlabUser) {
+	u.UserId = id
+	u.Email = user.Email
+	u.Token = user.Token
+	u.Domain = user.Domain
 }

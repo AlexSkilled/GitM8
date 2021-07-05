@@ -5,4 +5,6 @@ type User struct {
 	Name       string
 	TgUsername string
 	TgId       int64
+
+	Gitlabs []GitlabUser
 }

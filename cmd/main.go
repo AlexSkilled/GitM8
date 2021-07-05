@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gitlab-tg-bot/app"
 	"gitlab-tg-bot/internal"
 	"net/http"
 
@@ -8,6 +9,9 @@ import (
 )
 
 func main() {
+	application := app.NewApp()
+	application.Start()
+
 	conf, err := internal.NewConfiguration()
 	if err != nil {
 		logrus.Errorln("Ошибка при конфигурации приложения.")

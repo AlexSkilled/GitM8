@@ -33,9 +33,33 @@ func (u *UserProvider) Get(id int32) (model.User, error) {
 	return user.ToModel(), err
 }
 
-func (u *UserProvider) GetByTelegramId(id int64) (model.User, error) {
-	var user entity.User
+func (u *UserProvider) GetWithGitlabUsers(id int32) (model.User, error) {
+	var gitlabsEnt entity.GitlabUsers
 
-	err := u.Model(&user).Where("telegram_id = ?", id).Select()
-	return user.ToModel(), err
+	err := u.Model(&gitlabsEnt).Where("user_id = ?", id).Select()
+	if err != nil {
+		// TODO
+	}
+
+	gitlabs := gitlabsEnt.ToModel()
+
+	user, err := u.Get(id)
+	if err != nil {
+		// TODO
+	}
+
+	user.Gitlabs = gitlabs
+	return user, err
+}
+
+func (u *UserProvider) AddGitlab(userId int32, gitlab model.GitlabUser) error {
+	var gitlabEnt entity.GitlabUser
+	gitlabEnt.FromModel(userId, gitlab)
+
+	_, err := u.Model(gitlabEnt).Insert()
+	if err != nil {
+		// TODO
+	}
+
+	return nil
 }
