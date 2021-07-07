@@ -8,12 +8,16 @@ import (
 
 type ProviderStorage struct {
 	interfaces.UserProvider
-	interfaces.SubscriptionProvider
 }
+
+var _ interfaces.ProviderStorage = (*ProviderStorage)(nil)
 
 func NewProviderStorage(db *pg.DB) ProviderStorage {
 	return ProviderStorage{
-		UserProvider:         provider.NewUser(db),
-		SubscriptionProvider: provider.NewSubscriptionProvider(db),
+		UserProvider: provider.NewUser(db),
 	}
+}
+
+func (p *ProviderStorage) User() interfaces.UserProvider {
+	return p.UserProvider
 }

@@ -3,20 +3,22 @@ package app
 import (
 	"github.com/go-pg/pg/v9"
 	_ "github.com/go-pg/pg/v9/orm"
-	"github.com/sirupsen/logrus"
 	"gitlab-tg-bot/data"
 	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/service"
+	"gitlab-tg-bot/transport"
+	"gitlab-tg-bot/worker"
 	"net/http"
 )
 
 type App struct {
-	ProviderStorage data.ProviderStorage
+	ProviderStorage *data.ProviderStorage
 	ServiceStorage  service.Storage
+	Conf            internal.Configuration
 	//Telegram       tgbotapi.BotAPI
 }
 
-func NewApp() App {
+func NewApp(conf internal.Configuration) App {
 	db := pg.Connect(&pg.Options{
 		Addr:     "localhost:1000",
 		User:     "gitlab_bot",
@@ -26,27 +28,17 @@ func NewApp() App {
 
 	providerStorage := data.NewProviderStorage(db)
 	app := App{
-		ProviderStorage: providerStorage,
+		ProviderStorage: &providerStorage,
 		ServiceStorage:  service.NewStorage(providerStorage),
+		Conf:            conf,
 	}
 
 	return app
 }
 
 func (a *App) Start() {
-	conf, err := internal.NewConfiguration()
-	if err != nil {
-		logrus.Errorln("Ошибка при конфигурации приложения.")
-		panic(err)
-	}
-
-	notifier, err := internal.NewBot(conf)
-	if err != nil {
-		logrus.Errorln("Ошибка при подключении к Telegram API.")
-		panic(err)
-	}
-
-	handler := internal.NewHandler(conf, notifier)
-	panic(http.ListenAndServeTLS(conf.GetString(internal.ServerUrl), conf.GetString(internal.ServerCertPath),
-		conf.GetString(internal.ServerKeyPath), handler))
+	tgIntegration := worker.NewTelegramWorker(a.Conf, &a.ServiceStorage)
+	go tgIntegration.Start()
+	handler := transport.NewPublicHandler(a.Conf, tgIntegration)
+	panic(http.ListenAndServe(a.Conf.GetString(internal.ServerUrl), handler))
 }

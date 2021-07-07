@@ -16,6 +16,9 @@ const (
 	ServerKeyPath  = "ServerKeyPath"
 	SecretKey      = "SecretKey"
 	NoAuth         = "NoAuth"
+
+	WorkAsPublicService = "WorkAsPublicService"
+	Debug               = "IsDebugging"
 )
 
 func NewConfiguration() (Configuration, error) {
@@ -34,6 +37,7 @@ func NewConfiguration() (Configuration, error) {
 	conf.SetDefault(ServerKeyPath, "")
 	conf.SetDefault(SecretKey, "")
 	conf.SetDefault(NoAuth, true)
+	conf.SetDefault(WorkAsPublicService, false)
 	if confPath != "" {
 		conf.SetConfigFile(confPath)
 		err := conf.ReadInConfig()

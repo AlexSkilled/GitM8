@@ -9,14 +9,16 @@ import (
 )
 
 func main() {
-	application := app.NewApp()
-	application.Start()
-
 	conf, err := internal.NewConfiguration()
 	if err != nil {
 		logrus.Errorln("Ошибка при конфигурации приложения.")
 		panic(err)
 	}
+	if conf.GetBool(internal.WorkAsPublicService) {
+		application := app.NewApp(conf)
+		application.Start()
+	}
+
 	notifier, err := internal.NewBot(conf)
 	if err != nil {
 		logrus.Errorln("Ошибка при подключении к Telegram API.")

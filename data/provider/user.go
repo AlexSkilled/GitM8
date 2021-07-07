@@ -33,6 +33,16 @@ func (u *UserProvider) Get(id int32) (model.User, error) {
 	return user.ToModel(), err
 }
 
+func (u *UserProvider) GetByChatId(id int32) (model.User, error) {
+	var user entity.User
+
+	err := u.Model(&user).Where("tg_chat_id = ?", id).Select()
+	if err != nil {
+		//TODO
+	}
+	return u.GetWithGitlabUsers(user.Id)
+}
+
 func (u *UserProvider) GetWithGitlabUsers(id int32) (model.User, error) {
 	var gitlabsEnt entity.GitlabUsers
 

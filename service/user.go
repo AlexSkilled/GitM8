@@ -1,7 +1,6 @@
 package service
 
 import (
-	"gitlab-tg-bot/data"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/internal/model"
 )
@@ -10,11 +9,15 @@ type UserService struct {
 	UserProvider interfaces.UserProvider
 }
 
-func NewUserService(provider data.ProviderStorage) UserService {
-	return UserService{UserProvider: provider.UserProvider}
+var _ interfaces.UserService = (*UserService)(nil)
+
+func NewUserService(provider interfaces.ProviderStorage) interfaces.UserService {
+	return &UserService{
+		UserProvider: provider.User(),
+	}
 }
 
-func (u *UserService) CreateUser(user model.User) error {
+func (u *UserService) Register(user model.User) error {
 	err := u.UserProvider.Create(user)
 	return err
 }

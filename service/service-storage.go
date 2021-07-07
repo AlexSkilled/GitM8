@@ -1,13 +1,20 @@
 package service
 
-import "gitlab-tg-bot/data"
+import (
+	"gitlab-tg-bot/data"
+	"gitlab-tg-bot/internal/interfaces"
+)
 
 type Storage struct {
-	User UserService
+	interfaces.UserService
 }
 
-func NewStorage(holder data.ProviderStorage) Storage {
+func NewStorage(providerStorage data.ProviderStorage) Storage {
 	return Storage{
-		User: NewUserService(holder),
+		UserService: NewUserService(&providerStorage),
 	}
+}
+
+func (s *Storage) User() interfaces.UserService {
+	return s.UserService
 }
