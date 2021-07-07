@@ -3,10 +3,10 @@ package model
 import "github.com/plouc/go-gitlab-client/gitlab"
 
 type GitlabUser struct {
-	Id     int32
-	Email  string
-	Token  string
-	Domain string
+	Id       int32
+	Username string
+	Token    string
+	Domain   string
 }
 
 func (u *GitlabUser) GetGitlabClient() *gitlab.Gitlab {

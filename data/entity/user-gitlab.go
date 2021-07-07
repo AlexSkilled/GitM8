@@ -13,25 +13,26 @@ func (u *GitlabUsers) ToModel() []model.GitlabUser {
 }
 
 type GitlabUser struct {
-	Id     int32
-	UserId int64
-	Email  string
-	Token  string
-	Domain string
+	tableName struct{} `pg:"gitlab_user"`
+	Id        int32
+	UserId    int64
+	Email     string
+	Token     string
+	Domain    string
 }
 
 func (u *GitlabUser) ToModel() model.GitlabUser {
 	return model.GitlabUser{
-		Id:     u.Id,
-		Email:  u.Email,
-		Token:  u.Token,
-		Domain: u.Domain,
+		Id:       u.Id,
+		Username: u.Email,
+		Token:    u.Token,
+		Domain:   u.Domain,
 	}
 }
 
 func (u *GitlabUser) FromModel(id int64, user model.GitlabUser) {
 	u.UserId = id
-	u.Email = user.Email
+	u.Email = user.Username
 	u.Token = user.Token
 	u.Domain = user.Domain
 }

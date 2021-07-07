@@ -11,7 +11,7 @@ type UserService struct {
 
 var _ interfaces.UserService = (*UserService)(nil)
 
-func NewUserService(provider interfaces.ProviderStorage) interfaces.UserService {
+func NewUserService(provider interfaces.ProviderStorage) *UserService {
 	return &UserService{
 		UserProvider: provider.User(),
 	}
@@ -24,4 +24,8 @@ func (u *UserService) GetByTelegramId(tgId int64) (model.User, error) {
 func (u *UserService) Register(user model.User) error {
 	err := u.UserProvider.Create(user)
 	return err
+}
+
+func (u *UserService) AddGitlabAccount(tgId int64, gitlab model.GitlabUser) error {
+	return u.UserProvider.AddGitlab(tgId, gitlab)
 }

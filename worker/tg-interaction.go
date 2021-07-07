@@ -28,7 +28,7 @@ type Worker struct {
 	bot          *tgbotapi.BotAPI
 	processors   map[string]interfaces.TgProcessor
 	conf         internal.Configuration
-	interceptors map[int64]interfaces.TgProcessor
+	interceptors map[int64]interfaces.Interceptor
 }
 
 func NewTelegramWorker(conf internal.Configuration,
@@ -51,19 +51,25 @@ func NewTelegramWorker(conf internal.Configuration,
 		ServiceStorage: services,
 		processors:     processorsMap,
 		conf:           conf,
+		interceptors:   map[int64]interfaces.Interceptor{},
 	}
 }
 
 func (t *Worker) handleCommands(ctx context.Context, userId int64, update tgbotapi.Update) {
 	if update.Message.Text == CommandExit {
 		_, _ = t.bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Выполнение прервано"))
+
+		// такое Г потому что если пользователь пишет /Exit по логике нужно сбрасывать все введённые до этого данные
+		// Предлагаю для перехватчиков отдельный интерфейс в котором будет метод, который чистит для пользователя его сессию
+
+		t.interceptors[userId].DumpUserSession(userId)
 		delete(t.interceptors, userId)
 		return
 	}
 
 	if processor, ok := t.processors[update.Message.Text]; ok {
 		if processor.IsInterceptor() {
-			t.interceptors[userId] = processor
+			t.interceptors[userId] = processor.(interfaces.Interceptor)
 		}
 
 		processor.Process(ctx, update, t.bot)
@@ -94,16 +100,17 @@ func (t *Worker) Start() {
 		context.WithValue(ctx, utils.ContextKey_User, user)
 
 		userId := update.Message.From.ID
+
+		if strings.HasPrefix(update.Message.Text, CommandPrefix) {
+			t.handleCommands(ctx, userId, update)
+			continue
+		}
+
 		interceptor, ok := t.interceptors[userId]
 		if ok {
 			if interceptor.Process(ctx, update, t.bot) {
 				delete(t.interceptors, userId)
 			}
-		}
-
-		if strings.HasPrefix(update.Message.Text, CommandPrefix) {
-			t.handleCommands(ctx, userId, update)
-			continue
 		}
 	}
 }
