@@ -9,7 +9,6 @@ type User struct {
 	Id         int64
 	Name       string
 	TgUsername string
-	TgId       int64
 }
 
 func (u *User) FromModel(user model.User) {
