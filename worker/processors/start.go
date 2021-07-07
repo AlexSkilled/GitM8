@@ -24,9 +24,9 @@ func (s *Start) IsInterceptor() bool {
 
 func (s *Start) Process(update tgbotapi.Update, bot *tgbotapi.BotAPI) (isEnd bool) {
 	err := s.services.User().Register(model.User{
+		Id:         update.Message.From.ID,
 		Name:       update.Message.From.FirstName,
 		TgUsername: update.Message.From.UserName,
-		TgId:       update.Message.From.ID,
 	})
 	var messageText string
 	if err != nil {
