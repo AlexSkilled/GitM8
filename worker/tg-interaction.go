@@ -1,10 +1,12 @@
 package worker
 
 import (
+	"context"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/sirupsen/logrus"
 	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/internal/interfaces"
+	"gitlab-tg-bot/utils"
 	processors "gitlab-tg-bot/worker/processors"
 	"log"
 	"strings"
@@ -52,7 +54,7 @@ func NewTelegramWorker(conf internal.Configuration,
 	}
 }
 
-func (t *Worker) handleCommands(userId int64, update tgbotapi.Update) {
+func (t *Worker) handleCommands(ctx context.Context, userId int64, update tgbotapi.Update) {
 	if update.Message.Text == CommandExit {
 		_, _ = t.bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Выполнение прервано"))
 		delete(t.interceptors, userId)
@@ -64,7 +66,7 @@ func (t *Worker) handleCommands(userId int64, update tgbotapi.Update) {
 			t.interceptors[userId] = processor
 		}
 
-		processor.Process(update, t.bot)
+		processor.Process(ctx, update, t.bot)
 		return
 	}
 
@@ -82,19 +84,25 @@ func (t *Worker) Start() {
 			continue
 		}
 
-		//ctx := context.Background()
-		//t.User().
+		user, err := t.User().GetByTelegramId(update.Message.From.ID)
+		if err != nil {
+			// TODO Логировать ошибку
+			continue
+		}
+
+		ctx := context.Background()
+		context.WithValue(ctx, utils.ContextKey_User, user)
 
 		userId := update.Message.From.ID
 		interceptor, ok := t.interceptors[userId]
 		if ok {
-			if interceptor.Process(update, t.bot) {
+			if interceptor.Process(ctx, update, t.bot) {
 				delete(t.interceptors, userId)
 			}
 		}
 
 		if strings.HasPrefix(update.Message.Text, CommandPrefix) {
-			t.handleCommands(userId, update)
+			t.handleCommands(ctx, userId, update)
 			continue
 		}
 	}
