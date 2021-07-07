@@ -8,11 +8,12 @@ import (
 const (
 	StepUsername interfaces.StepName = iota
 	StepToken
+	StepEnd
 )
 
 type Register struct {
 	services      interfaces.ServiceStorage
-	dialogContext map[int64]registrationProcess // [tgUserId]->[fieldName]->value
+	dialogContext map[int64]*registrationProcess // [tgUserId]->[fieldName]->value
 }
 
 type registrationProcess struct {
@@ -24,14 +25,33 @@ type registrationProcess struct {
 func NewRegisterProcessor(services interfaces.ServiceStorage) *Register {
 	return &Register{
 		services:      services,
-		dialogContext: map[int64]registrationProcess{},
+		dialogContext: map[int64]*registrationProcess{},
 	}
 }
 
 func (r *Register) Process(update tgbotapi.Update, bot *tgbotapi.BotAPI) (isEnd bool) {
-	return true
+	registration, ok := r.dialogContext[update.Message.From.ID]
+	if !ok {
+		r.dialogContext[update.Message.From.ID] = &registrationProcess{
+			CurrentStep: StepUsername,
+		}
+		return false
+	}
+	messageText := update.Message.Text
+	switch registration.CurrentStep {
+	case StepUsername:
+		registration.GitlabName = messageText
+	case StepToken:
+		registration.GitlabToken = messageText
+	}
+	registration.CurrentStep++
+
+	if registration.CurrentStep == StepEnd {
+		return true
+	}
+	return false
 }
 
-func (u *Register) IsInterceptor() bool {
+func (r *Register) IsInterceptor() bool {
 	return true
 }
