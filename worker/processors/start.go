@@ -1,6 +1,7 @@
 package processors
 
 import (
+	"context"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/internal/model"
@@ -22,7 +23,7 @@ func (s *Start) IsInterceptor() bool {
 	return false
 }
 
-func (s *Start) Process(update tgbotapi.Update, bot *tgbotapi.BotAPI) (isEnd bool) {
+func (s *Start) Process(ctx context.Context, update tgbotapi.Update, bot *tgbotapi.BotAPI) (isEnd bool) {
 	err := s.services.User().Register(model.User{
 		Id:         update.Message.From.ID,
 		Name:       update.Message.From.FirstName,
