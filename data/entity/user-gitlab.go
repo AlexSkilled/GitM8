@@ -14,7 +14,7 @@ func (u *GitlabUsers) ToModel() []model.GitlabUser {
 
 type GitlabUser struct {
 	Id     int32
-	UserId int32
+	UserId int64
 	Email  string
 	Token  string
 	Domain string
@@ -29,7 +29,7 @@ func (u *GitlabUser) ToModel() model.GitlabUser {
 	}
 }
 
-func (u *GitlabUser) FromModel(id int32, user model.GitlabUser) {
+func (u *GitlabUser) FromModel(id int64, user model.GitlabUser) {
 	u.UserId = id
 	u.Email = user.Email
 	u.Token = user.Token

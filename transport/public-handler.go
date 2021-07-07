@@ -23,7 +23,7 @@ const (
 type PublicHandler struct {
 	conf       internal.Configuration
 	notifier   interfaces.TelegramWorker
-	processors map[string]internal.PublicProcessor
+	processors map[string]interfaces.PublicProcessor
 	services   service.Storage
 }
 
@@ -31,7 +31,7 @@ func NewPublicHandler(conf internal.Configuration, notifier interfaces.TelegramW
 	instance := &PublicHandler{
 		conf:       conf,
 		notifier:   notifier,
-		processors: map[string]internal.PublicProcessor{},
+		processors: map[string]interfaces.PublicProcessor{},
 	}
 	// TODO В пакете сделать функцию, для получения мапы всех обработчиков
 	instance.processors[MergeRequestHeader] = &processors.MergeRequest{}

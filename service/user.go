@@ -27,7 +27,6 @@ func (u *UserService) GetUser(id int32) (model.User, error) {
 		Id:         1,
 		Name:       "Bukov Alexandr",
 		TgUsername: "some u n",
-		TgId:       1,
 		Gitlabs: []model.GitlabUser{
 			{
 				Id:     1,

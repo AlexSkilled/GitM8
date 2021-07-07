@@ -5,17 +5,16 @@ import (
 )
 
 type User struct {
-	Id         int32
+	tableName  struct{} `pg:"tg_user"`
+	Id         int64
 	Name       string
 	TgUsername string
-	TgId       int64
 }
 
 func (u *User) FromModel(user model.User) {
 	u.Id = user.Id
 	u.Name = user.Name
 	u.TgUsername = user.TgUsername
-	u.TgId = user.TgId
 }
 
 func (u *User) ToModel() model.User {
@@ -23,6 +22,5 @@ func (u *User) ToModel() model.User {
 		Id:         u.Id,
 		Name:       u.Name,
 		TgUsername: u.TgUsername,
-		TgId:       u.TgId,
 	}
 }

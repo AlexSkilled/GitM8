@@ -26,7 +26,7 @@ func (u *UserProvider) Create(in model.User) error {
 	return err
 }
 
-func (u *UserProvider) Get(id int32) (model.User, error) {
+func (u *UserProvider) Get(id int64) (model.User, error) {
 	var user entity.User
 
 	err := u.Model(&user).Where("id = ?", id).Select()
@@ -43,7 +43,7 @@ func (u *UserProvider) GetByChatId(id int32) (model.User, error) {
 	return u.GetWithGitlabUsers(user.Id)
 }
 
-func (u *UserProvider) GetWithGitlabUsers(id int32) (model.User, error) {
+func (u *UserProvider) GetWithGitlabUsers(id int64) (model.User, error) {
 	var gitlabsEnt entity.GitlabUsers
 
 	err := u.Model(&gitlabsEnt).Where("user_id = ?", id).Select()
@@ -62,7 +62,7 @@ func (u *UserProvider) GetWithGitlabUsers(id int32) (model.User, error) {
 	return user, err
 }
 
-func (u *UserProvider) AddGitlab(userId int32, gitlab model.GitlabUser) error {
+func (u *UserProvider) AddGitlab(userId int64, gitlab model.GitlabUser) error {
 	var gitlabEnt entity.GitlabUser
 	gitlabEnt.FromModel(userId, gitlab)
 
