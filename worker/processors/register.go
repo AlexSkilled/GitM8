@@ -1,6 +1,7 @@
 package processors
 
 import (
+	"context"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"gitlab-tg-bot/internal/interfaces"
 )
@@ -28,7 +29,8 @@ func NewRegisterProcessor(services interfaces.ServiceStorage) *Register {
 	}
 }
 
-func (r *Register) Process(update tgbotapi.Update, bot *tgbotapi.BotAPI) (isEnd bool) {
+func (r *Register) Process(ctx context.Context, update tgbotapi.Update, bot *tgbotapi.BotAPI) (isEnd bool) {
+
 	return true
 }
 

@@ -5,6 +5,7 @@ import (
 )
 
 type User struct {
+	tableName  struct{} `pg:"user"`
 	Id         int32
 	Name       string
 	TgUsername string
