@@ -7,6 +7,7 @@ type ServiceStorage interface {
 }
 
 type UserService interface {
+	//GetByTelegramId(tgId int64) (*model.User, error)
 	Register(user model.User) error
 }
 
