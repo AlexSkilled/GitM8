@@ -17,7 +17,7 @@ const (
 
 type Register struct {
 	services      interfaces.ServiceStorage
-	dialogContext map[int64]*registrationProcess // [tgUserId]->[fieldName]->value
+	dialogContext map[int64]*registrationProcess // [tgUserId]->regForm
 }
 
 type registrationProcess struct {
@@ -35,6 +35,8 @@ func (r *registrationProcess) ToDto() model.GitlabUser {
 	}
 }
 
+var _ interfaces.Interceptor = (*Register)(nil)
+
 func NewRegisterProcessor(services interfaces.ServiceStorage) *Register {
 	return &Register{
 		services:      services,
@@ -48,16 +50,18 @@ func (r *Register) Process(ctx context.Context, update tgbotapi.Update, bot *tgb
 		r.dialogContext[update.Message.From.ID] = &registrationProcess{
 			CurrentStep: StepUsername,
 		}
+		_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Введите имя пользователя на Gitlab: @GitlabUser"))
 		return false
 	}
 	messageText := update.Message.Text
 	switch registration.CurrentStep {
-	// TODO на каждом этапе нужно дать подсказки, что вводить дальше
 	case StepUsername:
 		registration.GitlabName = messageText
+		_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Введите токен для  Gitlab (необходимы права на использование API)"))
 	case StepToken:
-		// TODO Пока что нужен токен только со скопом на api
+		// Пока что нужен токен только со скопом на api
 		registration.GitlabToken = messageText
+		_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Введите домен Gitlab (стандартный gitlab.ru)"))
 	case StepDomain:
 		registration.Domain = messageText
 	}
@@ -69,6 +73,7 @@ func (r *Register) Process(ctx context.Context, update tgbotapi.Update, bot *tgb
 		if err != nil {
 			// TODO обработать
 		}
+		_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Успешная регистрация!"))
 		delete(r.dialogContext, update.Message.From.ID)
 		return true
 	}
@@ -77,4 +82,8 @@ func (r *Register) Process(ctx context.Context, update tgbotapi.Update, bot *tgb
 
 func (r *Register) IsInterceptor() bool {
 	return true
+}
+
+func (r *Register) DumpUserSession(userId int64) {
+	delete(r.dialogContext, userId)
 }

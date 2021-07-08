@@ -57,13 +57,13 @@ func NewTelegramWorker(conf internal.Configuration,
 
 func (t *Worker) handleCommands(ctx context.Context, userId int64, update tgbotapi.Update) {
 	if update.Message.Text == CommandExit {
+		// МБ в будущем будет необходимость прерывать не только заполнение форм, так что да
+		if interceptor, ok := t.interceptors[userId]; ok {
+			interceptor.DumpUserSession(userId)
+			delete(t.interceptors, userId)
+		}
+
 		_, _ = t.bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Выполнение прервано"))
-
-		// такое Г потому что если пользователь пишет /Exit по логике нужно сбрасывать все введённые до этого данные
-		// Предлагаю для перехватчиков отдельный интерфейс в котором будет метод, который чистит для пользователя его сессию
-
-		t.interceptors[userId].DumpUserSession(userId)
-		delete(t.interceptors, userId)
 		return
 	}
 
