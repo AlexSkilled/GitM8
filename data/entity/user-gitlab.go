@@ -14,7 +14,6 @@ func (u *GitlabUsers) ToModel() []model.GitlabUser {
 
 type GitlabUser struct {
 	tableName struct{} `pg:"gitlab_user"`
-	Id        int32
 	UserId    int64
 	Email     string
 	Token     string
@@ -23,7 +22,7 @@ type GitlabUser struct {
 
 func (u *GitlabUser) ToModel() model.GitlabUser {
 	return model.GitlabUser{
-		Id:       u.Id,
+		UserId:   u.UserId,
 		Username: u.Email,
 		Token:    u.Token,
 		Domain:   u.Domain,

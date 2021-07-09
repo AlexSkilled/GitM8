@@ -39,5 +39,5 @@ func Connect() *pg.DB {
 		Password: "9_9",
 		Database: "gitlab_bot",
 	})
-	// docker run -d --name tg-gitlab-integration -e POSTGRES_PASSWORD=9_9 -e  POSTGRES_USER=gitlab_bot -e POSTGRES_DB=gitlab_bot -p "1000:5432" postgres
+	// docker run -d --name tg-gitlab-integration -e POSTGRES_PASSWORD=9_9 -e  POSTGRES_USER=gitlab_bot -e POSTGRES_DB=gitlab_bot --restart always -p "1000:5432" postgres
 }
