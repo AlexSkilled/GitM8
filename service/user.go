@@ -21,9 +21,8 @@ func (u *UserService) GetByTelegramId(tgId int64) (model.User, error) {
 	return u.UserProvider.Get(tgId)
 }
 
-func (u *UserService) Register(user model.User) error {
-	err := u.UserProvider.Create(user)
-	return err
+func (u *UserService) Register(user model.User) (model.User, error) {
+	return u.UserProvider.Create(user)
 }
 
 func (u *UserService) AddGitlabAccount(tgId int64, gitlab model.GitlabUser) error {

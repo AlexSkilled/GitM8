@@ -4,6 +4,7 @@ import (
 	"context"
 	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/internal/interfaces"
+	"gitlab-tg-bot/internal/model"
 	"gitlab-tg-bot/utils"
 	processors "gitlab-tg-bot/worker/processors"
 	"log"
@@ -97,9 +98,21 @@ func (t *Worker) Start() {
 		user, err := t.User().GetByTelegramId(userId)
 		if err != nil {
 			if err == pg.ErrNoRows {
-				t.handleCommands(context.Background(), userId, update)
+				user, err = t.User().Register(model.User{
+					Id:         userId,
+					Name:       update.Message.From.FirstName,
+					TgUsername: update.Message.From.UserName,
+				})
+
+				if err == nil {
+					t.processors[CommandStart].Process(context.Background(), update, t.bot)
+				}
 			}
-			continue
+
+			if err != nil {
+				// TODO логирование
+				continue
+			}
 		}
 
 		ctx := context.Background()

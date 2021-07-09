@@ -18,12 +18,12 @@ func NewUser(conn *pg.DB) interfaces.UserProvider {
 	return &UserProvider{conn}
 }
 
-func (u *UserProvider) Create(in model.User) error {
+func (u *UserProvider) Create(in model.User) (model.User, error) {
 	var user entity.User
 	user.FromModel(in)
 
 	_, err := u.Model(&user).Insert()
-	return err
+	return user.ToModel(), err
 }
 
 func (u *UserProvider) Get(id int64) (model.User, error) {
