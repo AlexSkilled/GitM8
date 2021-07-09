@@ -2,14 +2,17 @@ package worker
 
 import (
 	"context"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/sirupsen/logrus"
 	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/utils"
 	processors "gitlab-tg-bot/worker/processors"
 	"log"
 	"strings"
+
+	"github.com/go-pg/pg/v9"
+
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -81,7 +84,7 @@ func (t *Worker) handleCommands(ctx context.Context, userId int64, update tgbota
 
 func (t *Worker) Start() {
 	updateConfig := tgbotapi.NewUpdate(0)
-	updateConfig.Timeout = 60
+	updateConfig.Timeout = 1
 
 	updChan := t.bot.GetUpdatesChan(updateConfig)
 
@@ -90,16 +93,17 @@ func (t *Worker) Start() {
 			continue
 		}
 
-		user, err := t.User().GetByTelegramId(update.Message.From.ID)
+		userId := update.Message.From.ID
+		user, err := t.User().GetByTelegramId(userId)
 		if err != nil {
-			// TODO Логировать ошибку
+			if err == pg.ErrNoRows {
+				t.handleCommands(context.Background(), userId, update)
+			}
 			continue
 		}
 
 		ctx := context.Background()
 		context.WithValue(ctx, utils.ContextKey_User, user)
-
-		userId := update.Message.From.ID
 
 		if strings.HasPrefix(update.Message.Text, CommandPrefix) {
 			t.handleCommands(ctx, userId, update)
