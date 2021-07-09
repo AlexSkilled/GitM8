@@ -19,3 +19,8 @@ type PublicProcessor interface {
 }
 
 type StepName int32
+
+type Interceptor interface {
+	TgProcessor
+	DumpUserSession(userId int64)
+}

@@ -67,9 +67,10 @@ func (u *UserProvider) AddGitlab(userId int64, gitlab model.GitlabUser) error {
 	var gitlabEnt entity.GitlabUser
 	gitlabEnt.FromModel(userId, gitlab)
 
-	_, err := u.Model(gitlabEnt).Insert()
+	_, err := u.Model(&gitlabEnt).Insert()
 	if err != nil {
 		// TODO
+		return err
 	}
 
 	return nil
