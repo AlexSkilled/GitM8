@@ -7,7 +7,7 @@ type ProviderStorage interface {
 }
 
 type UserProvider interface {
-	Create(user model.User) error
+	Create(user model.User) (model.User, error)
 	Get(id int64) (model.User, error)
 	GetWithGitlabUsers(id int64) (model.User, error)
 	AddGitlab(userId int64, gitlab model.GitlabUser) error

@@ -2,9 +2,9 @@ package processors
 
 import (
 	"context"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"gitlab-tg-bot/internal/interfaces"
-	"gitlab-tg-bot/internal/model"
+
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 type Start struct {
@@ -24,18 +24,7 @@ func (s *Start) IsInterceptor() bool {
 }
 
 func (s *Start) Process(ctx context.Context, update tgbotapi.Update, bot *tgbotapi.BotAPI) (isEnd bool) {
-	err := s.services.User().Register(model.User{
-		Id:         update.Message.From.ID,
-		Name:       update.Message.From.FirstName,
-		TgUsername: update.Message.From.UserName,
-	})
-	var messageText string
-	if err != nil {
-		messageText = "Ошибка при регистрации."
-	} else {
-		messageText = "Регистрация прошла успешно."
-	}
-
+	messageText := "Новый профиль телеграм добавлен."
 	_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, messageText))
 
 	return true
