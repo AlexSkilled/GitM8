@@ -84,7 +84,7 @@ func (t *Worker) handleCommands(ctx context.Context, userId int64, update tgbota
 
 func (t *Worker) Start() {
 	updateConfig := tgbotapi.NewUpdate(0)
-	updateConfig.Timeout = 1
+	updateConfig.Timeout = 60
 
 	updChan := t.bot.GetUpdatesChan(updateConfig)
 
