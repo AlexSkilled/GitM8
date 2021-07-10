@@ -29,8 +29,6 @@ func (u *UserService) Register(user model.User) (model.User, error) {
 }
 
 func (u *UserService) AddGitlabAccount(tgId int64, gitlab model.GitlabUser) error {
-	// TODO добавить проверку корректности вводимых данных для регисстрации гита (кинуть запрос)
-
 	if !strings.HasPrefix(gitlab.Domain, "http") {
 		gitlab.Domain = "https://" + gitlab.Domain
 	}

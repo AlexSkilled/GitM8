@@ -113,7 +113,7 @@ func (s *SubscribeProcessor) getOrSuggestDomains(user model.User, form *subscrib
 				tgbotapi.NewInlineKeyboardButtonData("Аккаунт: "+item.Username+". Домен: "+item.Domain, item.Domain))
 		}
 
-		message := utils.NewTgMessageWithButtons(update.Message.Chat.ID, "Выберите домен", buttons)
+		message := utils.NewTgMessageWithButtons(update.Message.Chat.ID, "Выберите домен", buttons, 2)
 
 		_, err := bot.Send(message)
 		if err != nil {
@@ -141,10 +141,10 @@ func (s *SubscribeProcessor) getOrSuggestRepositories(user model.GitlabUser, for
 		return s.Process(ctx, update, bot)
 	default:
 		buttons := make([]tgbotapi.InlineKeyboardButton, len(repos))
-		for _, item := range repos {
-			buttons = append(buttons, tgbotapi.NewInlineKeyboardButtonData(item.RepoName, strconv.Itoa(int(item.Id))))
+		for i, item := range repos {
+			buttons[i] = tgbotapi.NewInlineKeyboardButtonData(item.Name, strconv.Itoa(int(item.Id)))
 		}
-		message := utils.NewTgMessageWithButtons(update.Message.Chat.ID, "Выберите репозиторий", buttons)
+		message := utils.NewTgMessageWithButtons(update.Message.Chat.ID, "Выберите репозиторий", buttons, 2)
 		_, err = bot.Send(message)
 		if err != nil {
 			logrus.Error(err)

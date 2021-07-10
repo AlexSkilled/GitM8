@@ -21,7 +21,6 @@ func NewGitlabApiService() *GitlabApiService {
 }
 
 func (g *GitlabApiService) GetRepositories(gitlabUser model.GitlabUser) ([]model.Repository, error) {
-	//client := gapi.NewGitlab("https://gitlab.ru/", "api/v4", "tBm_wxrKuwQxEPAzRQN4")
 	client := gapi.NewGitlab(gitlabUser.Domain, StandardApiLevel, gitlabUser.Token)
 
 	list, resp, err := client.Projects(&gapi.ProjectsOptions{Membership: true})
@@ -31,5 +30,16 @@ func (g *GitlabApiService) GetRepositories(gitlabUser model.GitlabUser) ([]model
 
 	logrus.Info(list)
 	logrus.Info(resp)
-	return nil, err
+	return g.toModelProjects(list), err
+}
+
+func (g *GitlabApiService) toModelProjects(in *gapi.ProjectCollection) []model.Repository {
+	out := make([]model.Repository, len(in.Items))
+	for i, item := range in.Items {
+		out[i] = model.Repository{
+			Id:   int32(item.Id),
+			Name: item.Name,
+		}
+	}
+	return out
 }
