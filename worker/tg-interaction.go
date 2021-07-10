@@ -19,8 +19,8 @@ import (
 const (
 	CommandPrefix string = "/"
 
-	CommandRegister  string = "/register"
 	CommandStart     string = "/start"
+	CommandRegister  string = "/register"
 	CommandSubscribe string = "/subscribe"
 
 	CommandExit string = "/exit"
@@ -46,8 +46,9 @@ func NewTelegramWorker(conf internal.Configuration,
 
 	log.Printf("Авторизация в боте %s", bot.Self.UserName)
 	processorsMap := map[string]interfaces.TgProcessor{
-		CommandStart:    processors.NewStartProcessor(services),
-		CommandRegister: processors.NewRegisterProcessor(services),
+		CommandStart:     processors.NewStartProcessor(services),
+		CommandRegister:  processors.NewRegisterProcessor(services),
+		CommandSubscribe: processors.NewSubscribeProcessor(services),
 	}
 
 	return &Worker{
@@ -90,37 +91,36 @@ func (t *Worker) Start() {
 	updChan := t.bot.GetUpdatesChan(updateConfig)
 
 	for update := range updChan {
-		if update.Message == nil {
-			continue
-		}
+		var userId int64
+		var ctx context.Context
+		var err error
+		if update.Message != nil {
+			userId = update.Message.From.ID
 
-		userId := update.Message.From.ID
-		user, err := t.User().GetByTelegramId(userId)
-		if err != nil {
-			if err == pg.ErrNoRows {
-				user, err = t.User().Register(model.User{
-					Id:         userId,
-					Name:       update.Message.From.FirstName,
-					TgUsername: update.Message.From.UserName,
-				})
+			logrus.Infof("Пользователь %d в чате %d написал %s", userId, update.Message.Chat.ID, update.Message.Text)
 
-				if err == nil {
-					t.processors[CommandStart].Process(context.Background(), update, t.bot)
-				}
-			}
-
+			ctx, err = t.fillContext(userId, update)
 			if err != nil {
-				// TODO логирование
+				logrus.Errorln(err)
 				continue
 			}
-		}
 
-		ctx := context.Background()
-		context.WithValue(ctx, utils.ContextKey_User, user)
+			if strings.HasPrefix(update.Message.Text, CommandPrefix) {
+				t.handleCommands(ctx, userId, update)
+				continue
+			}
 
-		if strings.HasPrefix(update.Message.Text, CommandPrefix) {
-			t.handleCommands(ctx, userId, update)
-			continue
+		} else if update.CallbackQuery == nil {
+
+			userId = update.CallbackQuery.From.ID
+
+			logrus.Infof("Пользователь %d в чате %d ответил %s со значением %s", userId, update.CallbackQuery.Message.Chat.ID, update.CallbackQuery.Message.Text, update.CallbackQuery.Data)
+
+			ctx, err = t.fillContext(userId, update)
+			if err != nil {
+				logrus.Errorln(err)
+				continue
+			}
 		}
 
 		interceptor, ok := t.interceptors[userId]
@@ -145,4 +145,31 @@ func (t *Worker) SendMessage(chatIds []int32, msg string) {
 
 		logrus.Debugf("В чат ID=%d отправлено сообщение: \n%v ", msgConf.ChatID, message)
 	}
+}
+
+func (t *Worker) fillContext(userId int64, update tgbotapi.Update) (context.Context, error) {
+
+	user, err := t.User().GetWithGitlabUsersByTgId(userId)
+	if err != nil {
+		if err == pg.ErrNoRows {
+			user, err = t.User().Register(model.User{
+				Id:         userId,
+				Name:       update.Message.From.FirstName,
+				TgUsername: update.Message.From.UserName,
+			})
+
+			if err == nil {
+				t.processors[CommandStart].Process(context.Background(), update, t.bot)
+			}
+		}
+
+		if err != nil {
+			// TODO логирование
+			//continue
+		}
+	}
+
+	ctx := context.WithValue(context.Background(), utils.ContextKey_User, user)
+
+	return ctx, err
 }

@@ -17,8 +17,8 @@ func NewUserService(provider interfaces.ProviderStorage) *UserService {
 	}
 }
 
-func (u *UserService) GetByTelegramId(tgId int64) (model.User, error) {
-	return u.UserProvider.Get(tgId)
+func (u *UserService) GetWithGitlabUsersByTgId(tgId int64) (model.User, error) {
+	return u.UserProvider.GetWithGitlabUsers(tgId)
 }
 
 func (u *UserService) Register(user model.User) (model.User, error) {

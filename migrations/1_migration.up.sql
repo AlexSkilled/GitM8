@@ -9,11 +9,18 @@ CREATE TABLE IF NOT EXISTS tg_user
 CREATE TABLE IF NOT EXISTS gitlab_user
 (
     name     TEXT,
-    user_id  INTEGER REFERENCES tg_user (id) PRIMARY KEY,
+    user_id  INTEGER REFERENCES tg_user (id),
     email    TEXT,
     token    TEXT,
     domain   TEXT
 );
+
+ALTER TABLE IF EXISTS gitlab_user
+DROP CONSTRAINT IF EXISTS gitlab_PKs;
+
+ALTER TABLE gitlab_user
+ADD CONSTRAINT gitlab_PKs
+UNIQUE (user_id, token, domain);
 
 CREATE TABLE IF NOT EXISTS project
 (
@@ -25,6 +32,6 @@ CREATE TABLE IF NOT EXISTS project
 
 CREATE TABLE IF NOT EXISTS users_projects
 (
-    user_id    INTEGER REFERENCES gitlab_user (user_id),
+    user_id    INTEGER REFERENCES tg_user (id),
     project_id INTEGER REFERENCES project (id)
 )
