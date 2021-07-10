@@ -2,10 +2,11 @@ package processors
 
 import (
 	"context"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/sirupsen/logrus"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/internal/model"
+
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -71,6 +72,7 @@ func (r *Register) Process(ctx context.Context, update tgbotapi.Update, bot *tgb
 	if registration.CurrentStep >= StepEnd {
 		err := r.services.User().AddGitlabAccount(update.Message.From.ID, registration.ToDto())
 		if err != nil {
+			// TODO добавить проверку корректности вводимых данных для регисстрации гита (кинуть запрос)
 			// TODO обработать
 		}
 		_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Успешная регистрация!"))
@@ -84,6 +86,6 @@ func (r *Register) IsInterceptor() bool {
 	return true
 }
 
-func (r *Register) DumpUserSession(userId int64) {
+func (r *Register) DumpChatSession(userId int64) {
 	delete(r.dialogContext, userId)
 }

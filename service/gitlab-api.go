@@ -4,8 +4,12 @@ import (
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/internal/model"
 
-	gapi "github.com/xanzy/go-gitlab"
+	"github.com/sirupsen/logrus"
+
+	gapi "github.com/plouc/go-gitlab-client/gitlab"
 )
+
+const standardApiLevel = "api/v4"
 
 type GitlabApiService struct {
 }
@@ -17,15 +21,15 @@ func NewGitlabApiService() *GitlabApiService {
 }
 
 func (g *GitlabApiService) GetRepositories(gitlabUser model.GitlabUser) ([]model.Repository, error) {
-	client, err := gapi.NewClient(gitlabUser.Token)
+	//client := gapi.NewGitlab("https://gitlab.ru/", "api/v4", "tBm_wxrKuwQxEPAzRQN4")
+	client := gapi.NewGitlab(gitlabUser.Domain, standardApiLevel, gitlabUser.Token)
+
+	list, resp, err := client.Projects(&gapi.ProjectsOptions{Membership: true})
 	if err != nil {
 		return nil, err
 	}
-	list, resp, err := client.Projects.ListProjects(&gapi.ListProjectsOptions{})
-	if err != nil {
-		return nil, err
-	}
-	list[0].Name = ""
-	resp.Header.Get("")
+
+	logrus.Info(list)
+	logrus.Info(resp)
 	return nil, err
 }

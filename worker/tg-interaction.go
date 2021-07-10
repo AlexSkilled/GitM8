@@ -64,7 +64,7 @@ func (t *Worker) handleCommands(ctx context.Context, userId int64, update tgbota
 	if update.Message.Text == CommandExit {
 		// МБ в будущем будет необходимость прерывать не только заполнение форм, так что да
 		if interceptor, ok := t.interceptors[userId]; ok {
-			interceptor.DumpUserSession(userId)
+			interceptor.DumpChatSession(update.Message.Chat.ID)
 			delete(t.interceptors, userId)
 		}
 
