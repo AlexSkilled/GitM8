@@ -3,6 +3,9 @@ package service
 import (
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/internal/model"
+	"strings"
+
+	gapi "github.com/plouc/go-gitlab-client/gitlab"
 )
 
 type UserService struct {
@@ -26,5 +29,22 @@ func (u *UserService) Register(user model.User) (model.User, error) {
 }
 
 func (u *UserService) AddGitlabAccount(tgId int64, gitlab model.GitlabUser) error {
+	// TODO добавить проверку корректности вводимых данных для регисстрации гита (кинуть запрос)
+
+	if !strings.HasPrefix(gitlab.Domain, "http") {
+		gitlab.Domain = "https://" + gitlab.Domain
+	}
+
+	if !strings.HasSuffix(gitlab.Domain, "/") {
+		gitlab.Domain += "/"
+	}
+
+	client := gapi.NewGitlab(gitlab.Domain, StandardApiLevel, gitlab.Token)
+	user, _, err := client.CurrentUser()
+	if err != nil {
+		return err
+	}
+	gitlab.Email = user.Email
+
 	return u.UserProvider.AddGitlab(tgId, gitlab)
 }

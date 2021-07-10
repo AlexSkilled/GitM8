@@ -9,7 +9,7 @@ import (
 	gapi "github.com/plouc/go-gitlab-client/gitlab"
 )
 
-const standardApiLevel = "api/v4"
+const StandardApiLevel = "api/v4"
 
 type GitlabApiService struct {
 }
@@ -22,7 +22,7 @@ func NewGitlabApiService() *GitlabApiService {
 
 func (g *GitlabApiService) GetRepositories(gitlabUser model.GitlabUser) ([]model.Repository, error) {
 	//client := gapi.NewGitlab("https://gitlab.ru/", "api/v4", "tBm_wxrKuwQxEPAzRQN4")
-	client := gapi.NewGitlab(gitlabUser.Domain, standardApiLevel, gitlabUser.Token)
+	client := gapi.NewGitlab(gitlabUser.Domain, StandardApiLevel, gitlabUser.Token)
 
 	list, resp, err := client.Projects(&gapi.ProjectsOptions{Membership: true})
 	if err != nil {

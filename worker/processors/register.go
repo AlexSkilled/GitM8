@@ -72,7 +72,6 @@ func (r *Register) Process(ctx context.Context, update tgbotapi.Update, bot *tgb
 	if registration.CurrentStep >= StepEnd {
 		err := r.services.User().AddGitlabAccount(update.Message.From.ID, registration.ToDto())
 		if err != nil {
-			// TODO добавить проверку корректности вводимых данных для регисстрации гита (кинуть запрос)
 			// TODO обработать
 		}
 		_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Успешная регистрация!"))
