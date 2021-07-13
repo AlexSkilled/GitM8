@@ -18,7 +18,7 @@ const (
 	WhiteCheckMark    = 0x2705
 )
 
-func getEmoji(rune rune) string {
+func GetEmoji(rune rune) string {
 	buff := bytes.Buffer{}
 	buff.WriteRune(rune)
 	return buff.String()

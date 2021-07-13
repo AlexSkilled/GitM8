@@ -19,5 +19,6 @@ type TelegramWorker interface {
 }
 
 type GitlabApiService interface {
-	GetRepositories(userId model.GitlabUser) ([]model.Repository, error)
+	GetRepositories(user model.GitlabUser) ([]model.Repository, error)
+	AddWebHook(user model.GitlabUser, hookInfo model.Hook) error
 }

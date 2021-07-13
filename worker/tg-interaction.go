@@ -110,7 +110,7 @@ func (t *Worker) Start() {
 				continue
 			}
 
-		} else if update.CallbackQuery == nil {
+		} else if update.CallbackQuery != nil {
 
 			userId = update.CallbackQuery.From.ID
 
