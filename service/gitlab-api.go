@@ -3,6 +3,7 @@ package service
 import (
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/internal/model"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
 
@@ -65,7 +66,7 @@ func (g *GitlabApiService) toModelProjects(in *gapi.ProjectCollection) []model.R
 	out := make([]model.Repository, len(in.Items))
 	for i, item := range in.Items {
 		out[i] = model.Repository{
-			Id:   int32(item.Id),
+			Id:   strconv.Itoa(item.Id),
 			Name: item.Name,
 		}
 	}

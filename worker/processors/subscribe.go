@@ -64,7 +64,7 @@ type subscribeForm struct {
 	gitlab       model.GitlabUser
 	currentStep  SubscriptionStep
 	hookTypes    map[HookType]bool
-	lastMessage  *tgbotapi.Message
+	lastMessage  tgbotapi.Message
 }
 
 func NewSubscribeProcessor(services interfaces.ServiceStorage) *SubscribeProcessor {
@@ -95,8 +95,10 @@ func (s *SubscribeProcessor) Process(ctx context.Context, update tgbotapi.Update
 		switch form.currentStep {
 		case SubscriptionStepDomain:
 			form.domain = update.CallbackQuery.Data
+			s.updateDomainMessage(user, update.CallbackQuery.Message.Chat.ID, form, bot)
 		case SubscriptionStepRepository:
 			form.repositoryId = update.CallbackQuery.Data
+			s.updateRepositoryMessage(update.CallbackQuery.Message.Chat.ID, form, bot)
 		case SubscriptionStepType:
 			typeNumber, err := strconv.ParseInt(update.CallbackQuery.Data, 10, 64)
 			if err != nil {
@@ -114,7 +116,7 @@ func (s *SubscribeProcessor) Process(ctx context.Context, update tgbotapi.Update
 
 	switch form.currentStep {
 	case SubscriptionStepDomain:
-		return s.getOrSuggestDomains(user, form, update, bot, ctx)
+		return s.suggestDomains(user, form, update, bot, ctx)
 	case SubscriptionStepRepository:
 		for _, item := range user.Gitlabs {
 			if item.Domain == form.domain {
@@ -122,7 +124,7 @@ func (s *SubscribeProcessor) Process(ctx context.Context, update tgbotapi.Update
 				break
 			}
 		}
-		return s.getOrSuggestRepositories(form, update, bot, ctx)
+		return s.suggestRepositories(form, update, bot, ctx)
 	case SubscriptionStepType:
 		return s.suggestHookType(update, form, bot)
 	case SubscriptionStepEnd:
@@ -160,7 +162,8 @@ func (s *SubscribeProcessor) DumpChatSession(chatId int64) {
 	delete(s.subscribeForms, chatId)
 }
 
-func (s *SubscribeProcessor) getOrSuggestDomains(user model.User, form *subscribeForm, update tgbotapi.Update, bot *tgbotapi.BotAPI, ctx context.Context) bool {
+func (s *SubscribeProcessor) suggestDomains(user model.User, form *subscribeForm, update tgbotapi.Update,
+	bot *tgbotapi.BotAPI, ctx context.Context) bool {
 	switch len(user.Gitlabs) {
 	case 0:
 		_, err := bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Необходимо зарегестрировать аккаунт gitlab - команда /register"))
@@ -194,12 +197,35 @@ func (s *SubscribeProcessor) getOrSuggestDomains(user model.User, form *subscrib
 			logrus.Errorln(err)
 			return true
 		}
-		form.lastMessage = &msg
+		form.lastMessage = msg
 	}
 	return false
 }
+func (s *SubscribeProcessor) updateDomainMessage(user model.User, chatId int64, form *subscribeForm,
+	bot *tgbotapi.BotAPI) {
 
-func (s *SubscribeProcessor) getOrSuggestRepositories(form *subscribeForm, update tgbotapi.Update, bot *tgbotapi.BotAPI, ctx context.Context) (isEnd bool) {
+	buttons := make([]tgbotapi.InlineKeyboardButton, len(user.Gitlabs))
+	for i, item := range user.Gitlabs {
+		buttons[i] = tgbotapi.InlineKeyboardButton{Text: item.Domain}
+		buttons[i].CallbackData = nil
+
+		if item.Domain == form.domain {
+			buttons[i].Text += internal.GetEmoji(internal.WhiteCheckMark)
+		}
+	}
+
+	markup := utils.NewTgMessageButtonsMarkup(buttons, 2)
+
+	message := tgbotapi.NewEditMessageReplyMarkup(chatId, form.lastMessage.MessageID, markup)
+
+	_, err := bot.Send(message)
+	if err != nil {
+		logrus.Error(err)
+	}
+}
+
+func (s *SubscribeProcessor) suggestRepositories(form *subscribeForm, update tgbotapi.Update,
+	bot *tgbotapi.BotAPI, ctx context.Context) (isEnd bool) {
 	repos, err := s.service.GitlabApi().GetRepositories(form.gitlab)
 	if err != nil {
 		logrus.Errorln(err)
@@ -210,7 +236,7 @@ func (s *SubscribeProcessor) getOrSuggestRepositories(form *subscribeForm, updat
 			fmt.Sprintf("Для домена %s отсутствуют репозитории", form.gitlab.Domain)))
 		return true
 	case 1:
-		form.repositoryId = string(repos[0].Id)
+		form.repositoryId = repos[0].Id
 		form.currentStep++
 		bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID,
 			fmt.Sprintf("Найден единственный репозиторий - %s.", repos[0].Name)))
@@ -218,22 +244,50 @@ func (s *SubscribeProcessor) getOrSuggestRepositories(form *subscribeForm, updat
 	default:
 		buttons := make([]tgbotapi.InlineKeyboardButton, len(repos))
 		for i, item := range repos {
-			buttons[i] = tgbotapi.NewInlineKeyboardButtonData(item.Name, strconv.Itoa(int(item.Id)))
+			buttons[i] = tgbotapi.NewInlineKeyboardButtonData(item.Name, item.Id)
 		}
 		markup := utils.NewTgMessageButtonsMarkup(buttons, 2)
 		message := tgbotapi.NewMessage(update.Message.Chat.ID, "Выберите репозиторий")
 		message.BaseChat.ReplyMarkup = markup
 
-		_, err = bot.Send(message)
+		msg, err := bot.Send(message)
 		if err != nil {
 			logrus.Error(err)
 		}
+		form.lastMessage = msg
 	}
 
 	return false
 }
+func (s *SubscribeProcessor) updateRepositoryMessage(chatId int64, form *subscribeForm,
+	bot *tgbotapi.BotAPI) {
 
-func (s *SubscribeProcessor) suggestHookType(update tgbotapi.Update, form *subscribeForm, bot *tgbotapi.BotAPI) (isEnd bool) {
+	repos, err := s.service.GitlabApi().GetRepositories(form.gitlab)
+	if err != nil {
+		logrus.Error(err)
+		return
+	}
+
+	buttons := make([]tgbotapi.InlineKeyboardButton, len(repos))
+	for i, item := range repos {
+		buttons[i] = tgbotapi.NewInlineKeyboardButtonData(item.Name, item.Id)
+		if item.Id == form.repositoryId {
+			buttons[i].Text += internal.GetEmoji(internal.WhiteCheckMark)
+		}
+	}
+
+	markup := utils.NewTgMessageButtonsMarkup(buttons, 2)
+
+	message := tgbotapi.NewEditMessageReplyMarkup(chatId, form.lastMessage.MessageID, markup)
+
+	_, err = bot.Send(message)
+	if err != nil {
+		logrus.Error(err)
+	}
+}
+
+func (s *SubscribeProcessor) suggestHookType(update tgbotapi.Update, form *subscribeForm,
+	bot *tgbotapi.BotAPI) (isEnd bool) {
 	buttons := make([]tgbotapi.InlineKeyboardButton, len(eventsNames))
 	for i, item := range eventsNames {
 		buttons[i] = tgbotapi.NewInlineKeyboardButtonData(item, strconv.Itoa(i))
@@ -246,11 +300,13 @@ func (s *SubscribeProcessor) suggestHookType(update tgbotapi.Update, form *subsc
 	if err != nil {
 		logrus.Error(err)
 	}
-	form.lastMessage = &msg
+	form.lastMessage = msg
 	return false
 }
 
-func (s *SubscribeProcessor) updateHookTypeMessage(chatId int64, form *subscribeForm, bot *tgbotapi.BotAPI) bool {
+func (s *SubscribeProcessor) updateHookTypeMessage(chatId int64, form *subscribeForm,
+	bot *tgbotapi.BotAPI) bool {
+
 	buttons := make([]tgbotapi.InlineKeyboardButton, len(eventsNames))
 	for i, item := range eventsNames {
 		buttons[i] = tgbotapi.NewInlineKeyboardButtonData(item, strconv.Itoa(i))
