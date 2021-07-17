@@ -149,7 +149,7 @@ func (t *Worker) SendMessage(chatIds []int32, msg string) {
 
 func (t *Worker) fillContext(userId int64, update tgbotapi.Update) (context.Context, error) {
 
-	user, err := t.User().GetWithGitlabUsersByTgId(userId)
+	user, err := t.User().GetWithGitlabUsersById(userId)
 	if err != nil {
 		if err == pg.ErrNoRows {
 			user, err = t.User().Register(model.User{

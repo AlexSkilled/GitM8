@@ -20,7 +20,7 @@ func NewUserService(provider interfaces.ProviderStorage) *UserService {
 	}
 }
 
-func (u *UserService) GetWithGitlabUsersByTgId(tgId int64) (model.User, error) {
+func (u *UserService) GetWithGitlabUsersById(tgId int64) (model.User, error) {
 	return u.UserProvider.GetWithGitlabUsers(tgId)
 }
 

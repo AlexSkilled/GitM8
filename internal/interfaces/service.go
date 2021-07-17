@@ -8,7 +8,7 @@ type ServiceStorage interface {
 }
 
 type UserService interface {
-	GetWithGitlabUsersByTgId(tgId int64) (model.User, error)
+	GetWithGitlabUsersById(id int64) (model.User, error)
 	Register(user model.User) (model.User, error)
 	AddGitlabAccount(tgId int64, gitlab model.GitlabUser) error
 }
