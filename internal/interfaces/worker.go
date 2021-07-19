@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"context"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -22,5 +23,5 @@ type StepName int32
 
 type Interceptor interface {
 	TgProcessor
-	DumpUserSession(userId int64)
+	DumpChatSession(userId int64)
 }

@@ -54,68 +54,68 @@ func (m MergeRequestProcessor) isApproved(request model.MergeRequest) bool {
 
 func (m MergeRequestProcessor) parseNew(request model.MergeRequest) string {
 	sb := strings.Builder{}
-	sb.WriteString(fmt.Sprintf("%s *Опубликован Merge Request* № *%d*\n", getEmoji(Loudspeaker), request.ObjectAttributes.Iid))
-	sb.WriteString(fmt.Sprintf("%s Проект *%s*\n", getEmoji(WhiteLargeCircle), request.Project.Name))
-	sb.WriteString(fmt.Sprintf("%s source *%s* -> target *%s*\n", getEmoji(WhiteLargeCircle), request.ObjectAttributes.SourceBranch, request.ObjectAttributes.TargetBranch))
-	sb.WriteString(fmt.Sprintf("%s Публикатор *%s*\n", getEmoji(WhiteLargeCircle), request.User.Name))
-	sb.WriteString(fmt.Sprintf("%s Ответственный *%s*\n", getEmoji(WhiteLargeCircle), m.getAssigneeName(request)))
-	sb.WriteString(fmt.Sprintf("%s Заголовок *%s*\n", getEmoji(WhiteLargeCircle), request.ObjectAttributes.Title))
-	sb.WriteString(fmt.Sprintf("%s Ссылка *%s*", getEmoji(WhiteLargeCircle), request.ObjectAttributes.URL))
+	sb.WriteString(fmt.Sprintf("%s *Опубликован Merge Request* № *%d*\n", GetEmoji(Loudspeaker), request.ObjectAttributes.Iid))
+	sb.WriteString(fmt.Sprintf("%s Проект *%s*\n", GetEmoji(WhiteLargeCircle), request.Project.Name))
+	sb.WriteString(fmt.Sprintf("%s source *%s* -> target *%s*\n", GetEmoji(WhiteLargeCircle), request.ObjectAttributes.SourceBranch, request.ObjectAttributes.TargetBranch))
+	sb.WriteString(fmt.Sprintf("%s Публикатор *%s*\n", GetEmoji(WhiteLargeCircle), request.User.Name))
+	sb.WriteString(fmt.Sprintf("%s Ответственный *%s*\n", GetEmoji(WhiteLargeCircle), m.getAssigneeName(request)))
+	sb.WriteString(fmt.Sprintf("%s Заголовок *%s*\n", GetEmoji(WhiteLargeCircle), request.ObjectAttributes.Title))
+	sb.WriteString(fmt.Sprintf("%s Ссылка *%s*", GetEmoji(WhiteLargeCircle), request.ObjectAttributes.URL))
 	return sb.String()
 }
 
 func (m MergeRequestProcessor) parseUpdated(request model.MergeRequest) string {
 	sb := strings.Builder{}
-	sb.WriteString(fmt.Sprintf("%s *Обновлен Merge Request* № *%d*\n", getEmoji(Loudspeaker), request.ObjectAttributes.Iid))
-	sb.WriteString(fmt.Sprintf("%s Проект *%s*\n", getEmoji(OrangeLargeCircle), request.Project.Name))
-	sb.WriteString(fmt.Sprintf("%s source *%s* -> target *%s*\n", getEmoji(OrangeLargeCircle), request.ObjectAttributes.SourceBranch, request.ObjectAttributes.TargetBranch))
-	sb.WriteString(fmt.Sprintf("%s Публикатор *%s*\n", getEmoji(OrangeLargeCircle), request.User.Name))
-	sb.WriteString(fmt.Sprintf("%s Ответственный *%s*\n", getEmoji(OrangeLargeCircle), m.getAssigneeName(request)))
-	sb.WriteString(fmt.Sprintf("%s Заголовок *%s*\n", getEmoji(OrangeLargeCircle), request.ObjectAttributes.Title))
-	sb.WriteString(fmt.Sprintf("%s Ссылка *%s*", getEmoji(OrangeLargeCircle), request.ObjectAttributes.URL))
+	sb.WriteString(fmt.Sprintf("%s *Обновлен Merge Request* № *%d*\n", GetEmoji(Loudspeaker), request.ObjectAttributes.Iid))
+	sb.WriteString(fmt.Sprintf("%s Проект *%s*\n", GetEmoji(OrangeLargeCircle), request.Project.Name))
+	sb.WriteString(fmt.Sprintf("%s source *%s* -> target *%s*\n", GetEmoji(OrangeLargeCircle), request.ObjectAttributes.SourceBranch, request.ObjectAttributes.TargetBranch))
+	sb.WriteString(fmt.Sprintf("%s Публикатор *%s*\n", GetEmoji(OrangeLargeCircle), request.User.Name))
+	sb.WriteString(fmt.Sprintf("%s Ответственный *%s*\n", GetEmoji(OrangeLargeCircle), m.getAssigneeName(request)))
+	sb.WriteString(fmt.Sprintf("%s Заголовок *%s*\n", GetEmoji(OrangeLargeCircle), request.ObjectAttributes.Title))
+	sb.WriteString(fmt.Sprintf("%s Ссылка *%s*", GetEmoji(OrangeLargeCircle), request.ObjectAttributes.URL))
 	return sb.String()
 }
 
 func (m MergeRequestProcessor) parseLocked(request model.MergeRequest) string {
 	sb := strings.Builder{}
-	sb.WriteString(fmt.Sprintf("%s *Заблокирован Merge Request* № *%d*\n", getEmoji(Loudspeaker), request.ObjectAttributes.Iid))
-	sb.WriteString(fmt.Sprintf("%s Проект *%s*\n", getEmoji(BlueLargeCircle), request.Project.Name))
-	sb.WriteString(fmt.Sprintf("%s source *%s* -> target *%s*\n", getEmoji(BlueLargeCircle), request.ObjectAttributes.SourceBranch, request.ObjectAttributes.TargetBranch))
-	sb.WriteString(fmt.Sprintf("%s Публикатор *%s*\n", getEmoji(BlueLargeCircle), request.User.Name))
-	sb.WriteString(fmt.Sprintf("%s Заголовок *%s*\n", getEmoji(BlueLargeCircle), request.ObjectAttributes.Title))
-	sb.WriteString(fmt.Sprintf("%s Ссылка *%s*", getEmoji(BlueLargeCircle), request.ObjectAttributes.URL))
+	sb.WriteString(fmt.Sprintf("%s *Заблокирован Merge Request* № *%d*\n", GetEmoji(Loudspeaker), request.ObjectAttributes.Iid))
+	sb.WriteString(fmt.Sprintf("%s Проект *%s*\n", GetEmoji(BlueLargeCircle), request.Project.Name))
+	sb.WriteString(fmt.Sprintf("%s source *%s* -> target *%s*\n", GetEmoji(BlueLargeCircle), request.ObjectAttributes.SourceBranch, request.ObjectAttributes.TargetBranch))
+	sb.WriteString(fmt.Sprintf("%s Публикатор *%s*\n", GetEmoji(BlueLargeCircle), request.User.Name))
+	sb.WriteString(fmt.Sprintf("%s Заголовок *%s*\n", GetEmoji(BlueLargeCircle), request.ObjectAttributes.Title))
+	sb.WriteString(fmt.Sprintf("%s Ссылка *%s*", GetEmoji(BlueLargeCircle), request.ObjectAttributes.URL))
 	return sb.String()
 }
 
 func (m MergeRequestProcessor) parseClosed(request model.MergeRequest) string {
 	sb := strings.Builder{}
-	sb.WriteString(fmt.Sprintf("%s *Закрыт Merge Request* № *%d*\n", getEmoji(Loudspeaker), request.ObjectAttributes.Iid))
-	sb.WriteString(fmt.Sprintf("%s Проект *%s*\n", getEmoji(BlackLargeCircle), request.Project.Name))
-	sb.WriteString(fmt.Sprintf("%s source *%s* -> target *%s*\n", getEmoji(BlackLargeCircle), request.ObjectAttributes.SourceBranch, request.ObjectAttributes.TargetBranch))
-	sb.WriteString(fmt.Sprintf("%s Заголовок *%s*\n", getEmoji(BlackLargeCircle), request.ObjectAttributes.Title))
-	sb.WriteString(fmt.Sprintf("%s Ссылка *%s*", getEmoji(BlackLargeCircle), request.ObjectAttributes.URL))
+	sb.WriteString(fmt.Sprintf("%s *Закрыт Merge Request* № *%d*\n", GetEmoji(Loudspeaker), request.ObjectAttributes.Iid))
+	sb.WriteString(fmt.Sprintf("%s Проект *%s*\n", GetEmoji(BlackLargeCircle), request.Project.Name))
+	sb.WriteString(fmt.Sprintf("%s source *%s* -> target *%s*\n", GetEmoji(BlackLargeCircle), request.ObjectAttributes.SourceBranch, request.ObjectAttributes.TargetBranch))
+	sb.WriteString(fmt.Sprintf("%s Заголовок *%s*\n", GetEmoji(BlackLargeCircle), request.ObjectAttributes.Title))
+	sb.WriteString(fmt.Sprintf("%s Ссылка *%s*", GetEmoji(BlackLargeCircle), request.ObjectAttributes.URL))
 	return sb.String()
 }
 
 func (m MergeRequestProcessor) parseMerged(request model.MergeRequest) string {
 	sb := strings.Builder{}
-	sb.WriteString(fmt.Sprintf("%s *Успешное слияние Merge Request* № *%d*\n", getEmoji(Loudspeaker), request.ObjectAttributes.Iid))
-	sb.WriteString(fmt.Sprintf("%s Проект *%s*\n", getEmoji(GreenLargeCircle), request.Project.Name))
-	sb.WriteString(fmt.Sprintf("%s source *%s* -> target *%s*\n", getEmoji(GreenLargeCircle), request.ObjectAttributes.SourceBranch, request.ObjectAttributes.TargetBranch))
-	sb.WriteString(fmt.Sprintf("%s Заголовок *%s*\n", getEmoji(GreenLargeCircle), request.ObjectAttributes.Title))
-	sb.WriteString(fmt.Sprintf("%s Ссылка *%s*", getEmoji(GreenLargeCircle), request.ObjectAttributes.URL))
+	sb.WriteString(fmt.Sprintf("%s *Успешное слияние Merge Request* № *%d*\n", GetEmoji(Loudspeaker), request.ObjectAttributes.Iid))
+	sb.WriteString(fmt.Sprintf("%s Проект *%s*\n", GetEmoji(GreenLargeCircle), request.Project.Name))
+	sb.WriteString(fmt.Sprintf("%s source *%s* -> target *%s*\n", GetEmoji(GreenLargeCircle), request.ObjectAttributes.SourceBranch, request.ObjectAttributes.TargetBranch))
+	sb.WriteString(fmt.Sprintf("%s Заголовок *%s*\n", GetEmoji(GreenLargeCircle), request.ObjectAttributes.Title))
+	sb.WriteString(fmt.Sprintf("%s Ссылка *%s*", GetEmoji(GreenLargeCircle), request.ObjectAttributes.URL))
 	return sb.String()
 }
 
 func (m MergeRequestProcessor) parseApproved(request model.MergeRequest) string {
 	sb := strings.Builder{}
-	sb.WriteString(fmt.Sprintf("%s *Одобрен Merge Request* № *%d*\n", getEmoji(Loudspeaker), request.ObjectAttributes.Iid))
-	sb.WriteString(fmt.Sprintf("%s Проект *%s*\n", getEmoji(WhiteCheckMark), request.Project.Name))
-	sb.WriteString(fmt.Sprintf("%s source *%s* -> target *%s*\n", getEmoji(WhiteCheckMark), request.ObjectAttributes.SourceBranch, request.ObjectAttributes.TargetBranch))
-	sb.WriteString(fmt.Sprintf("%s Публикатор *%s*\n", getEmoji(WhiteCheckMark), request.User.Name))
-	sb.WriteString(fmt.Sprintf("%s Ответственный *%s*\n", getEmoji(WhiteCheckMark), m.getAssigneeName(request)))
-	sb.WriteString(fmt.Sprintf("%s Заголовок *%s*\n", getEmoji(WhiteCheckMark), request.ObjectAttributes.Title))
-	sb.WriteString(fmt.Sprintf("%s Ссылка *%s*", getEmoji(WhiteCheckMark), request.ObjectAttributes.URL))
+	sb.WriteString(fmt.Sprintf("%s *Одобрен Merge Request* № *%d*\n", GetEmoji(Loudspeaker), request.ObjectAttributes.Iid))
+	sb.WriteString(fmt.Sprintf("%s Проект *%s*\n", GetEmoji(WhiteCheckMark), request.Project.Name))
+	sb.WriteString(fmt.Sprintf("%s source *%s* -> target *%s*\n", GetEmoji(WhiteCheckMark), request.ObjectAttributes.SourceBranch, request.ObjectAttributes.TargetBranch))
+	sb.WriteString(fmt.Sprintf("%s Публикатор *%s*\n", GetEmoji(WhiteCheckMark), request.User.Name))
+	sb.WriteString(fmt.Sprintf("%s Ответственный *%s*\n", GetEmoji(WhiteCheckMark), m.getAssigneeName(request)))
+	sb.WriteString(fmt.Sprintf("%s Заголовок *%s*\n", GetEmoji(WhiteCheckMark), request.ObjectAttributes.Title))
+	sb.WriteString(fmt.Sprintf("%s Ссылка *%s*", GetEmoji(WhiteCheckMark), request.ObjectAttributes.URL))
 	return sb.String()
 }
 

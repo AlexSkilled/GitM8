@@ -5,6 +5,8 @@ import (
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/internal/model"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/go-pg/pg/v9"
 )
 
@@ -33,17 +35,6 @@ func (u *UserProvider) Get(id int64) (model.User, error) {
 	return user.ToModel(), err
 }
 
-func (u *UserProvider) GetByTelegramId(id int64) (model.User, error) {
-	var user entity.User
-
-	err := u.Model(&user).Where("tg_id = ?", id).Select()
-	if err != nil {
-		//TODO
-	}
-
-	return u.GetWithGitlabUsers(user.Id)
-}
-
 func (u *UserProvider) GetWithGitlabUsers(id int64) (model.User, error) {
 	var gitlabsEnt entity.GitlabUsers
 
@@ -69,7 +60,7 @@ func (u *UserProvider) AddGitlab(userId int64, gitlab model.GitlabUser) error {
 
 	_, err := u.Model(&gitlabEnt).Insert()
 	if err != nil {
-		// TODO
+		logrus.Error(err)
 		return err
 	}
 

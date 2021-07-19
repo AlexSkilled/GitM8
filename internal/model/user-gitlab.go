@@ -7,6 +7,7 @@ type GitlabUser struct {
 	Username string
 	Token    string
 	Domain   string
+	Email    string
 }
 
 func (u *GitlabUser) GetGitlabClient() *gitlab.Gitlab {
