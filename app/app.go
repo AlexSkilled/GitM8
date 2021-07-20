@@ -1,14 +1,15 @@
 package app
 
 import (
-	"github.com/go-pg/pg/v9"
-	_ "github.com/go-pg/pg/v9/orm"
 	"gitlab-tg-bot/data"
 	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/service"
 	"gitlab-tg-bot/transport"
 	"gitlab-tg-bot/worker"
 	"net/http"
+
+	"github.com/go-pg/pg/v9"
+	_ "github.com/go-pg/pg/v9/orm"
 )
 
 type App struct {
@@ -20,10 +21,10 @@ type App struct {
 
 func NewApp(conf internal.Configuration) App {
 	db := pg.Connect(&pg.Options{
-		Addr:     "localhost:1000",
-		User:     "gitlab_bot",
-		Password: "9_9",
-		Database: "gitlab_bot",
+		Addr:     conf.GetString(internal.DbConnectionString),
+		User:     conf.GetString(internal.DbUser),
+		Password: conf.GetString(internal.DbPassword),
+		Database: conf.GetString(internal.DbName),
 	})
 
 	providerStorage := data.NewProviderStorage(db)

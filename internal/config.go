@@ -19,6 +19,11 @@ const (
 
 	WorkAsPublicService = "WorkAsPublicService"
 	Debug               = "IsDebugging"
+
+	DbConnectionString = "Db.ConnectionString"
+	DbUser             = "Db.User"
+	DbPassword         = "Db.Password"
+	DbName             = "Db.Name"
 )
 
 func NewConfiguration() (Configuration, error) {
@@ -38,6 +43,10 @@ func NewConfiguration() (Configuration, error) {
 	conf.SetDefault(SecretKey, "")
 	conf.SetDefault(NoAuth, true)
 	conf.SetDefault(WorkAsPublicService, false)
+	conf.SetDefault(DbConnectionString, "")
+	conf.SetDefault(DbUser, "")
+	conf.SetDefault(DbPassword, "")
+	conf.SetDefault(DbName, "")
 	if confPath != "" {
 		conf.SetConfigFile(confPath)
 		err := conf.ReadInConfig()
