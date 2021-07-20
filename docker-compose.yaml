@@ -1,26 +1,18 @@
 version: '3.9'
 services:
-  tgbot:
-    image: "registry.digital-spirit.ru/tgbot:dev"
-    container_name: tgbot-service
+  app:
+    build:
+      context: .
     ports:
-      - "10010:10010"
+      - 10010:10010
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres
     restart: always
     environment:
-      - BOT_CONFPATH=/src/conf/bot_conf.yml
-    volumes:
-      - "${CONF}/bot_conf.yml:/src/conf/bot_conf.yml"
-    logging:
-      driver: "json-file"
-      options:
-        max-file: "5"
-        max-size: "10m"
-    networks:
-      tgbot:
-        aliases:
-          - tgbotservice
-networks:
-  tgbot:
-    driver: bridge
-    driver_opts:
-      com.docker.network.enable_ipv6: "false"
+      POSTGRES_USER: gitlab_bot
+      POSTGRES_PASSWORD: 9_9
+      POSTGRES_DB: gitlab_bot
+    ports:
+      - "1000:1000"
