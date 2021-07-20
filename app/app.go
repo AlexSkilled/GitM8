@@ -3,6 +3,7 @@ package app
 import (
 	"gitlab-tg-bot/data"
 	"gitlab-tg-bot/internal"
+	"gitlab-tg-bot/migrations"
 	"gitlab-tg-bot/service"
 	"gitlab-tg-bot/transport"
 	"gitlab-tg-bot/worker"
@@ -20,6 +21,8 @@ type App struct {
 }
 
 func NewApp(conf internal.Configuration) App {
+	migrations.CheckAndMigrate(conf)
+
 	db := pg.Connect(&pg.Options{
 		Addr:     conf.GetString(internal.DbConnectionString),
 		User:     conf.GetString(internal.DbUser),

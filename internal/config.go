@@ -47,6 +47,7 @@ func NewConfiguration() (Configuration, error) {
 	conf.SetDefault(DbUser, "")
 	conf.SetDefault(DbPassword, "")
 	conf.SetDefault(DbName, "")
+
 	if confPath != "" {
 		conf.SetConfigFile(confPath)
 		err := conf.ReadInConfig()
