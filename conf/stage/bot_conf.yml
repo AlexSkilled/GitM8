@@ -1,0 +1,14 @@
+Token: 1816053505:AAHvhsI0LbDPUc9KhykQob7OPCKKK_qCIgE
+ServerUrl: :10010
+SecretKey: mysecretkey
+NoAuth: true
+
+WorkAsPublicService: true
+IsDebugging: false
+WebHookUrl: https://tg-bot-catch.requestcatcher.com/
+
+Db:
+  ConnectionString: "localhost:1000"
+  User: "gitlab_bot"
+  Password: "9_9"
+  Name: "gitlab_bot"
