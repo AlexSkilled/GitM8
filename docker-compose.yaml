@@ -1,18 +1,66 @@
-version: '3.9'
+version: '3.1'
+
 services:
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=gitlab_bot
+      - POSTGRES_USER=gitlab_bot
+      - POSTGRES_PASSWORD=gitlab_bot_pass
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U gitlab_bot" ]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+    networks:
+      tgbot:
+        aliases:
+          - postgres
+
+  pgadmin:
+    image: fenglc/pgadmin4:2.1-python2.7-alpine
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 9999:5050
+    environment:
+      DEFAULT_PASSWORD: gitlab_bot_pass
+      DEFAULT_USER: gitlab_bot
+    networks:
+      - tgbot
+
+  migration:
+    build:
+      context: .
+    depends_on:
+      db:
+        condition: service_healthy
+    command: "./migration"
+    networks:
+      - tgbot
+
   app:
     build:
       context: .
+    restart: always
     ports:
       - 10010:10010
     depends_on:
-      - postgres
-  postgres:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_USER: gitlab_bot
-      POSTGRES_PASSWORD: 9_9
-      POSTGRES_DB: gitlab_bot
-    ports:
-      - "1000:1000"
+      migration:
+        condition: service_started
+    command: "./main"
+    networks:
+      tgbot:
+        aliases:
+          - backend
+networks:
+  tgbot:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"

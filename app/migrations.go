@@ -11,37 +11,22 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func CheckAndMigrate(conf internal.Configuration) {
+func CheckMigration(conf internal.Configuration) {
 	db := Connect(conf)
 
-	oldVersion, newVersion, targetVersion, err :=
-		int64(0), int64(0), int64(0), error(nil)
+	newVersion, targetVersion, err :=
+		int64(0), int64(0), error(nil)
 
 	targetVersion, err = getVersion()
 
 	newVersion, err = migrations.Version(db)
 	if err != nil {
-		errrorr := err.Error()
-		if strings.HasPrefix(errrorr, "ERROR #42P01 relation \"gopg_migrations\" does not exist") {
-			oldVersion, newVersion, err = migrations.Run(db, []string{"init"}...) // Если миграция ещё не проводилась, инициируем и ставим нужную версию
-			if err != nil {
-				panic(err)
-			}
-		}
+		logrus.Errorln(err)
+		panic(err)
 	}
-	if newVersion < targetVersion {
-		oldVersion, newVersion, err = migrations.Run(db, []string{}...) // если установлена не та версия бд, обновляем вверх
-		if err != nil {
-			panic(err)
-		}
-		logrus.Info(oldVersion, " -> ", newVersion)
-		return
+	if newVersion != targetVersion {
+		panic("Версия базы не совпадает с миграциями в /migrations")
 	}
-	if newVersion > targetVersion {
-		panic("Версия миграции существующей базы больше доступной. Откатите базу")
-	}
-
-	panic(err)
 }
 
 func Connect(conf internal.Configuration) *pg.DB {

@@ -20,7 +20,7 @@ type App struct {
 }
 
 func NewApp(conf internal.Configuration) App {
-	CheckAndMigrate(conf)
+	CheckMigration(conf)
 
 	db := pg.Connect(&pg.Options{
 		Addr:     conf.GetString(internal.DbConnectionString),

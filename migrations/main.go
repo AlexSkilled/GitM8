@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"gitlab-tg-bot/internal"
 	"os"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/go-pg/migrations/v7"
 	"github.com/go-pg/pg/v9"
@@ -33,11 +36,18 @@ func main() {
 }
 
 func Connect() *pg.DB {
-	return pg.Connect(&pg.Options{
-		Addr:     "localhost:1000",
-		User:     "gitlab_bot",
-		Password: "9_9",
-		Database: "gitlab_bot",
-	})
+	conf, err := internal.NewConfiguration()
+	if err != nil {
+
+	}
+	loginOption := &pg.Options{
+		Addr:     conf.GetString(internal.DbConnectionString), //"localhost:1000",
+		User:     conf.GetString(internal.DbUser),             //"gitlab_bot",
+		Password: conf.GetString(internal.DbPassword),         //"9_9",
+		Database: conf.GetString(internal.DbName),             //"gitlab_bot",
+	}
+	logrus.Infof("Подключение к базе данных. Address: %s, User: %s, Password: %s, DbName: %s",
+		loginOption.Addr, loginOption.User, loginOption.Password, loginOption.Database)
+	return pg.Connect(loginOption)
 	// docker run -d --name tg-gitlab-integration -e POSTGRES_PASSWORD=9_9 -e  POSTGRES_USER=gitlab_bot -e POSTGRES_DB=gitlab_bot --restart always -p "1000:5432" postgres
 }
