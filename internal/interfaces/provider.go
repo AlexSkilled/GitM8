@@ -1,6 +1,8 @@
 package interfaces
 
-import "gitlab-tg-bot/internal/model"
+import (
+	"gitlab-tg-bot/service/model"
+)
 
 type ProviderStorage interface {
 	User() UserProvider

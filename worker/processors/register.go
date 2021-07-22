@@ -3,7 +3,7 @@ package processors
 import (
 	"context"
 	"gitlab-tg-bot/internal/interfaces"
-	"gitlab-tg-bot/internal/model"
+	"gitlab-tg-bot/service/model"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/sirupsen/logrus"

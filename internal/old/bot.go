@@ -1,6 +1,8 @@
-package internal
+package old
 
 import (
+	configuration "gitlab-tg-bot/conf"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/sirupsen/logrus"
 )
@@ -14,12 +16,12 @@ var _ Notifier = (*Bot)(nil)
 var _ UpdateWatcher = (*Bot)(nil)
 
 func NewBot(conf Configuration) (Notifier, error) {
-	bot, err := tgbotapi.NewBotAPI(conf.GetString(Token))
+	bot, err := tgbotapi.NewBotAPI(conf.GetString(configuration.Token))
 	return &Bot{api: bot, conf: conf}, err
 }
 
 func (b *Bot) Notify(payload string) error {
-	msgConf := tgbotapi.NewMessage(b.conf.GetInt64(ChatId), payload)
+	msgConf := tgbotapi.NewMessage(b.conf.GetInt64(configuration.ChatId), payload)
 	msgConf.ParseMode = "Markdown"
 	msgConf.DisableNotification = true
 	msg, err := b.api.Send(msgConf)

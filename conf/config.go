@@ -1,6 +1,7 @@
-package internal
+package conf
 
 import (
+	"gitlab-tg-bot/internal/interfaces"
 	"strings"
 
 	"github.com/spf13/pflag"
@@ -17,9 +18,8 @@ const (
 	SecretKey      = "SecretKey"
 	NoAuth         = "NoAuth"
 
-	WorkAsPublicService = "WorkAsPublicService"
-	Debug               = "IsDebugging"
-	WebHookUrl          = "WebHookUrl"
+	Debug      = "IsDebugging"
+	WebHookUrl = "WebHookUrl"
 
 	DbConnectionString = "Db.ConnectionString"
 	DbUser             = "Db.User"
@@ -27,7 +27,7 @@ const (
 	DbName             = "Db.Name"
 )
 
-func NewConfiguration() (Configuration, error) {
+func NewConfiguration() (interfaces.Configuration, error) {
 	conf := viper.New()
 	conf.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	conf.SetEnvPrefix("bot")
@@ -43,7 +43,6 @@ func NewConfiguration() (Configuration, error) {
 	conf.SetDefault(ServerKeyPath, "")
 	conf.SetDefault(SecretKey, "")
 	conf.SetDefault(NoAuth, true)
-	conf.SetDefault(WorkAsPublicService, false)
 	conf.SetDefault(DbConnectionString, "")
 	conf.SetDefault(DbUser, "")
 	conf.SetDefault(DbPassword, "")
@@ -58,4 +57,4 @@ func NewConfiguration() (Configuration, error) {
 	return conf, nil
 }
 
-var _ Configuration = (*viper.Viper)(nil)
+var _ interfaces.Configuration = (*viper.Viper)(nil)

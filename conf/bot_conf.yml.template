@@ -1,7 +1,0 @@
-Token:
-ServerUrl: :10010
-SecretKey: mysecretkey
-NoAuth: true
-
-WorkAsPublicService: true
-IsDebugging: false

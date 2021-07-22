@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"gitlab-tg-bot/internal/model"
+	"gitlab-tg-bot/service/model"
 )
 
 type Tickets []Ticket

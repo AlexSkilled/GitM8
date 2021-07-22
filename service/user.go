@@ -2,7 +2,7 @@ package service
 
 import (
 	"gitlab-tg-bot/internal/interfaces"
-	"gitlab-tg-bot/internal/model"
+	"gitlab-tg-bot/service/model"
 
 	"strings"
 

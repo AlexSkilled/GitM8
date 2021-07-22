@@ -3,7 +3,7 @@ package provider
 import (
 	"gitlab-tg-bot/data/entity"
 	"gitlab-tg-bot/internal/interfaces"
-	"gitlab-tg-bot/internal/model"
+	"gitlab-tg-bot/service/model"
 
 	"github.com/sirupsen/logrus"
 

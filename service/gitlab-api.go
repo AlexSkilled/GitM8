@@ -1,9 +1,10 @@
 package service
 
 import (
-	"gitlab-tg-bot/internal"
+	config "gitlab-tg-bot/conf"
 	"gitlab-tg-bot/internal/interfaces"
-	"gitlab-tg-bot/internal/model"
+	"gitlab-tg-bot/service/model"
+	"gitlab-tg-bot/transport"
 	"strconv"
 
 	"github.com/sirupsen/logrus"
@@ -17,11 +18,11 @@ type GitlabApiService struct {
 	webHookUrl string
 }
 
-var _ interfaces.GitlabApiService = (*GitlabApiService)(nil)
+var _ interfaces.GitApiService = (*GitlabApiService)(nil)
 
-func NewGitlabApiService(conf internal.Configuration) *GitlabApiService {
+func NewGitlabApiService(conf interfaces.Configuration) *GitlabApiService {
 	return &GitlabApiService{
-		webHookUrl: conf.GetString(internal.WebHookUrl),
+		webHookUrl: conf.GetString(config.WebHookUrl) + transport.Gitlab,
 	}
 }
 

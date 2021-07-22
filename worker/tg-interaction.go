@@ -2,9 +2,9 @@ package worker
 
 import (
 	"context"
-	"gitlab-tg-bot/internal"
+	config "gitlab-tg-bot/conf"
 	"gitlab-tg-bot/internal/interfaces"
-	"gitlab-tg-bot/internal/model"
+	"gitlab-tg-bot/service/model"
 	"gitlab-tg-bot/utils"
 	processors "gitlab-tg-bot/worker/processors"
 	"log"
@@ -31,18 +31,18 @@ type Worker struct {
 
 	bot          *tgbotapi.BotAPI
 	processors   map[string]interfaces.TgProcessor
-	conf         internal.Configuration
+	conf         interfaces.Configuration
 	interceptors map[int64]interfaces.Interceptor
 }
 
-func NewTelegramWorker(conf internal.Configuration,
+func NewTelegramWorker(conf interfaces.Configuration,
 	services interfaces.ServiceStorage) interfaces.TelegramWorker {
-	bot, err := tgbotapi.NewBotAPI(conf.GetString(internal.Token))
+	bot, err := tgbotapi.NewBotAPI(conf.GetString(config.Token))
 	if err != nil {
 		panic(err)
 	}
 
-	bot.Debug = conf.GetBool(internal.Debug)
+	bot.Debug = conf.GetBool(config.Debug)
 
 	log.Printf("Авторизация в боте %s", bot.Self.UserName)
 	processorsMap := map[string]interfaces.TgProcessor{

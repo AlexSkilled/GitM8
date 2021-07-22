@@ -1,7 +1,8 @@
-package internal
+package old
 
 import (
 	"fmt"
+	"gitlab-tg-bot/conf"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -64,7 +65,7 @@ func (h Handler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 }
 
 func (h Handler) authenticate(header http.Header) bool {
-	if h.conf.GetBool(NoAuth) {
+	if h.conf.GetBool(conf.NoAuth) {
 		return true
 	}
 	token := header.Get(TokenHeaderKey)
@@ -72,7 +73,7 @@ func (h Handler) authenticate(header http.Header) bool {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("mailformed token")
 		}
-		return []byte(h.conf.GetString(SecretKey)), nil
+		return []byte(h.conf.GetString(conf.SecretKey)), nil
 	})
 	if err != nil {
 		logrus.Errorf("Попытка доступа с неправильно сформированным токеном: %s", token)

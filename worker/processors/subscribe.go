@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/internal/interfaces"
-	"gitlab-tg-bot/internal/model"
+	"gitlab-tg-bot/service/model"
 	"gitlab-tg-bot/utils"
 	"strconv"
 

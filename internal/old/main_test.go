@@ -1,7 +1,7 @@
-package internal
+package old
 
 import (
-	"gitlab-tg-bot/internal/model"
+	"gitlab-tg-bot/internal/old/model"
 	"reflect"
 	"testing"
 	"time"

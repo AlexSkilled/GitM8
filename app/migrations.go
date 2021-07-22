@@ -1,7 +1,6 @@
 package app
 
 import (
-	"gitlab-tg-bot/internal"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -11,9 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func CheckMigration(conf internal.Configuration) {
-	db := Connect(conf)
-
+func CheckMigration(db *pg.DB) {
 	newVersion, targetVersion, err :=
 		int64(0), int64(0), error(nil)
 
@@ -27,15 +24,6 @@ func CheckMigration(conf internal.Configuration) {
 	if newVersion != targetVersion {
 		panic("Версия базы не совпадает с миграциями в /migrations")
 	}
-}
-
-func Connect(conf internal.Configuration) *pg.DB {
-	return pg.Connect(&pg.Options{
-		Addr:     conf.GetString(internal.DbConnectionString),
-		User:     conf.GetString(internal.DbUser),
-		Password: conf.GetString(internal.DbPassword),
-		Database: conf.GetString(internal.DbName),
-	})
 }
 
 func getVersion() (int64, error) {

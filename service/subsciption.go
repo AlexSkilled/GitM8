@@ -1,9 +1,10 @@
 package service
 
 import (
-	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/internal/interfaces"
-	"gitlab-tg-bot/internal/model"
+	"gitlab-tg-bot/service/model"
+
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -21,13 +22,13 @@ const (
 type SubscriptionService struct {
 	TicketProvider interfaces.TicketProvider
 
-	GitlabApi interfaces.GitlabApiService
+	GitlabApi interfaces.GitApiService
 }
 
 var _ interfaces.SubscriptionService = (*SubscriptionService)(nil)
 
-func NewSubscription(conf internal.Configuration, provider interfaces.ProviderStorage,
-	gitlabApi interfaces.GitlabApiService) *SubscriptionService {
+func NewSubscription(conf interfaces.Configuration, provider interfaces.ProviderStorage,
+	gitlabApi interfaces.GitApiService) *SubscriptionService {
 	return &SubscriptionService{
 		TicketProvider: provider.Ticket(),
 
@@ -36,6 +37,12 @@ func NewSubscription(conf internal.Configuration, provider interfaces.ProviderSt
 }
 
 func (s *SubscriptionService) Subscribe(gitlab model.GitlabUser, tgUserId int64, hookInfo model.Hook) (int32, error) {
+	err := s.GitlabApi.AddWebHook(gitlab, hookInfo)
+	if err != nil {
+		logrus.Error(err)
+		return 0, err
+	}
+
 	ticket := model.Ticket{
 		MaintainerGitlabId: gitlab.Id,
 		RepositoryId:       hookInfo.RepoId,

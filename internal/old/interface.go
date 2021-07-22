@@ -1,4 +1,4 @@
-package internal
+package old
 
 type Processor interface {
 	Process(payload []byte) (msg string, skip bool, err error)

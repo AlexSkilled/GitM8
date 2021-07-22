@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gitlab-tg-bot/internal"
+	config "gitlab-tg-bot/conf"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -36,15 +36,15 @@ func main() {
 }
 
 func Connect() *pg.DB {
-	conf, err := internal.NewConfiguration()
+	conf, err := config.NewConfiguration()
 	if err != nil {
 
 	}
 	loginOption := &pg.Options{
-		Addr:     conf.GetString(internal.DbConnectionString),
-		User:     conf.GetString(internal.DbUser),
-		Password: conf.GetString(internal.DbPassword),
-		Database: conf.GetString(internal.DbName),
+		Addr:     conf.GetString(config.DbConnectionString),
+		User:     conf.GetString(config.DbUser),
+		Password: conf.GetString(config.DbPassword),
+		Database: conf.GetString(config.DbName),
 	}
 	logrus.Infof("Подключение к базе данных. Address: %s, User: %s, Password: %s, DbName: %s",
 		loginOption.Addr, loginOption.User, loginOption.Password, loginOption.Database)

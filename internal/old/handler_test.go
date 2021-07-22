@@ -1,10 +1,11 @@
-package internal
+package old
 
 import (
 	"bytes"
 	"encoding/json"
-	"gitlab-tg-bot/internal/model"
-	"gitlab-tg-bot/internal/moq"
+	config "gitlab-tg-bot/conf"
+	"gitlab-tg-bot/internal/old/model"
+	moq2 "gitlab-tg-bot/internal/old/moq"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -18,9 +19,9 @@ import (
 )
 
 func Test_ShouldHandleMergeRequest(t *testing.T) {
-	conf := moq.Config{}
-	conf.On("GetBool", NoAuth).Return(true)
-	notifier := moq.Notifier{}
+	conf := moq2.Config{}
+	conf.On("GetBool", config.NoAuth).Return(true)
+	notifier := moq2.Notifier{}
 	notifier.On("Notify", mock.Anything).Return(nil)
 	handler := NewHandler(conf, notifier)
 	srv := httptest.NewServer(handler)
@@ -39,9 +40,9 @@ func Test_ShouldHandleMergeRequest(t *testing.T) {
 }
 
 func Test_IfMRStateIsUnknown_ShouldNotSendNotification(t *testing.T) {
-	conf := moq.Config{}
-	conf.On("GetBool", NoAuth).Return(true)
-	notifier := moq.Notifier{}
+	conf := moq2.Config{}
+	conf.On("GetBool", config.NoAuth).Return(true)
+	notifier := moq2.Notifier{}
 	notifier.On("Notify", mock.Anything).Return(nil)
 	handler := NewHandler(conf, notifier)
 	srv := httptest.NewServer(handler)
@@ -57,9 +58,9 @@ func Test_IfMRStateIsUnknown_ShouldNotSendNotification(t *testing.T) {
 }
 
 func Test_ShouldHandlePipeline(t *testing.T) {
-	conf := moq.Config{}
-	conf.On("GetBool", NoAuth).Return(true)
-	notifier := moq.Notifier{}
+	conf := moq2.Config{}
+	conf.On("GetBool", config.NoAuth).Return(true)
+	notifier := moq2.Notifier{}
 	notifier.On("Notify", mock.Anything).Return(nil)
 	handler := NewHandler(conf, notifier)
 	srv := httptest.NewServer(handler)
@@ -78,9 +79,9 @@ func Test_ShouldHandlePipeline(t *testing.T) {
 }
 
 func Test_IfPipelineStatusIsUnknown_ShouldNotSendNotification(t *testing.T) {
-	conf := moq.Config{}
-	conf.On("GetBool", NoAuth).Return(true)
-	notifier := moq.Notifier{}
+	conf := moq2.Config{}
+	conf.On("GetBool", config.NoAuth).Return(true)
+	notifier := moq2.Notifier{}
 	notifier.On("Notify", mock.Anything).Return(nil)
 	handler := NewHandler(conf, notifier)
 	srv := httptest.NewServer(handler)
@@ -96,10 +97,10 @@ func Test_IfPipelineStatusIsUnknown_ShouldNotSendNotification(t *testing.T) {
 }
 
 func Test_IfTokenIsNotValid_ShouldReturnStatus403(t *testing.T) {
-	conf := moq.Config{}
-	conf.On("GetBool", NoAuth).Return(false)
-	conf.On("GetString", SecretKey).Return("my_secret_key")
-	notifier := moq.Notifier{}
+	conf := moq2.Config{}
+	conf.On("GetBool", config.NoAuth).Return(false)
+	conf.On("GetString", config.SecretKey).Return("my_secret_key")
+	notifier := moq2.Notifier{}
 	notifier.On("Notify", mock.Anything).Return(nil)
 	handler := NewHandler(conf, notifier)
 	srv := httptest.NewServer(handler)
@@ -112,10 +113,10 @@ func Test_IfTokenIsNotValid_ShouldReturnStatus403(t *testing.T) {
 }
 
 func Test_IfTokenIsValid_ShouldReturnStatus200(t *testing.T) {
-	conf := moq.Config{}
-	conf.On("GetBool", NoAuth).Return(false)
-	conf.On("GetString", SecretKey).Return("my_secret_key")
-	notifier := moq.Notifier{}
+	conf := moq2.Config{}
+	conf.On("GetBool", config.NoAuth).Return(false)
+	conf.On("GetString", config.SecretKey).Return("my_secret_key")
+	notifier := moq2.Notifier{}
 	notifier.On("Notify", mock.Anything).Return(nil)
 	handler := NewHandler(conf, notifier)
 	srv := httptest.NewServer(handler)

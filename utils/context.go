@@ -3,7 +3,7 @@ package utils
 import (
 	"context"
 	"errors"
-	"gitlab-tg-bot/internal/model"
+	"gitlab-tg-bot/service/model"
 )
 
 type ContextKey int32

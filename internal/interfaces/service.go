@@ -1,10 +1,13 @@
 package interfaces
 
-import "gitlab-tg-bot/internal/model"
+import (
+	"gitlab-tg-bot/service/model"
+)
 
 type ServiceStorage interface {
 	User() UserService
 	Subscription() SubscriptionService
+	Announcer() AnnouncerService
 }
 
 type UserService interface {
@@ -18,7 +21,7 @@ type TelegramWorker interface {
 	SendMessage(chatId []int32, msg string)
 }
 
-type GitlabApiService interface {
+type GitApiService interface {
 	GetRepositories(user model.GitlabUser) ([]model.Repository, error)
 	AddWebHook(user model.GitlabUser, hookInfo model.Hook) error
 }
@@ -26,4 +29,16 @@ type GitlabApiService interface {
 type SubscriptionService interface {
 	Subscribe(user model.GitlabUser, tgUserId int64, hookInfo model.Hook) (ticketId int32, err error)
 	GetRepositories(user model.GitlabUser) ([]model.Repository, error)
+}
+
+type AnnouncerService interface {
+	Announce(message interface{})
+}
+
+type Configuration interface {
+	GetBool(string) bool
+	GetInt(string) int
+	GetInt32(string) int32
+	GetInt64(string) int64
+	GetString(string) string
 }
