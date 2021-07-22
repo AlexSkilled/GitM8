@@ -31,12 +31,11 @@ func CheckMigration(conf internal.Configuration) {
 
 func Connect(conf internal.Configuration) *pg.DB {
 	return pg.Connect(&pg.Options{
-		Addr:     conf.GetString(internal.DbConnectionString), // "localhost:1000"
-		User:     conf.GetString(internal.DbUser),             //"gitlab_bot"
-		Password: conf.GetString(internal.DbPassword),         //"9_9"
-		Database: conf.GetString(internal.DbName),             // "gitlab_bot"
+		Addr:     conf.GetString(internal.DbConnectionString),
+		User:     conf.GetString(internal.DbUser),
+		Password: conf.GetString(internal.DbPassword),
+		Database: conf.GetString(internal.DbName),
 	})
-	// docker run -d --name tg-gitlab-integration -e POSTGRES_PASSWORD=9_9 -e  POSTGRES_USER=gitlab_bot -e POSTGRES_DB=gitlab_bot --restart always -p "1000:5432" postgres
 }
 
 func getVersion() (int64, error) {
