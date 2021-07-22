@@ -164,8 +164,8 @@ func (t *Worker) fillContext(userId int64, update tgbotapi.Update) (context.Cont
 		}
 
 		if err != nil {
-			// TODO логирование
-			//continue
+			logrus.Errorln(err)
+			return nil, err
 		}
 	}
 

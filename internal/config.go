@@ -19,6 +19,7 @@ const (
 
 	WorkAsPublicService = "WorkAsPublicService"
 	Debug               = "IsDebugging"
+	WebHookUrl          = "WebHookUrl"
 
 	DbConnectionString = "Db.ConnectionString"
 	DbUser             = "Db.User"
@@ -47,6 +48,7 @@ func NewConfiguration() (Configuration, error) {
 	conf.SetDefault(DbUser, "")
 	conf.SetDefault(DbPassword, "")
 	conf.SetDefault(DbName, "")
+	conf.SetDefault(WebHookUrl, "")
 
 	if confPath != "" {
 		conf.SetConfigFile(confPath)

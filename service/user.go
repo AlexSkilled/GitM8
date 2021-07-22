@@ -3,6 +3,7 @@ package service
 import (
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/internal/model"
+
 	"strings"
 
 	gapi "github.com/plouc/go-gitlab-client/gitlab"

@@ -4,7 +4,7 @@ import "gitlab-tg-bot/internal/model"
 
 type ServiceStorage interface {
 	User() UserService
-	GitlabApi() GitlabApiService
+	Subscription() SubscriptionService
 }
 
 type UserService interface {
@@ -21,4 +21,9 @@ type TelegramWorker interface {
 type GitlabApiService interface {
 	GetRepositories(user model.GitlabUser) ([]model.Repository, error)
 	AddWebHook(user model.GitlabUser, hookInfo model.Hook) error
+}
+
+type SubscriptionService interface {
+	Subscribe(user model.GitlabUser, tgUserId int64, hookInfo model.Hook) (ticketId int32, err error)
+	GetRepositories(user model.GitlabUser) ([]model.Repository, error)
 }

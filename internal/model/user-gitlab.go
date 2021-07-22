@@ -3,7 +3,8 @@ package model
 import "github.com/plouc/go-gitlab-client/gitlab"
 
 type GitlabUser struct {
-	UserId   int64
+	Id int64
+	//TgUserId int64
 	Username string
 	Token    string
 	Domain   string

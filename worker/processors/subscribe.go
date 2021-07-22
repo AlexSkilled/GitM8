@@ -56,11 +56,13 @@ var eventsNames = []string{
 type SubscribeProcessor struct {
 	service        interfaces.ServiceStorage
 	subscribeForms map[int64]*subscribeForm
+	whiteCheck     string
 }
 
 type subscribeForm struct {
 	domain       string
 	repositoryId string
+	tgUserId     int64
 	gitlab       model.GitlabUser
 	currentStep  SubscriptionStep
 	hookTypes    map[HookType]bool
@@ -71,6 +73,7 @@ func NewSubscribeProcessor(services interfaces.ServiceStorage) *SubscribeProcess
 	return &SubscribeProcessor{
 		service:        services,
 		subscribeForms: map[int64]*subscribeForm{},
+		whiteCheck:     internal.GetEmoji(internal.WhiteCheckMark),
 	}
 }
 
@@ -87,6 +90,7 @@ func (s *SubscribeProcessor) Process(ctx context.Context, update tgbotapi.Update
 		s.subscribeForms[user.Id] = &subscribeForm{
 			currentStep: SubscriptionStepDomain,
 			hookTypes:   map[HookType]bool{},
+			tgUserId:    update.Message.From.ID,
 		}
 		form, _ = s.subscribeForms[user.Id]
 	}
@@ -140,8 +144,9 @@ func (s *SubscribeProcessor) Process(ctx context.Context, update tgbotapi.Update
 			PipelineEvents:           form.hookTypes[PipelineEvents],
 			WikiPageEvents:           form.hookTypes[WikiPageEvents],
 		}
-
-		err = s.service.GitlabApi().AddWebHook(form.gitlab, webhook)
+		s.finalizeChoose(update.CallbackQuery.Message.From.ID, form, bot)
+		_, err = s.service.Subscription().Subscribe(form.gitlab, form.tgUserId, webhook)
+		delete(s.subscribeForms, user.Id)
 		if err != nil {
 			logrus.Errorln(err)
 			bot.Send(tgbotapi.NewMessage(update.CallbackQuery.Message.Chat.ID,
@@ -210,7 +215,7 @@ func (s *SubscribeProcessor) updateDomainMessage(user model.User, chatId int64, 
 		buttons[i].CallbackData = nil
 
 		if item.Domain == form.domain {
-			buttons[i].Text += internal.GetEmoji(internal.WhiteCheckMark)
+			buttons[i].Text += s.whiteCheck
 		}
 	}
 
@@ -226,7 +231,7 @@ func (s *SubscribeProcessor) updateDomainMessage(user model.User, chatId int64, 
 
 func (s *SubscribeProcessor) suggestRepositories(form *subscribeForm, update tgbotapi.Update,
 	bot *tgbotapi.BotAPI, ctx context.Context) (isEnd bool) {
-	repos, err := s.service.GitlabApi().GetRepositories(form.gitlab)
+	repos, err := s.service.Subscription().GetRepositories(form.gitlab)
 	if err != nil {
 		logrus.Errorln(err)
 	}
@@ -262,7 +267,7 @@ func (s *SubscribeProcessor) suggestRepositories(form *subscribeForm, update tgb
 func (s *SubscribeProcessor) updateRepositoryMessage(chatId int64, form *subscribeForm,
 	bot *tgbotapi.BotAPI) {
 
-	repos, err := s.service.GitlabApi().GetRepositories(form.gitlab)
+	repos, err := s.service.Subscription().GetRepositories(form.gitlab)
 	if err != nil {
 		logrus.Error(err)
 		return
@@ -272,7 +277,7 @@ func (s *SubscribeProcessor) updateRepositoryMessage(chatId int64, form *subscri
 	for i, item := range repos {
 		buttons[i] = tgbotapi.NewInlineKeyboardButtonData(item.Name, item.Id)
 		if item.Id == form.repositoryId {
-			buttons[i].Text += internal.GetEmoji(internal.WhiteCheckMark)
+			buttons[i].Text += s.whiteCheck
 		}
 	}
 
@@ -311,7 +316,7 @@ func (s *SubscribeProcessor) updateHookTypeMessage(chatId int64, form *subscribe
 	for i, item := range eventsNames {
 		buttons[i] = tgbotapi.NewInlineKeyboardButtonData(item, strconv.Itoa(i))
 		if selected, _ := form.hookTypes[HookType(i)]; selected {
-			buttons[i].Text += internal.GetEmoji(internal.WhiteCheckMark)
+			buttons[i].Text += s.whiteCheck
 		}
 	}
 
@@ -324,4 +329,26 @@ func (s *SubscribeProcessor) updateHookTypeMessage(chatId int64, form *subscribe
 		logrus.Error(err)
 	}
 	return false
+}
+
+func (s *SubscribeProcessor) finalizeChoose(chatId int64, form *subscribeForm,
+	bot *tgbotapi.BotAPI) {
+	buttons := make([]tgbotapi.InlineKeyboardButton, 0, 1)
+	for i, item := range eventsNames {
+
+		whiteCheck := s.whiteCheck
+
+		if selected, _ := form.hookTypes[HookType(i)]; selected {
+			buttons = append(buttons, tgbotapi.NewInlineKeyboardButtonData(item+whiteCheck, strconv.Itoa(i)))
+		}
+	}
+
+	markup := utils.NewTgMessageButtonsMarkup(buttons, 2)
+
+	message := tgbotapi.NewEditMessageReplyMarkup(chatId, form.lastMessage.MessageID, markup)
+
+	_, err := bot.Send(message)
+	if err != nil {
+		logrus.Error(err)
+	}
 }
