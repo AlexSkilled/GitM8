@@ -19,7 +19,7 @@ func NewStorage(providerStorage interfaces.ProviderStorage, conf interfaces.Conf
 	return &Storage{
 		UserService:         NewUserService(providerStorage),
 		SubscriptionService: NewSubscription(conf, providerStorage, gitlabApiService),
-		AnnouncerService:    NewAnnouncer(),
+		AnnouncerService:    NewAnnouncer(providerStorage),
 	}
 }
 

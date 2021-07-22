@@ -1,0 +1,180 @@
+POST /gitlab HTTP/1.1
+Host: tg-bot-catch.requestcatcher.com
+Connection: close
+Connection: close
+Content-Length: 4068
+Content-Type: application/json
+X-Gitlab-Event: Merge Request Hook
+X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
+
+{
+  "object_kind": "merge_request",
+  "event_type": "merge_request",
+  "user": {
+    "name": "alex",
+    "username": "skilled",
+    "avatar_url": "https://secure.gravatar.com/avatar/d336181e889aca632406b2f01dd61114?s=80\u0026d=identicon",
+    "email": "olegthander@yandex.ru"
+  },
+  "project": {
+    "id": 1756,
+    "name": "tn-cicd-tg-bot",
+    "description": "",
+    "web_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
+    "avatar_url": null,
+    "git_ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+    "git_http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git",
+    "namespace": "alex",
+    "visibility_level": 0,
+    "path_with_namespace": "skilled/tn-cicd-tg-bot",
+    "default_branch": "master",
+    "ci_config_path": null,
+    "homepage": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
+    "url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+    "ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+    "http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git"
+  },
+  "object_attributes": {
+    "assignee_id": null,
+    "author_id": 2039,
+    "created_at": "2021-07-22 19:31:51 UTC",
+    "description": "",
+    "head_pipeline_id": null,
+    "id": 1599,
+    "iid": 1,
+    "last_edited_at": null,
+    "last_edited_by_id": null,
+    "merge_commit_sha": null,
+    "merge_error": null,
+    "merge_params": {
+      "force_remove_source_branch": "1"
+    },
+    "merge_status": "unchecked",
+    "merge_user_id": null,
+    "merge_when_pipeline_succeeds": false,
+    "milestone_id": null,
+    "source_branch": "telegram",
+    "source_project_id": 1756,
+    "state_id": 1,
+    "target_branch": "master",
+    "target_project_id": 1756,
+    "time_estimate": 0,
+    "title": "Telegram",
+    "updated_at": "2021-07-22 19:31:51 UTC",
+    "updated_by_id": null,
+    "url": "https://gitlab.ru/skilled/tn-cicd-tg-bot/-/merge_requests/1",
+    "source": {
+      "id": 1756,
+      "name": "tn-cicd-tg-bot",
+      "description": "",
+      "web_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
+      "avatar_url": null,
+      "git_ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+      "git_http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git",
+      "namespace": "alex",
+      "visibility_level": 0,
+      "path_with_namespace": "skilled/tn-cicd-tg-bot",
+      "default_branch": "master",
+      "ci_config_path": null,
+      "homepage": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
+      "url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+      "ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+      "http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git"
+    },
+    "target": {
+      "id": 1756,
+      "name": "tn-cicd-tg-bot",
+      "description": "",
+      "web_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
+      "avatar_url": null,
+      "git_ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+      "git_http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git",
+      "namespace": "alex",
+      "visibility_level": 0,
+      "path_with_namespace": "skilled/tn-cicd-tg-bot",
+      "default_branch": "master",
+      "ci_config_path": null,
+      "homepage": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
+      "url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+      "ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+      "http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git"
+    },
+    "last_commit": {
+      "id": "912fe5ae6e9b2420465a484659ebbc06d557850e",
+      "message": "Промежуточный коммит\n\n",
+      "title": "Промежуточный коммит",
+      "timestamp": "2021-06-10T12:13:05+03:00",
+      "url": "https://gitlab.ru/skilled/tn-cicd-tg-bot/-/commit/912fe5ae6e9b2420465a484659ebbc06d557850e",
+      "author": {
+        "name": "Alexander",
+        "email": "g.a.androidjc2@ya.ru"
+      }
+    },
+    "work_in_progress": false,
+    "total_time_spent": 0,
+    "human_total_time_spent": null,
+    "human_time_estimate": null,
+    "assignee_ids": [],
+    "state": "opened",
+    "action": "open"
+  },
+  "labels": [],
+  "changes": {
+    "author_id": {
+      "previous": null,
+      "current": 2039
+    },
+    "created_at": {
+      "previous": null,
+      "current": "2021-07-22 19:31:51 UTC"
+    },
+    "description": {
+      "previous": null,
+      "current": ""
+    },
+    "id": {
+      "previous": null,
+      "current": 1599
+    },
+    "iid": {
+      "previous": null,
+      "current": 1
+    },
+    "merge_params": {
+      "previous": {},
+      "current": {
+        "force_remove_source_branch": "1"
+      }
+    },
+    "source_branch": {
+      "previous": null,
+      "current": "telegram"
+    },
+    "source_project_id": {
+      "previous": null,
+      "current": 1756
+    },
+    "target_branch": {
+      "previous": null,
+      "current": "master"
+    },
+    "target_project_id": {
+      "previous": null,
+      "current": 1756
+    },
+    "title": {
+      "previous": null,
+      "current": "Telegram"
+    },
+    "updated_at": {
+      "previous": null,
+      "current": "2021-07-22 19:31:51 UTC"
+    }
+  },
+  "repository": {
+    "name": "tn-cicd-tg-bot",
+    "url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+    "description": "",
+    "homepage": "https://gitlab.ru/skilled/tn-cicd-tg-bot"
+  }
+}

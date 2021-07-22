@@ -8,9 +8,6 @@ import (
 const (
 	EventHeaderKey = "X-Gitlab-Event"
 	TokenHeaderKey = "X-Gitlab-Token"
-
-	MergeRequestHeader = "Merge Request Hook"
-	PipelineHeader     = "Pipeline Hook"
 )
 
 type Handler struct {

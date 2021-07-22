@@ -1,0 +1,144 @@
+POST /gitlab HTTP/1.1
+Host: tg-bot-catch.requestcatcher.com
+Connection: close
+Connection: close
+Content-Length: 3515
+Content-Type: application/json
+X-Gitlab-Event: Push Hook
+X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
+
+{
+  "object_kind": "push",
+  "event_name": "push",
+  "before": "5b4bdc6ab89d790b36b63d767f1de7f64183b87d",
+  "after": "63c5117c20263339991a0a27f28363afbab70b6a",
+  "ref": "refs/heads/master",
+  "checkout_sha": "63c5117c20263339991a0a27f28363afbab70b6a",
+  "message": null,
+  "user_id": 2039,
+  "user_name": "alex",
+  "user_username": "skilled",
+  "user_email": "",
+  "user_avatar": "https://secure.gravatar.com/avatar/d336181e889aca632406b2f01dd61114?s=80\u0026d=identicon",
+  "project_id": 1756,
+  "project": {
+    "id": 1756,
+    "name": "tn-cicd-tg-bot",
+    "description": "",
+    "web_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
+    "avatar_url": null,
+    "git_ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+    "git_http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git",
+    "namespace": "alex",
+    "visibility_level": 0,
+    "path_with_namespace": "skilled/tn-cicd-tg-bot",
+    "default_branch": "master",
+    "ci_config_path": null,
+    "homepage": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
+    "url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+    "ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+    "http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git"
+  },
+  "commits": [
+    {
+      "id": "63c5117c20263339991a0a27f28363afbab70b6a",
+      "message": "Merge branch 'tg-interface'\n",
+      "title": "Merge branch 'tg-interface'",
+      "timestamp": "2021-06-10T10:44:16+03:00",
+      "url": "https://gitlab.ru/skilled/tn-cicd-tg-bot/-/commit/63c5117c20263339991a0a27f28363afbab70b6a",
+      "author": {
+        "name": "Alexander",
+        "email": "g.a.androidjc2@ya.ru"
+      },
+      "added": [
+        "data/entity/subscription-repositories.go",
+        "data/entity/user-gitlab.go",
+        "go.sum",
+        "model/subscription.go",
+        "model/user-gitlab.go"
+      ],
+      "modified": [
+        "data/entity/user.go",
+        "interfaces/providers.go",
+        "interfaces/service.go",
+        "model/user.go",
+        "telegram/client.go"
+      ],
+      "removed": []
+    },
+    {
+      "id": "069a154c43ede6d08db9ef643c43b7e75ce6bed7",
+      "message": "Интерфейсы и сущности\n",
+      "title": "Интерфейсы и сущности",
+      "timestamp": "2021-06-10T01:48:08+03:00",
+      "url": "https://gitlab.ru/skilled/tn-cicd-tg-bot/-/commit/069a154c43ede6d08db9ef643c43b7e75ce6bed7",
+      "author": {
+        "name": "Alexander",
+        "email": "g.a.androidjc2@ya.ru"
+      },
+      "added": [
+        "data/entity/subscription-repositories.go",
+        "data/entity/user-gitlab.go",
+        "go.sum",
+        "model/subscription.go",
+        "model/user-gitlab.go"
+      ],
+      "modified": [
+        "data/entity/user.go",
+        "interfaces/providers.go",
+        "interfaces/service.go",
+        "model/user.go",
+        "telegram/client.go"
+      ],
+      "removed": []
+    },
+    {
+      "id": "5b4bdc6ab89d790b36b63d767f1de7f64183b87d",
+      "message": "клиент для бота\n",
+      "title": "клиент для бота",
+      "timestamp": "2021-06-10T00:43:02+03:00",
+      "url": "https://gitlab.ru/skilled/tn-cicd-tg-bot/-/commit/5b4bdc6ab89d790b36b63d767f1de7f64183b87d",
+      "author": {
+        "name": "Буков Александр Викторович (DigitalSpirit)",
+        "email": "olegthander@yander.ru"
+      },
+      "added": [
+        "app/app-holder.go",
+        "data/holder.go",
+        "interfaces/providers.go",
+        "interfaces/service.go",
+        "service/holder.go",
+        "service/pipelines.go",
+        "telegram/client.go"
+      ],
+      "modified": [
+        "cmd/tn-cicd-tg-bot/main.go",
+        "data/entity/user.go",
+        "data/provider/user.go",
+        "go.mod",
+        "migrations/1_migration.up.sql",
+        "model/user.go",
+        "service/user.go",
+        "transport/listener.go",
+        "transport/servers/pipeline.go"
+      ],
+      "removed": [
+        "app/provider-holder.go",
+        "data/interfaces.go",
+        "service/service-holder.go",
+        "transport/servers/user.go"
+      ]
+    }
+  ],
+  "total_commits_count": 3,
+  "push_options": {},
+  "repository": {
+    "name": "tn-cicd-tg-bot",
+    "url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+    "description": "",
+    "homepage": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
+    "git_http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git",
+    "git_ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+    "visibility_level": 0
+  }
+}
