@@ -144,7 +144,7 @@ func (s *SubscribeProcessor) Process(ctx context.Context, update tgbotapi.Update
 			PipelineEvents:           form.hookTypes[PipelineEvents],
 			WikiPageEvents:           form.hookTypes[WikiPageEvents],
 		}
-		s.finalizeChoose(update.CallbackQuery.Message.From.ID, form, bot)
+		s.finalizeChoose(form, bot)
 		_, err = s.service.Subscription().Subscribe(form.gitlab, form.tgUserId, webhook)
 		delete(s.subscribeForms, user.Id)
 		if err != nil {
@@ -324,14 +324,16 @@ func (s *SubscribeProcessor) updateHookTypeMessage(chatId int64, form *subscribe
 
 	message := tgbotapi.NewEditMessageReplyMarkup(chatId, form.lastMessage.MessageID, markup)
 
-	_, err := bot.Send(message)
+	msg, err := bot.Send(message)
 	if err != nil {
 		logrus.Error(err)
 	}
+
+	form.lastMessage = msg
 	return false
 }
 
-func (s *SubscribeProcessor) finalizeChoose(chatId int64, form *subscribeForm,
+func (s *SubscribeProcessor) finalizeChoose(form *subscribeForm,
 	bot *tgbotapi.BotAPI) {
 	buttons := make([]tgbotapi.InlineKeyboardButton, 0, 1)
 	for i, item := range eventsNames {
@@ -345,7 +347,7 @@ func (s *SubscribeProcessor) finalizeChoose(chatId int64, form *subscribeForm,
 
 	markup := utils.NewTgMessageButtonsMarkup(buttons, 2)
 
-	message := tgbotapi.NewEditMessageReplyMarkup(chatId, form.lastMessage.MessageID, markup)
+	message := tgbotapi.NewEditMessageReplyMarkup(form.lastMessage.Chat.ID, form.lastMessage.MessageID, markup)
 
 	_, err := bot.Send(message)
 	if err != nil {
