@@ -24,6 +24,7 @@ services:
 
   pgadmin:
     image: fenglc/pgadmin4:2.1-python2.7-alpine
+    restart: always
     depends_on:
       db:
         condition: service_healthy
@@ -38,6 +39,7 @@ services:
   migration:
     build:
       context: .
+    restart: on-failure
     depends_on:
       db:
         condition: service_healthy
