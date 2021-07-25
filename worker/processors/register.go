@@ -45,24 +45,24 @@ func NewRegisterProcessor(services interfaces.ServiceStorage) *Register {
 	}
 }
 
-func (r *Register) Process(ctx context.Context, update tgbotapi.Update, bot *tgbotapi.BotAPI) (isEnd bool) {
-	registration, ok := r.dialogContext[update.Message.From.ID]
+func (r *Register) Process(ctx context.Context, message *tgbotapi.Message, bot *tgbotapi.BotAPI) (isEnd bool) {
+	registration, ok := r.dialogContext[message.From.ID]
 	if !ok {
-		r.dialogContext[update.Message.From.ID] = &registrationProcess{
+		r.dialogContext[message.From.ID] = &registrationProcess{
 			CurrentStep: StepUsername,
 		}
-		_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Введите имя пользователя на Gitlab: @GitlabUser"))
+		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Введите имя пользователя на Gitlab: @GitlabUser"))
 		return false
 	}
-	messageText := update.Message.Text
+	messageText := message.Text
 	switch registration.CurrentStep {
 	case StepUsername:
 		registration.GitlabName = messageText
-		_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Введите токен для  Gitlab (необходимы права на использование API)"))
+		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Введите токен для  Gitlab (необходимы права на использование API)"))
 	case StepToken:
 		// Пока что нужен токен только со скопом на api
 		registration.GitlabToken = messageText
-		_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Введите домен Gitlab (стандартный gitlab.ru)"))
+		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Введите домен Gitlab (стандартный gitlab.ru)"))
 	case StepDomain:
 		registration.Domain = messageText
 	}
@@ -70,12 +70,12 @@ func (r *Register) Process(ctx context.Context, update tgbotapi.Update, bot *tgb
 	registration.CurrentStep++
 
 	if registration.CurrentStep >= StepEnd {
-		err := r.services.User().AddGitlabAccount(update.Message.From.ID, registration.ToDto())
+		err := r.services.User().AddGitlabAccount(message.From.ID, registration.ToDto())
 		if err != nil {
 			// TODO обработать
 		}
-		_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Успешная регистрация!"))
-		delete(r.dialogContext, update.Message.From.ID)
+		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Успешная регистрация!"))
+		delete(r.dialogContext, message.From.ID)
 		return true
 	}
 	return false

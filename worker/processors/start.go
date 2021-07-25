@@ -23,9 +23,9 @@ func (s *Start) IsInterceptor() bool {
 	return false
 }
 
-func (s *Start) Process(ctx context.Context, update tgbotapi.Update, bot *tgbotapi.BotAPI) (isEnd bool) {
+func (s *Start) Process(ctx context.Context, message *tgbotapi.Message, bot *tgbotapi.BotAPI) (isEnd bool) {
 	messageText := "Новый профиль телеграм добавлен."
-	_, _ = bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, messageText))
+	_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, messageText))
 
 	return true
 }

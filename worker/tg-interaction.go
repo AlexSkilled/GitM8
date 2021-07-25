@@ -60,28 +60,28 @@ func NewTelegramWorker(conf interfaces.Configuration,
 	}
 }
 
-func (t *Worker) handleCommands(ctx context.Context, userId int64, update tgbotapi.Update) {
-	if update.Message.Text == CommandExit {
+func (t *Worker) handleCommands(ctx context.Context, message *tgbotapi.Message) {
+	if message.Text == CommandExit {
 		// МБ в будущем будет необходимость прерывать не только заполнение форм, так что да
-		if interceptor, ok := t.interceptors[userId]; ok {
-			interceptor.DumpChatSession(update.Message.Chat.ID)
-			delete(t.interceptors, userId)
+		if interceptor, ok := t.interceptors[message.Chat.ID]; ok {
+			interceptor.DumpChatSession(message.Chat.ID)
+			delete(t.interceptors, message.Chat.ID)
 		}
 
-		_, _ = t.bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "Выполнение прервано"))
+		_, _ = t.bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Выполнение прервано"))
 		return
 	}
 
-	if processor, ok := t.processors[update.Message.Text]; ok {
+	if processor, ok := t.processors[message.Text]; ok {
 		if processor.IsInterceptor() {
-			t.interceptors[userId] = processor.(interfaces.Interceptor)
+			t.interceptors[message.Chat.ID] = processor.(interfaces.Interceptor)
 		}
 
-		processor.Process(ctx, update, t.bot)
+		processor.Process(ctx, message, t.bot)
 		return
 	}
 
-	logrus.Printf("Не знаю как обработать команду - `%s`", update.Message.Text)
+	logrus.Printf("Не знаю как обработать команду - `%s`", message.Text)
 }
 
 func (t *Worker) Start() {
@@ -91,41 +91,41 @@ func (t *Worker) Start() {
 	updChan := t.bot.GetUpdatesChan(updateConfig)
 
 	for update := range updChan {
-		var userId int64
-		var ctx context.Context
-		var err error
+
+		var message *tgbotapi.Message
+
 		if update.Message != nil {
-			userId = update.Message.From.ID
-
-			logrus.Infof("Пользователь %d в чате %d написал %s", userId, update.Message.Chat.ID, update.Message.Text)
-
-			ctx, err = t.fillContext(userId, update)
-			if err != nil {
-				logrus.Errorln(err)
-				continue
-			}
-
-			if strings.HasPrefix(update.Message.Text, CommandPrefix) {
-				t.handleCommands(ctx, userId, update)
-				continue
-			}
-
-		} else if update.CallbackQuery != nil {
-
-			userId = update.CallbackQuery.From.ID
-
-			logrus.Infof("Пользователь %d в чате %d ответил %s со значением %s", userId, update.CallbackQuery.Message.Chat.ID, update.CallbackQuery.Message.Text, update.CallbackQuery.Data)
-
-			ctx, err = t.fillContext(userId, update)
-			if err != nil {
-				logrus.Errorln(err)
-				continue
-			}
+			message = update.Message
+		} else if update.CallbackQuery.Message != nil {
+			message = update.CallbackQuery.Message
+			message.Text = update.CallbackQuery.Data
+			message.From = update.CallbackQuery.From
+		} else {
+			continue
 		}
 
-		interceptor, ok := t.interceptors[userId]
+		var ctx context.Context
+		var err error
+
+		userId := message.From.ID
+
+		chatId := message.Chat.ID
+		logrus.Infof("Пользователь %d в чате %d написал %s", userId, chatId, message.Text)
+
+		ctx, err = t.fillContext(message)
+		if err != nil {
+			logrus.Errorln(err)
+			continue
+		}
+
+		if strings.HasPrefix(message.Text, CommandPrefix) {
+			t.handleCommands(ctx, message)
+			continue
+		}
+
+		interceptor, ok := t.interceptors[chatId]
 		if ok {
-			if interceptor.Process(ctx, update, t.bot) {
+			if interceptor.Process(ctx, message, t.bot) {
 				delete(t.interceptors, userId)
 			}
 		}
@@ -147,19 +147,19 @@ func (t *Worker) SendMessage(chatIds []int32, msg string) {
 	}
 }
 
-func (t *Worker) fillContext(userId int64, update tgbotapi.Update) (context.Context, error) {
+func (t *Worker) fillContext(message *tgbotapi.Message) (context.Context, error) {
 
-	user, err := t.User().GetWithGitlabUsersById(userId)
+	user, err := t.User().GetWithGitlabUsersById(message.From.ID)
 	if err != nil {
 		if err == pg.ErrNoRows {
 			user, err = t.User().Register(model.User{
-				Id:         userId,
-				Name:       update.Message.From.FirstName,
-				TgUsername: update.Message.From.UserName,
+				Id:         message.From.ID,
+				Name:       message.From.FirstName,
+				TgUsername: message.From.UserName,
 			})
 
 			if err == nil {
-				t.processors[CommandStart].Process(context.Background(), update, t.bot)
+				t.processors[CommandStart].Process(context.Background(), message, t.bot)
 			}
 		}
 
@@ -170,6 +170,6 @@ func (t *Worker) fillContext(userId int64, update tgbotapi.Update) (context.Cont
 	}
 
 	ctx := context.WithValue(context.Background(), utils.ContextKey_User, user)
-
+	ctx = context.WithValue(ctx, utils.ContextKey_ChatId, message.Chat.ID)
 	return ctx, err
 }
