@@ -1,6 +1,8 @@
 package events
 
-import "time"
+import (
+	"time"
+)
 
 const PushHeader = "Push Hook"
 
@@ -62,4 +64,8 @@ type Push struct {
 		GitSshUrl       string `json:"git_ssh_url"`
 		VisibilityLevel int    `json:"visibility_level"`
 	} `json:"repository"`
+}
+
+func (p *Push) Process() (msg string, err error) {
+	return "", nil
 }

@@ -24,5 +24,5 @@ type SubscriptionProvider interface {
 
 type TicketProvider interface {
 	AddTicket(model.Ticket) (tickerId int32, err error)
-	AddTicketToUser(userId int64, ticketId int32) error
+	AddTicketToChat(chatId int64, ticketId int32) error
 }

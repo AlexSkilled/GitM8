@@ -7,7 +7,6 @@ import (
 type ServiceStorage interface {
 	User() UserService
 	Subscription() SubscriptionService
-	Announcer() AnnouncerService
 }
 
 type UserService interface {
@@ -27,12 +26,8 @@ type GitApiService interface {
 }
 
 type SubscriptionService interface {
-	Subscribe(user model.GitlabUser, tgUserId int64, hookInfo model.Hook) (ticketId int32, err error)
+	Subscribe(user model.GitlabUser, chatId int64, hookInfo model.Hook) (ticketId int32, err error)
 	GetRepositories(user model.GitlabUser) ([]model.Repository, error)
-}
-
-type AnnouncerService interface {
-	Announce(message interface{})
 }
 
 type Configuration interface {

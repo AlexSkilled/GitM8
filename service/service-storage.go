@@ -7,7 +7,6 @@ import (
 type Storage struct {
 	interfaces.UserService
 	interfaces.SubscriptionService
-	interfaces.AnnouncerService
 }
 
 var _ interfaces.ServiceStorage = (*Storage)(nil)
@@ -19,7 +18,6 @@ func NewStorage(providerStorage interfaces.ProviderStorage, conf interfaces.Conf
 	return &Storage{
 		UserService:         NewUserService(providerStorage),
 		SubscriptionService: NewSubscription(conf, providerStorage, gitlabApiService),
-		AnnouncerService:    NewAnnouncer(providerStorage),
 	}
 }
 
@@ -29,8 +27,4 @@ func (s *Storage) User() interfaces.UserService {
 
 func (s *Storage) Subscription() interfaces.SubscriptionService {
 	return s.SubscriptionService
-}
-
-func (s *Storage) Announcer() interfaces.AnnouncerService {
-	return s.AnnouncerService
 }

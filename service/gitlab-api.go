@@ -4,7 +4,6 @@ import (
 	config "gitlab-tg-bot/conf"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
-	"gitlab-tg-bot/transport"
 	"strconv"
 
 	"github.com/sirupsen/logrus"
@@ -22,7 +21,7 @@ var _ interfaces.GitApiService = (*GitlabApiService)(nil)
 
 func NewGitlabApiService(conf interfaces.Configuration) *GitlabApiService {
 	return &GitlabApiService{
-		webHookUrl: conf.GetString(config.WebHookUrl) + transport.Gitlab,
+		webHookUrl: conf.GetString(config.WebHookUrl) + model.Gitlab.GetUri(),
 	}
 }
 

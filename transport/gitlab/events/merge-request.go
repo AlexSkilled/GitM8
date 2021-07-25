@@ -1,6 +1,8 @@
 package events
 
-import "time"
+import (
+	"time"
+)
 
 const MergeRequestHeader = "Merge Request Hook"
 
@@ -175,4 +177,8 @@ type MergeRequest struct {
 		Description string `json:"description"`
 		Homepage    string `json:"homepage"`
 	} `json:"repository"`
+}
+
+func (p *MergeRequest) Process() (msg string, err error) {
+	return "", nil
 }

@@ -36,7 +36,7 @@ func NewSubscription(conf interfaces.Configuration, provider interfaces.Provider
 	}
 }
 
-func (s *SubscriptionService) Subscribe(gitlab model.GitlabUser, tgUserId int64, hookInfo model.Hook) (int32, error) {
+func (s *SubscriptionService) Subscribe(gitlab model.GitlabUser, chatId int64, hookInfo model.Hook) (int32, error) {
 	err := s.GitlabApi.AddWebHook(gitlab, hookInfo)
 	if err != nil {
 		logrus.Error(err)
@@ -45,6 +45,7 @@ func (s *SubscriptionService) Subscribe(gitlab model.GitlabUser, tgUserId int64,
 
 	ticket := model.Ticket{
 		MaintainerGitlabId: gitlab.Id,
+		ChatIds:            []int64{chatId},
 		RepositoryId:       hookInfo.RepoId,
 		HookTypes: map[string]interface{}{
 			HookTypePushEvents:               hookInfo.PushEvents,
@@ -62,10 +63,7 @@ func (s *SubscriptionService) Subscribe(gitlab model.GitlabUser, tgUserId int64,
 	if err != nil {
 		return 0, err
 	}
-	err = s.TicketProvider.AddTicketToUser(tgUserId, ticketId)
-	if err != nil {
-		return 0, err
-	}
+
 	return ticketId, nil
 }
 

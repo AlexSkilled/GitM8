@@ -3,12 +3,10 @@ package transport
 import (
 	configuration "gitlab-tg-bot/conf"
 	"gitlab-tg-bot/internal/interfaces"
+	"gitlab-tg-bot/service/model"
 	"gitlab-tg-bot/transport/gitlab"
 	"net/http"
 )
-
-const Gitlab = "gitlab" // на этот URI будут регистрироваться хуки для гита.
-// т.е гит будет слать хуки на http://our.service.web/gitlab
 
 type PublicHandler struct {
 	conf       interfaces.Configuration
@@ -18,15 +16,9 @@ type PublicHandler struct {
 }
 
 func ServeHTTP(conf interfaces.Configuration, services interfaces.ServiceStorage,
-	notifier interfaces.TelegramWorker) {
-	//instance := &PublicHandler{
-	//	conf:       conf,
-	//	notifier:   notifier,
-	//	processors: map[string]interfaces.PublicProcessor{},
-	//}
-	// TODO В пакете сделать функцию, для получения мапы всех обработчиков
-	//instance.processors[MergeRequestHeader] = &processors.MergeRequest{}
+	bot interfaces.TelegramWorker) {
 
-	http.Handle(Gitlab, gitlab.NewHandler(services.Announcer()))
-	http.ListenAndServe("localhost"+conf.GetString(configuration.ServerUrl), nil)
+	http.Handle(model.Gitlab.GetUri(), gitlab.NewHandler())
+
+	http.ListenAndServe(conf.GetString(configuration.ServerUrl), nil)
 }

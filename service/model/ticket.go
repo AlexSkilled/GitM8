@@ -5,4 +5,5 @@ type Ticket struct {
 	MaintainerGitlabId int64
 	RepositoryId       string
 	HookTypes          map[string]interface{}
+	ChatIds            []int64
 }

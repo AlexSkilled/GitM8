@@ -1,6 +1,8 @@
 package events
 
-import "time"
+import (
+	"time"
+)
 
 const PipelineHeader = "Pipeline Hook"
 
@@ -81,4 +83,8 @@ type Pipeline struct {
 			Size     interface{} `json:"size"`
 		} `json:"artifacts_file"`
 	} `json:"builds"`
+}
+
+func (p *Pipeline) Process() (msg string, err error) {
+	return "", nil
 }

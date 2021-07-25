@@ -5,7 +5,7 @@ NoAuth: true
 
 WorkAsPublicService: true
 IsDebugging: false
-WebHookUrl: https://tg-bot-catch.requestcatcher.com/
+WebHookUrl: https://tg-bot-catch.requestcatcher.com
 
 Db:
   ConnectionString: "postgres:5432"

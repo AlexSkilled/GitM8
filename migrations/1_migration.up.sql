@@ -32,8 +32,11 @@ CREATE TABLE IF NOT EXISTS ticket
     hook_types           JSONB
 );
 
-CREATE TABLE IF NOT EXISTS users_tickets
+CREATE TABLE IF NOT EXISTS tickets_chat_id
 (
-    tg_user_id INTEGER REFERENCES tg_user (id),
-    ticket_id  INTEGER REFERENCES ticket (id)
+    chat_id   INTEGER,
+    ticket_id INTEGER,
+    is_active  BOOLEAN,
+
+    UNIQUE (chat_id, ticket_id)
 );

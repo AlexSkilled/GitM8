@@ -146,10 +146,12 @@ func (s *SubscribeProcessor) Process(ctx context.Context, update tgbotapi.Update
 		}
 		s.finalizeChoose(form, bot)
 		_, err = s.service.Subscription().Subscribe(form.gitlab, form.tgUserId, webhook)
+
 		delete(s.subscribeForms, user.Id)
+
 		if err != nil {
 			logrus.Errorln(err)
-			bot.Send(tgbotapi.NewMessage(update.CallbackQuery.Message.Chat.ID,
+			_, _ = bot.Send(tgbotapi.NewMessage(update.CallbackQuery.Message.Chat.ID,
 				"Не удалось создать слушатель эвентов"+err.Error()))
 			return true
 		}

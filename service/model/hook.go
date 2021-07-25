@@ -5,24 +5,6 @@ import (
 	"net"
 )
 
-type XGitlabEvent string
-
-const (
-	HookTypePush             XGitlabEvent = "Push Hook"
-	HookTypePushTag          XGitlabEvent = "Tag Push Hook"
-	HookTypePushIssue        XGitlabEvent = "Issue Hook"
-	HookTypePushNote         XGitlabEvent = "Note Hook"
-	HookTypePushMergeRequest XGitlabEvent = "Merge Request Hook"
-	HookTypePushWiki         XGitlabEvent = "Wiki Page Hook"
-	HookTypePushPipeline     XGitlabEvent = "Pipeline Hook"
-	HookTypePushJob          XGitlabEvent = "Job Hook"
-	HookTypePushDeployment   XGitlabEvent = "Deployment Hook"
-	HookTypePushMember       XGitlabEvent = "Member Hook"
-	HookTypePushSubgroup     XGitlabEvent = "Subgroup Hook"
-	HookTypePushFeatureFlag  XGitlabEvent = "Feature Flag Hook"
-	HookTypePushRelease      XGitlabEvent = "Release Hook"
-)
-
 type Hook struct {
 	RepoId                   string
 	PushEvents               bool
