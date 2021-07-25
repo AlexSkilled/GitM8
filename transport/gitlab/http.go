@@ -2,7 +2,6 @@ package gitlab
 
 import (
 	"encoding/json"
-	"fmt"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/transport/gitlab/events"
 	"io/ioutil"
@@ -18,16 +17,20 @@ const (
 )
 
 type Handler struct {
-	events map[string]interfaces.HttpProcessor
+	events         map[string]interfaces.GitMapper
+	messageSender  interfaces.TelegramMessageSender
+	webhookService interfaces.WebhookService
 }
 
-func NewHandler() http.Handler {
+func NewHandler(storage interfaces.ServiceStorage, tg interfaces.TelegramMessageSender) http.Handler {
 	return &Handler{
-		events: map[string]interfaces.HttpProcessor{
+		events: map[string]interfaces.GitMapper{
 			events.PushHeader:         &events.Push{},
 			events.MergeRequestHeader: &events.MergeRequest{},
 			events.PipelineHeader:     &events.Pipeline{},
 		},
+		webhookService: storage.Webhook(),
+		messageSender:  tg,
 	}
 }
 
@@ -40,15 +43,21 @@ func (h *Handler) ServeHTTP(_ http.ResponseWriter, req *http.Request) {
 	b, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		logrus.Errorf("Ошибка при чтении тела запроса: %v", err)
+		return
 	}
 
 	err = json.Unmarshal(b, &event)
 	if err != nil {
 		logrus.Errorf("Ошибка при маршалинге тела запроса: %v", err)
+		return
 	}
-	msg, err := event.Process() // передать модель в сервис публикации
+	dto := event.ToModel()
+
+	msg, chatIds, err := h.webhookService.ProcessMessage(*dto)
 	if err != nil {
 		logrus.Errorf("Ошибка при маршалинге тела запроса: %v", err)
+		return
 	}
-	fmt.Println(msg)
+
+	h.messageSender.SendMessage(chatIds, msg)
 }

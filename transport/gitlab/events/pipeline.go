@@ -1,6 +1,7 @@
 package events
 
 import (
+	"gitlab-tg-bot/service/model"
 	"time"
 )
 
@@ -85,6 +86,6 @@ type Pipeline struct {
 	} `json:"builds"`
 }
 
-func (p *Pipeline) Process() (msg string, err error) {
-	return "", nil
+func (p *Pipeline) ToModel() *model.GitEvent {
+	return &model.GitEvent{}
 }

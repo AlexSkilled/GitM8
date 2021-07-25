@@ -1,6 +1,7 @@
 package events
 
 import (
+	"gitlab-tg-bot/service/model"
 	"time"
 )
 
@@ -66,6 +67,6 @@ type Push struct {
 	} `json:"repository"`
 }
 
-func (p *Push) Process() (msg string, err error) {
-	return "", nil
+func (p *Push) ToModel() *model.GitEvent {
+	return &model.GitEvent{}
 }

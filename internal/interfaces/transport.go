@@ -1,5 +1,7 @@
 package interfaces
 
-type HttpProcessor interface {
-	Process() (msg string, err error)
+import "gitlab-tg-bot/service/model"
+
+type GitMapper interface {
+	ToModel() *model.GitEvent
 }

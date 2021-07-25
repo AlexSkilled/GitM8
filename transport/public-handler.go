@@ -10,15 +10,14 @@ import (
 
 type PublicHandler struct {
 	conf       interfaces.Configuration
-	notifier   interfaces.TelegramWorker
 	processors map[string]interfaces.PublicProcessor
 	//services   service.Storage
 }
 
 func ServeHTTP(conf interfaces.Configuration, services interfaces.ServiceStorage,
-	bot interfaces.TelegramWorker) {
+	bot interfaces.TelegramMessageSender) {
 
-	http.Handle(model.Gitlab.GetUri(), gitlab.NewHandler())
+	http.Handle(model.Gitlab.GetUri(), gitlab.NewHandler(services, bot))
 
 	http.ListenAndServe(conf.GetString(configuration.ServerUrl), nil)
 }

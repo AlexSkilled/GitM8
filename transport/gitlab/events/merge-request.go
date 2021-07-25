@@ -1,6 +1,7 @@
 package events
 
 import (
+	"gitlab-tg-bot/service/model"
 	"time"
 )
 
@@ -179,6 +180,6 @@ type MergeRequest struct {
 	} `json:"repository"`
 }
 
-func (p *MergeRequest) Process() (msg string, err error) {
-	return "", nil
+func (p *MergeRequest) ToModel() *model.GitEvent {
+	return &model.GitEvent{}
 }

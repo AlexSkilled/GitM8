@@ -7,6 +7,7 @@ import (
 type ServiceStorage interface {
 	User() UserService
 	Subscription() SubscriptionService
+	Webhook() WebhookService
 }
 
 type UserService interface {
@@ -17,6 +18,10 @@ type UserService interface {
 
 type TelegramWorker interface {
 	Start()
+	TelegramMessageSender
+}
+
+type TelegramMessageSender interface {
 	SendMessage(chatId []int32, msg string)
 }
 
@@ -36,4 +41,8 @@ type Configuration interface {
 	GetInt32(string) int32
 	GetInt64(string) int64
 	GetString(string) string
+}
+
+type WebhookService interface {
+	ProcessMessage(event model.GitEvent) (msg string, chatIds []int32, err error)
 }
