@@ -34,9 +34,10 @@ CREATE TABLE IF NOT EXISTS ticket
 
 CREATE TABLE IF NOT EXISTS tickets_chat_id
 (
-    chat_id   INTEGER,
-    ticket_id INTEGER,
-    is_active  BOOLEAN,
+    chat_id      INTEGER,
+    ticket_id    INTEGER,
+    is_active    BOOLEAN DEFAULT TRUE,
+    is_notifying BOOLEAN DEFAULT TRUE,
 
     UNIQUE (chat_id, ticket_id)
 );

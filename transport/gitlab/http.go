@@ -53,11 +53,11 @@ func (h *Handler) ServeHTTP(_ http.ResponseWriter, req *http.Request) {
 	}
 	dto := event.ToModel()
 
-	msg, chatIds, err := h.webhookService.ProcessMessage(*dto)
+	msg, err := h.webhookService.ProcessMessage(*dto)
 	if err != nil {
 		logrus.Errorf("Ошибка при маршалинге тела запроса: %v", err)
 		return
 	}
 
-	h.messageSender.SendMessage(chatIds, msg)
+	h.messageSender.SendMessages(msg)
 }

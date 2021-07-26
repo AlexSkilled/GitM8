@@ -1,19 +1,19 @@
 package model
 
-type XGitEvent string
+type GitHookType string
 
 const (
-	GitEventPush             XGitEvent = "Push"
-	GitEventPushTag          XGitEvent = "Tag Push"
-	GitEventPushIssue        XGitEvent = "Issue"
-	GitEventPushNote         XGitEvent = "Note"
-	GitEventPushMergeRequest XGitEvent = "Merge Request"
-	GitEventPushWiki         XGitEvent = "Wiki Page"
-	GitEventPushPipeline     XGitEvent = "Pipeline"
-	GitEventPushJob          XGitEvent = "Job"
-	GitEventPushDeployment   XGitEvent = "Deployment"
-	GitEventPushMember       XGitEvent = "Member"
-	GitEventPushSubgroup     XGitEvent = "Subgroup"
-	GitEventPushFeatureFlag  XGitEvent = "Feature Flag"
-	GitEventPushRelease      XGitEvent = "Release"
+	GitEventPush         GitHookType = "Push"
+	GitEventTag          GitHookType = "Tag"
+	GitEventIssue        GitHookType = "Issue"
+	GitEventNote         GitHookType = "Note"
+	GitEventMergeRequest GitHookType = "Merge Request"
+	GitEventWiki         GitHookType = "Wiki Page"
+	GitEventPipeline     GitHookType = "Pipeline"
+	GitEventJob          GitHookType = "Job"
+	GitEventDeployment   GitHookType = "Deployment"
+	GitEventMember       GitHookType = "Member"
+	GitEventSubgroup     GitHookType = "Subgroup"
+	GitEventFeatureFlag  GitHookType = "Feature Flag"
+	GitEventRelease      GitHookType = "Release"
 )

@@ -74,6 +74,9 @@ func (t *Worker) handleCommands(ctx context.Context, message *tgbotapi.Message) 
 
 	if processor, ok := t.processors[message.Text]; ok {
 		if processor.IsInterceptor() {
+			if _, ok = t.interceptors[message.Chat.ID]; ok {
+				t.interceptors[message.Chat.ID].DumpChatSession(message.Chat.ID)
+			}
 			t.interceptors[message.Chat.ID] = processor.(interfaces.Interceptor)
 		}
 
@@ -132,11 +135,14 @@ func (t *Worker) Start() {
 	}
 }
 
-func (t *Worker) SendMessage(chatIds []int32, msg string) {
-	for _, id := range chatIds {
-		msgConf := tgbotapi.NewMessage(int64(id), msg)
+func (t *Worker) SendMessages(messages []model.OutputMessage) {
+	for _, msg := range messages {
+		msgConf := tgbotapi.NewMessage(msg.ChatId, msg.Msg)
 		msgConf.ParseMode = "Markdown"
-		msgConf.DisableNotification = true
+		msgConf.DisableWebPagePreview = false
+
+		msgConf.DisableNotification = msg.DisableNotification
+
 		message, err := t.bot.Send(msgConf)
 		if err != nil {
 			logrus.Errorln(err)

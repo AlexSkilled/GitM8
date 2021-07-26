@@ -22,7 +22,7 @@ type TelegramWorker interface {
 }
 
 type TelegramMessageSender interface {
-	SendMessage(chatId []int32, msg string)
+	SendMessages(message []model.OutputMessage)
 }
 
 type GitApiService interface {
@@ -44,5 +44,5 @@ type Configuration interface {
 }
 
 type WebhookService interface {
-	ProcessMessage(event model.GitEvent) (msg string, chatIds []int32, err error)
+	ProcessMessage(event model.GitEvent) (msg []model.OutputMessage, err error)
 }

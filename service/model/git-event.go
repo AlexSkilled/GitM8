@@ -15,5 +15,5 @@ func (g GitSource) GetUri() string {
 type GitEvent struct {
 	GitSource GitSource
 	ProjectId string
-	EventType XGitEvent
+	HookType  GitHookType
 }

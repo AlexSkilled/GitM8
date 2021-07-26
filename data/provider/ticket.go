@@ -37,7 +37,7 @@ func (t *TicketProvider) AddTicket(ticket model.Ticket) (ticketId int32, err err
 
 	var ticketEntity entity.Ticket
 	ticketEntity.FromDto(ticket)
-	_, err = t.Model(&ticketEntity).Insert()
+	_, err = tx.Model(&ticketEntity).Insert()
 	if err != nil {
 		return 0, err
 	}
@@ -48,7 +48,7 @@ func (t *TicketProvider) AddTicket(ticket model.Ticket) (ticketId int32, err err
 		ticketChatIds[i].ChatId = ticket.ChatIds[i]
 		ticketChatIds[i].IsActive = true
 	}
-	_, err = t.Model(&ticketChatIds).Insert()
+	_, err = tx.Model(&ticketChatIds).Insert()
 	if err != nil {
 		return 0, err
 	}
