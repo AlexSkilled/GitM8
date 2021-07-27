@@ -76,3 +76,8 @@ func (t *TicketProvider) AddTicketToChat(chatId int64, ticketId int32) error {
 	}
 	return nil
 }
+
+func (t *TicketProvider) GetTicketsToSend(repoId string, hookType model.GitHookType) ([]model.TicketChatId, error) {
+
+	return nil, nil
+}

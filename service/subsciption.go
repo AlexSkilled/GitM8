@@ -7,18 +7,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const (
-	HookTypePushEvents               = "PushEvents"
-	HookTypeIssuesEvents             = "IssuesEvents"
-	HookTypeConfidentialIssuesEvents = "ConfidentialIssuesEvents"
-	HookTypeMergeRequestsEvents      = "MergeRequestsEvents"
-	HookTypeTagPushEvents            = "TagPushEvents"
-	HookTypeNoteEvents               = "NoteEvents"
-	HookTypeJobEvents                = "JobEvents"
-	HookTypePipelineEvents           = "PipelineEvents"
-	HookTypeWikiPageEvents           = "WikiPageEvents"
-)
-
 type SubscriptionService struct {
 	TicketProvider interfaces.TicketProvider
 
@@ -47,16 +35,16 @@ func (s *SubscriptionService) Subscribe(gitlab model.GitlabUser, chatId int64, h
 		MaintainerGitlabId: gitlab.Id,
 		ChatIds:            []int64{chatId},
 		RepositoryId:       hookInfo.RepoId,
-		HookTypes: map[string]interface{}{
-			HookTypePushEvents:               hookInfo.PushEvents,
-			HookTypeIssuesEvents:             hookInfo.IssuesEvents,
-			HookTypeConfidentialIssuesEvents: hookInfo.ConfidentialIssuesEvents,
-			HookTypeMergeRequestsEvents:      hookInfo.MergeRequestsEvents,
-			HookTypeTagPushEvents:            hookInfo.TagPushEvents,
-			HookTypeNoteEvents:               hookInfo.NoteEvents,
-			HookTypeJobEvents:                hookInfo.JobEvents,
-			HookTypePipelineEvents:           hookInfo.PipelineEvents,
-			HookTypeWikiPageEvents:           hookInfo.WikiPageEvents,
+		HookTypes: map[model.GitHookType]interface{}{
+			model.HookTypePush:               hookInfo.PushEvents,
+			model.HookTypeIssues:             hookInfo.IssuesEvents,
+			model.HookTypeConfidentialIssues: hookInfo.ConfidentialIssuesEvents,
+			model.HookTypeMergeRequests:      hookInfo.MergeRequestsEvents,
+			model.HookTypeTagPush:            hookInfo.TagPushEvents,
+			model.HookTypeNote:               hookInfo.NoteEvents,
+			model.HookTypeJob:                hookInfo.JobEvents,
+			model.HookTypePipeline:           hookInfo.PipelineEvents,
+			model.HookTypeWikiPage:           hookInfo.WikiPageEvents,
 		},
 	}
 	ticketId, err := s.TicketProvider.AddTicket(ticket)
