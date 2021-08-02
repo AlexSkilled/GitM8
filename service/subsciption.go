@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
 
@@ -8,9 +9,9 @@ import (
 )
 
 type SubscriptionService struct {
-	TicketProvider interfaces.TicketProvider
-
 	GitlabApi interfaces.GitApiService
+
+	ticket interfaces.TicketProvider
 }
 
 var _ interfaces.SubscriptionService = (*SubscriptionService)(nil)
@@ -18,7 +19,7 @@ var _ interfaces.SubscriptionService = (*SubscriptionService)(nil)
 func NewSubscription(conf interfaces.Configuration, provider interfaces.ProviderStorage,
 	gitlabApi interfaces.GitApiService) *SubscriptionService {
 	return &SubscriptionService{
-		TicketProvider: provider.Ticket(),
+		ticket: provider.Ticket(),
 
 		GitlabApi: gitlabApi,
 	}
@@ -47,7 +48,7 @@ func (s *SubscriptionService) Subscribe(gitlab model.GitlabUser, chatId int64, h
 			model.HookTypeWikiPage:           hookInfo.WikiPageEvents,
 		},
 	}
-	ticketId, err := s.TicketProvider.AddTicket(ticket)
+	ticketId, err := s.ticket.AddTicket(ticket)
 	if err != nil {
 		return 0, err
 	}
@@ -57,4 +58,29 @@ func (s *SubscriptionService) Subscribe(gitlab model.GitlabUser, chatId int64, h
 
 func (s *SubscriptionService) GetRepositories(user model.GitlabUser) ([]model.Repository, error) {
 	return s.GitlabApi.GetRepositories(user)
+}
+
+func (s *SubscriptionService) ProcessMessage(event model.GitEvent) ([]model.OutputMessage, error) {
+	tickets, err := s.ticket.GetTicketsToSend(event.ProjectId, event.HookType)
+	fmt.Println(tickets)
+	if err != nil {
+		return nil, err
+	}
+	switch event.HookType {
+	//case model.GitEventPush:
+	//case model.GitEventPushTag:
+	//case model.GitEventPushIssue:
+	//case model.GitEventPushNote:
+	case model.HookTypePush:
+		//case model.GitEventWiki:
+		//case model.GitEventPipeline:
+		//case model.GitEventJob:
+		//case model.GitEventDeployment:
+		//case model.GitEventMember:
+		//case model.GitEventSubgroup:
+		//case model.GitEventFeatureFlag:
+		//case model.GitEventRelease:
+	}
+	messages := make([]model.OutputMessage, 0)
+	return messages, nil
 }

@@ -78,6 +78,20 @@ func (t *TicketProvider) AddTicketToChat(chatId int64, ticketId int32) error {
 }
 
 func (t *TicketProvider) GetTicketsToSend(repoId string, hookType model.GitHookType) ([]model.TicketChatId, error) {
+	var tickets entity.TicketChatIds
 
-	return nil, nil
+	_, err := t.DB.Query(&tickets, `
+SELECT
+	       tc.*
+FROM       tickets_chat_id  AS tc
+RIGHT JOIN ticket           AS t
+ON         tc.ticket_id      = t.id
+WHERE      t.repository_id   = ?
+AND        is_active = true
+AND        t.hook_types->> ? = 'true'`, repoId, hookType)
+
+	if err != nil {
+		return nil, err
+	}
+	return tickets.ToDto(), nil
 }
