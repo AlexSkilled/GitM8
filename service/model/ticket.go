@@ -21,3 +21,23 @@ const (
 	HookTypePipeline           GitHookType = "PipelineEvents"
 	HookTypeWikiPage           GitHookType = "WikiPageEvents"
 )
+
+type GitHookSubtype string
+
+const (
+	MROpened = "opened"
+	MRClosed = "closed"
+	MRLocked = "locked"
+	MRMerged = "merged"
+
+	MRApproved = "approved"
+	MRUpdated  = "update"
+	MROpen     = "open"
+)
+
+func (g GitHookType) GetSubs() []GitHookSubtype {
+	if g == HookTypeMergeRequests {
+		return []GitHookSubtype{MROpened, MRClosed, MRLocked, MRMerged, MRApproved, MRUpdated, MROpen}
+	}
+	return nil
+}

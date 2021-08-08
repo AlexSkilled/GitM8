@@ -41,3 +41,21 @@ CREATE TABLE IF NOT EXISTS tickets_chat_id
 
     UNIQUE (chat_id, ticket_id)
 );
+
+CREATE TYPE message_type_pattern_enum AS ENUM (
+    'PushEvents',
+    'IssuesEvents',
+    'ConfidentialIssuesEvents',
+    'MergeRequestsEvents',
+    'TagPushEvents',
+    'NoteEvents',
+    'JobEvents',
+    'PipelineEvents',
+    'WikiPageEvents');
+
+CREATE TABLE message_pattern
+(
+    hook_type message_type_pattern_enum,
+    lang      TEXT,
+    patterns  JSONB
+)

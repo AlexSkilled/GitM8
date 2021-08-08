@@ -66,21 +66,16 @@ func (s *SubscriptionService) ProcessMessage(event model.GitEvent) ([]model.Outp
 	if err != nil {
 		return nil, err
 	}
+
+	var messageText string
+
 	switch event.HookType {
-	//case model.GitEventPush:
-	//case model.GitEventPushTag:
-	//case model.GitEventPushIssue:
-	//case model.GitEventPushNote:
-	case model.HookTypePush:
-		//case model.GitEventWiki:
-		//case model.GitEventPipeline:
-		//case model.GitEventJob:
-		//case model.GitEventDeployment:
-		//case model.GitEventMember:
-		//case model.GitEventSubgroup:
-		//case model.GitEventFeatureFlag:
-		//case model.GitEventRelease:
+	case model.HookTypeMergeRequests:
+		messageText = ""
 	}
+
 	messages := make([]model.OutputMessage, 0)
+	messages[0].Msg = messageText
+
 	return messages, nil
 }
