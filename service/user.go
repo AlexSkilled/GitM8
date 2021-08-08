@@ -29,21 +29,25 @@ func (u *UserService) Register(user model.User) (model.User, error) {
 	return u.UserProvider.Create(user)
 }
 
-func (u *UserService) AddGitlabAccount(tgId int64, gitlab model.GitlabUser) error {
-	if !strings.HasPrefix(gitlab.Domain, "http") {
-		gitlab.Domain = "https://" + gitlab.Domain
+func (u *UserService) AddGitAccount(tgId int64, gitAccount model.GitUser) error {
+	if !strings.HasPrefix(gitAccount.Domain, "http") {
+		gitAccount.Domain = "https://" + gitAccount.Domain
 	}
 
-	if !strings.HasSuffix(gitlab.Domain, "/") {
-		gitlab.Domain += "/"
+	if !strings.HasSuffix(gitAccount.Domain, "/") {
+		gitAccount.Domain += "/"
 	}
 
-	client := gapi.NewGitlab(gitlab.Domain, StandardApiLevel, gitlab.Token)
+	client := gapi.NewGitlab(gitAccount.Domain, StandardApiLevel, gitAccount.Token)
 	user, _, err := client.CurrentUser()
 	if err != nil {
+		// тк пока работаем только с гитлабом, оставляем обработку так,
+		// в будущем при добавлении пользователя будет посылаться несколько запросов
+		// успешный будет определять с каким гитом (github/gitlab/bitbucket/etc...) будет работать
+		// этот токен
 		return err
 	}
-	gitlab.Email = user.Email
-
-	return u.UserProvider.AddGitlab(tgId, gitlab)
+	gitAccount.Email = user.Email
+	gitAccount.Username = user.Username
+	return u.UserProvider.AddGit(tgId, gitAccount)
 }

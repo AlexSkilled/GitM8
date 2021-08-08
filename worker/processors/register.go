@@ -10,8 +10,7 @@ import (
 )
 
 const (
-	StepUsername interfaces.StepName = iota
-	StepToken
+	StepToken interfaces.StepName = iota
 	StepDomain
 	StepEnd
 )
@@ -28,8 +27,8 @@ type registrationProcess struct {
 	CurrentStep interfaces.StepName
 }
 
-func (r *registrationProcess) ToDto() model.GitlabUser {
-	return model.GitlabUser{
+func (r *registrationProcess) ToDto() model.GitUser {
+	return model.GitUser{
 		Username: r.GitlabName,
 		Token:    r.GitlabToken,
 		Domain:   r.Domain,
@@ -49,18 +48,14 @@ func (r *Register) Process(ctx context.Context, message *tgbotapi.Message, bot *
 	registration, ok := r.dialogContext[message.From.ID]
 	if !ok {
 		r.dialogContext[message.From.ID] = &registrationProcess{
-			CurrentStep: StepUsername,
+			CurrentStep: StepToken,
 		}
-		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Введите имя пользователя на Gitlab: @GitlabUser"))
+		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Введите токен для  Gitlab (необходимы права на использование API)"))
 		return false
 	}
 	messageText := message.Text
 	switch registration.CurrentStep {
-	case StepUsername:
-		registration.GitlabName = messageText
-		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Введите токен для  Gitlab (необходимы права на использование API)"))
 	case StepToken:
-		// Пока что нужен токен только со скопом на api
 		registration.GitlabToken = messageText
 		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Введите домен Gitlab (стандартный gitlab.ru)"))
 	case StepDomain:
@@ -70,7 +65,7 @@ func (r *Register) Process(ctx context.Context, message *tgbotapi.Message, bot *
 	registration.CurrentStep++
 
 	if registration.CurrentStep >= StepEnd {
-		err := r.services.User().AddGitlabAccount(message.From.ID, registration.ToDto())
+		err := r.services.User().AddGitAccount(message.From.ID, registration.ToDto())
 		if err != nil {
 			// TODO обработать
 		}

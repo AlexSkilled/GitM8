@@ -2,6 +2,7 @@ package events
 
 import (
 	"gitlab-tg-bot/service/model"
+	"strconv"
 	"time"
 )
 
@@ -181,5 +182,9 @@ type MergeRequest struct {
 }
 
 func (p *MergeRequest) ToModel() *model.GitEvent {
-	return &model.GitEvent{}
+	return &model.GitEvent{
+		GitSource: model.Gitlab,
+		ProjectId: strconv.Itoa(p.Project.Id),
+		HookType:  "",
+	}
 }

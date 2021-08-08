@@ -4,28 +4,29 @@ import (
 	"gitlab-tg-bot/service/model"
 )
 
-type GitlabUsers []GitlabUser
+type GitlabUsers []GitUser
 
-func (u *GitlabUsers) ToModel() []model.GitlabUser {
-	out := make([]model.GitlabUser, len(*u))
+func (u *GitlabUsers) ToModel() []model.GitUser {
+	out := make([]model.GitUser, len(*u))
 	for i, item := range *u {
 		out[i] = item.ToModel()
 	}
 	return out
 }
 
-type GitlabUser struct {
-	tableName struct{} `pg:"gitlab_user"`
+type GitUser struct {
+	tableName struct{} `pg:"git_user"`
 	Id        int64
 	Name      string
 	UserId    int64
 	Email     string
 	Token     string
 	Domain    string
+	GitSource model.GitSource
 }
 
-func (u *GitlabUser) ToModel() model.GitlabUser {
-	return model.GitlabUser{
+func (u *GitUser) ToModel() model.GitUser {
+	return model.GitUser{
 		Id:       u.Id,
 		Email:    u.Email,
 		Username: u.Email,
@@ -34,7 +35,7 @@ func (u *GitlabUser) ToModel() model.GitlabUser {
 	}
 }
 
-func (u *GitlabUser) FromModel(id int64, user model.GitlabUser) {
+func (u *GitUser) FromModel(id int64, user model.GitUser) {
 	u.UserId = id
 	u.Email = user.Email
 	u.Token = user.Token

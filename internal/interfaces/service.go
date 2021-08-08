@@ -13,7 +13,7 @@ type ServiceStorage interface {
 type UserService interface {
 	GetWithGitlabUsersById(id int64) (model.User, error)
 	Register(user model.User) (model.User, error)
-	AddGitlabAccount(tgId int64, gitlab model.GitlabUser) error
+	AddGitAccount(tgId int64, gitlab model.GitUser) error
 }
 
 type TelegramWorker interface {
@@ -26,13 +26,13 @@ type TelegramMessageSender interface {
 }
 
 type GitApiService interface {
-	GetRepositories(user model.GitlabUser) ([]model.Repository, error)
-	AddWebHook(user model.GitlabUser, hookInfo model.Hook) error
+	GetRepositories(user model.GitUser) ([]model.Repository, error)
+	AddWebHook(user model.GitUser, hookInfo model.Hook) error
 }
 
 type SubscriptionService interface {
-	Subscribe(user model.GitlabUser, chatId int64, hookInfo model.Hook) (ticketId int32, err error)
-	GetRepositories(user model.GitlabUser) ([]model.Repository, error)
+	Subscribe(user model.GitUser, chatId int64, hookInfo model.Hook) (ticketId int32, err error)
+	GetRepositories(user model.GitUser) ([]model.Repository, error)
 }
 
 type Configuration interface {

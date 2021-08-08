@@ -54,8 +54,8 @@ func (u *UserProvider) GetWithGitlabUsers(id int64) (model.User, error) {
 	return user, err
 }
 
-func (u *UserProvider) AddGitlab(userId int64, gitlab model.GitlabUser) error {
-	var gitlabEnt entity.GitlabUser
+func (u *UserProvider) AddGit(userId int64, gitlab model.GitUser) error {
+	var gitlabEnt entity.GitUser
 	gitlabEnt.FromModel(userId, gitlab)
 
 	_, err := u.Model(&gitlabEnt).Insert()

@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	config "gitlab-tg-bot/conf"
+	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 
@@ -27,12 +29,44 @@ func main() {
 		} else {
 		}
 		oldVersion, newVersion, err = migrations.Run(db, pflag.Args()...)
+		if err != nil {
+
+		}
 	}
 	if err != nil {
 		fmt.Printf("%s\n", err.Error())
 		os.Exit(1)
 	}
 	fmt.Println(oldVersion, " -> ", newVersion)
+
+	wd, _ := os.Getwd()
+	wd += "\\migrations\\message-patterns-data\\"
+	patterns, err := ioutil.ReadDir(wd)
+	if err != nil {
+		logrus.Error(err)
+		return
+	}
+
+	insertionScript := strings.Builder{}
+
+	for _, f := range patterns {
+		name := f.Name()
+		if strings.Contains(name, ".sql") {
+			file, err := ioutil.ReadFile(wd + name)
+			if err != nil {
+				logrus.Error(err)
+				continue
+			}
+
+			insertionScript.Write(file)
+		}
+	}
+
+	_, err = db.Exec(insertionScript.String())
+	if err != nil {
+		logrus.Error(err)
+	}
+
 }
 
 func Connect() *pg.DB {

@@ -5,5 +5,5 @@ type User struct {
 	Name       string
 	TgUsername string
 
-	Gitlabs []GitlabUser
+	Gitlabs []GitUser
 }

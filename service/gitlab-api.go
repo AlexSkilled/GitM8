@@ -25,7 +25,7 @@ func NewGitlabApiService(conf interfaces.Configuration) *GitlabApiService {
 	}
 }
 
-func (g *GitlabApiService) GetRepositories(gitlabUser model.GitlabUser) ([]model.Repository, error) {
+func (g *GitlabApiService) GetRepositories(gitlabUser model.GitUser) ([]model.Repository, error) {
 	client := gapi.NewGitlab(gitlabUser.Domain, StandardApiLevel, gitlabUser.Token)
 
 	list, _, err := client.Projects(&gapi.ProjectsOptions{Membership: true})
@@ -36,7 +36,7 @@ func (g *GitlabApiService) GetRepositories(gitlabUser model.GitlabUser) ([]model
 	return g.toModelProjects(list), err
 }
 
-func (g *GitlabApiService) AddWebHook(gitlabUser model.GitlabUser, hookInfo model.Hook) error {
+func (g *GitlabApiService) AddWebHook(gitlabUser model.GitUser, hookInfo model.Hook) error {
 	client := gapi.NewGitlab(gitlabUser.Domain, StandardApiLevel, gitlabUser.Token)
 
 	addr, _ := model.GetMyInterfaceAddr()

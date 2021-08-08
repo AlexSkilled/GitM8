@@ -67,7 +67,7 @@ type subscribeForm struct {
 	domain       string
 	repositoryId string
 	tgUserId     int64
-	gitlab       model.GitlabUser
+	gitlab       model.GitUser
 	currentStep  SubscriptionStep
 	hookTypes    map[HookType]bool
 	lastMessage  tgbotapi.Message

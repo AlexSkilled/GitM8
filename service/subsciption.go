@@ -25,7 +25,7 @@ func NewSubscription(conf interfaces.Configuration, provider interfaces.Provider
 	}
 }
 
-func (s *SubscriptionService) Subscribe(gitlab model.GitlabUser, chatId int64, hookInfo model.Hook) (int32, error) {
+func (s *SubscriptionService) Subscribe(gitlab model.GitUser, chatId int64, hookInfo model.Hook) (int32, error) {
 	err := s.GitlabApi.AddWebHook(gitlab, hookInfo)
 	if err != nil {
 		logrus.Error(err)
@@ -56,7 +56,7 @@ func (s *SubscriptionService) Subscribe(gitlab model.GitlabUser, chatId int64, h
 	return ticketId, nil
 }
 
-func (s *SubscriptionService) GetRepositories(user model.GitlabUser) ([]model.Repository, error) {
+func (s *SubscriptionService) GetRepositories(user model.GitUser) ([]model.Repository, error) {
 	return s.GitlabApi.GetRepositories(user)
 }
 
