@@ -95,3 +95,20 @@ AND        t.hook_types->> ? = 'true'`, repoId, hookType)
 	}
 	return tickets.ToDto(), nil
 }
+
+func (t *TicketProvider) GetGitUserByTicketId(ticketId int32) (model.GitUser, error) {
+	var git entity.GitUser
+
+	_, err := t.DB.Query(&git, `
+			SELECT
+			       git_user.*
+			FROM   git_user
+
+			RIGHT  JOIN ticket t 
+		  	ON          git_user.id = t.maintainer_gitlab_id
+			WHERE       t.id        = ?`, ticketId)
+	if err != nil {
+		return model.GitUser{}, err
+	}
+	return git.ToModel(), nil
+}

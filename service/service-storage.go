@@ -7,7 +7,7 @@ import (
 type Storage struct {
 	interfaces.UserService
 	interfaces.SubscriptionService
-	interfaces.WebhookService
+	interfaces.MessageService
 }
 
 var _ interfaces.ServiceStorage = (*Storage)(nil)
@@ -19,6 +19,7 @@ func NewStorage(providerStorage interfaces.ProviderStorage, conf interfaces.Conf
 	return &Storage{
 		UserService:         NewUserService(providerStorage),
 		SubscriptionService: NewSubscription(conf, providerStorage, gitlabApiService),
+		MessageService:      NewMessageService(gitlabApiService, providerStorage),
 	}
 }
 
@@ -30,6 +31,6 @@ func (s *Storage) Subscription() interfaces.SubscriptionService {
 	return s.SubscriptionService
 }
 
-func (s *Storage) Webhook() interfaces.WebhookService {
-	return s.WebhookService
+func (s *Storage) MessageHandler() interfaces.MessageService {
+	return s.MessageService
 }

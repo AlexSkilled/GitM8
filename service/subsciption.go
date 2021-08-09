@@ -1,10 +1,8 @@
 package service
 
 import (
-	"fmt"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
-	"gitlab-tg-bot/service/processor"
 
 	"github.com/sirupsen/logrus"
 )
@@ -60,31 +58,4 @@ func (s *SubscriptionService) Subscribe(gitlab model.GitUser, chatId int64, hook
 
 func (s *SubscriptionService) GetRepositories(user model.GitUser) ([]model.Repository, error) {
 	return s.GitlabApi.GetRepositories(user)
-}
-
-func (s *SubscriptionService) ProcessMessage(event model.GitEvent) ([]model.OutputMessage, error) {
-	tickets, err := s.ticket.GetTicketsToSend(event.ProjectId, event.HookType)
-	fmt.Println(tickets)
-	if err != nil {
-		return nil, err
-	}
-
-	messageText, additional, err := s.patterns.GetMessage("ru_RU", event.HookType, event.SubType)
-	if err != nil {
-
-	}
-
-	switch event.HookType {
-	case model.HookTypeMergeRequests:
-		messageText = processor.ProcessMergeRequest(event, messageText, additional)
-	}
-
-	messages := make([]model.OutputMessage, len(tickets))
-
-	for i, item := range tickets {
-		messages[i].Msg = messageText
-		messages[i].ChatId = item.ChatId
-	}
-
-	return messages, nil
 }

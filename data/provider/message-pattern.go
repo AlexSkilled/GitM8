@@ -24,8 +24,8 @@ func (m *MessagePatternProvider) GetMessage(lang string, hookType model.GitHookT
 	var pattern entity.MessagePattern
 	_, err := m.Query(&pattern, `
 				SELECT 
-					  patterns->> ?,
-					  additional_patterns
+					  patterns->> ? AS message,
+					  additional_patterns AS additional_patterns
  			  	FROM  message_pattern
 				WHERE lang      = ?
 				AND   hook_type = ?`, subType, lang, hookType)

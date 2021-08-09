@@ -19,7 +19,7 @@ const (
 type Handler struct {
 	events         map[string]interfaces.GitMapper
 	messageSender  interfaces.TelegramMessageSender
-	webhookService interfaces.WebhookService
+	messageService interfaces.MessageService
 }
 
 func NewHandler(storage interfaces.ServiceStorage, tg interfaces.TelegramMessageSender) http.Handler {
@@ -29,7 +29,7 @@ func NewHandler(storage interfaces.ServiceStorage, tg interfaces.TelegramMessage
 			events.MergeRequestHeader: &events.MergeRequest{},
 			events.PipelineHeader:     &events.Pipeline{},
 		},
-		webhookService: storage.Webhook(),
+		messageService: storage.MessageHandler(),
 		messageSender:  tg,
 	}
 }
@@ -53,7 +53,7 @@ func (h *Handler) ServeHTTP(_ http.ResponseWriter, req *http.Request) {
 	}
 	dto := event.ToModel()
 
-	msg, err := h.webhookService.ProcessMessage(*dto)
+	msg, err := h.messageService.ProcessMessage(dto)
 	if err != nil {
 		logrus.Errorf("Ошибка при маршалинге тела запроса: %v", err)
 		return

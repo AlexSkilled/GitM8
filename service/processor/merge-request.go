@@ -8,24 +8,26 @@ import (
 
 func ProcessMergeRequest(event model.GitEvent, messageText string, additional map[string]string) string {
 	sb := strings.Builder{}
+
+	mergeRequestNameWithLink := "[" + event.Payload[model.PKHeader] + "](" + event.Payload[model.PKLink] + ")"
+
 	sb.WriteString(
 		fmt.Sprintf(messageText,
 			event.ProjectName,
-			event.Payload[model.PKHeader],
+			mergeRequestNameWithLink,
 			event.Payload[model.PKSourceBranch],
 			event.Payload[model.PKTargetBranch],
 			event.Payload[model.PKCreatedByUser]))
 
 	if assignedToUser, ok := event.Payload[model.PKmrAssignedToUser]; ok {
-		sb.WriteString(
-			fmt.Sprintf(additional[model.MRSubInfoKey_AssignedTo], assignedToUser))
+		sb.WriteString(fmt.Sprintf(additional[model.MRSubInfoKey_AssignedTo], assignedToUser))
 	}
 
 	switch event.SubType {
 	case model.MRApproved:
 		sb.WriteString(
 			fmt.Sprintf(additional[model.MRSubInfoKey_ApprovedBy],
-				event.Payload[model.PKmrApprovedBy]))
+				event.Payload[model.PKTriggeredByUser]))
 	case model.MRClose:
 		sb.WriteString(
 			fmt.Sprintf(additional[model.MRSubInfoKey_ClosedBy],
@@ -33,7 +35,7 @@ func ProcessMergeRequest(event model.GitEvent, messageText string, additional ma
 	case model.MRMerge:
 		sb.WriteString(
 			fmt.Sprintf(additional[model.MRSubInfoKey_MergedBy],
-				event.Payload[model.PKmrMergedBy]))
+				event.Payload[model.PKTriggeredByUser]))
 	case model.MRUpdated:
 		sb.WriteString(
 			fmt.Sprintf(additional[model.MRSubInfoKey_UpdatedBy],
@@ -42,5 +44,6 @@ func ProcessMergeRequest(event model.GitEvent, messageText string, additional ma
 
 	}
 
+	//sb.WriteString("\n[link](https://google.com)")
 	return sb.String()
 }

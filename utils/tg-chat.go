@@ -1,6 +1,10 @@
 package utils
 
-import tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+import (
+	"strings"
+
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+)
 
 func NewTgMessageButtonsMarkup(buttons []tgbotapi.InlineKeyboardButton, buttonsInRaw int) tgbotapi.InlineKeyboardMarkup {
 	finalButtonsSet := make([][]tgbotapi.InlineKeyboardButton, 0, 1)
@@ -16,4 +20,23 @@ func NewTgMessageButtonsMarkup(buttons []tgbotapi.InlineKeyboardButton, buttonsI
 	}
 
 	return tgbotapi.InlineKeyboardMarkup{InlineKeyboard: finalButtonsSet}
+}
+
+func EscapeLinkSymbols(in string) (out string) {
+	in = strings.Replace(in, "_", "\\_", -1)
+	return in
+}
+
+func EscapeNameSymbols(in string) (out string) {
+	in = EscapeLinkSymbols(in)
+
+	in = strings.Replace(in, ".", "\\.", -1)
+	in = strings.Replace(in, "*", "\\*", -1)
+	in = strings.Replace(in, "[", "\\[", -1)
+	in = strings.Replace(in, "]", "\\]", -1)
+	in = strings.Replace(in, "`", "\\`", -1)
+	in = strings.Replace(in, "(", "\\(", -1)
+	in = strings.Replace(in, ")", "\\)", -1)
+	in = strings.Replace(in, ">", "\\>", -1)
+	return in
 }

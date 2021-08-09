@@ -139,7 +139,7 @@ func (t *Worker) SendMessages(messages []model.OutputMessage) {
 	for _, msg := range messages {
 		msgConf := tgbotapi.NewMessage(msg.ChatId, msg.Msg)
 		msgConf.ParseMode = "Markdown"
-		msgConf.DisableWebPagePreview = false
+		msgConf.DisableWebPagePreview = true
 
 		msgConf.DisableNotification = msg.DisableNotification
 

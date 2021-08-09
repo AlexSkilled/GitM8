@@ -62,6 +62,19 @@ func (g *GitlabApiService) AddWebHook(gitlabUser model.GitUser, hookInfo model.H
 	return nil
 }
 
+func (g *GitlabApiService) GetUser(git model.GitUser, userId string) (model.GitUserInfo, error) {
+	client := gapi.NewGitlab(git.Domain, StandardApiLevel, git.Token)
+	user, _, err := client.User(userId)
+	if err != nil {
+		return model.GitUserInfo{}, nil
+	}
+	return model.GitUserInfo{
+		Id:   int32(user.Id),
+		Name: user.Name,
+		Url:  user.WebUrl,
+	}, nil
+}
+
 func (g *GitlabApiService) toModelProjects(in *gapi.ProjectCollection) []model.Repository {
 	out := make([]model.Repository, len(in.Items))
 	for i, item := range in.Items {

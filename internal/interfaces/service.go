@@ -7,7 +7,7 @@ import (
 type ServiceStorage interface {
 	User() UserService
 	Subscription() SubscriptionService
-	Webhook() WebhookService
+	MessageHandler() MessageService
 }
 
 type UserService interface {
@@ -28,6 +28,7 @@ type TelegramMessageSender interface {
 type GitApiService interface {
 	GetRepositories(user model.GitUser) ([]model.Repository, error)
 	AddWebHook(user model.GitUser, hookInfo model.Hook) error
+	GetUser(git model.GitUser, userId string) (model.GitUserInfo, error)
 }
 
 type SubscriptionService interface {
@@ -43,6 +44,6 @@ type Configuration interface {
 	GetString(string) string
 }
 
-type WebhookService interface {
+type MessageService interface {
 	ProcessMessage(event model.GitEvent) (msg []model.OutputMessage, err error)
 }

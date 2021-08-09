@@ -3,6 +3,7 @@ package events
 import (
 	"gitlab-tg-bot/service/model"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -36,7 +37,7 @@ type MergeRequest struct {
 		HttpUrl           string      `json:"http_url"`
 	} `json:"project"`
 	ObjectAttributes struct {
-		AssigneeId     interface{} `json:"assignee_id"`
+		AssigneeId     int         `json:"assignee_id"`
 		AuthorId       int         `json:"author_id"`
 		CreatedAt      string      `json:"created_at"`
 		Description    string      `json:"description"`
@@ -172,6 +173,7 @@ type MergeRequest struct {
 			Previous interface{} `json:"previous"`
 			Current  string      `json:"current"`
 		} `json:"updated_at"`
+		Oldrev string `json:"oldrev"`
 	} `json:"changes"`
 	Repository struct {
 		Name        string `json:"name"`
@@ -179,15 +181,39 @@ type MergeRequest struct {
 		Description string `json:"description"`
 		Homepage    string `json:"homepage"`
 	} `json:"repository"`
+	Assignees []struct {
+		Name      string `json:"name"`
+		Username  string `json:"username"`
+		AvatarUrl string `json:"avatar_url"`
+		Email     string `json:"email"`
+	} `json:"assignees"`
 }
 
-func (p *MergeRequest) ToModel() *model.GitEvent {
-	return &model.GitEvent{
+func (p *MergeRequest) ToModel() model.GitEvent {
+	payload := make(map[model.PayloadKey]string)
+	payload[model.PKHeader] = p.ObjectAttributes.Title
+	payload[model.PKSourceBranch] = p.ObjectAttributes.SourceBranch
+	payload[model.PKTargetBranch] = p.ObjectAttributes.TargetBranch
+	payload[model.PKCreatedByUser] = strconv.Itoa(p.ObjectAttributes.AuthorId)
+
+	if p.Assignees != nil {
+		assignedToArray := make([]string, len(p.Assignees))
+		for i, item := range p.Assignees {
+			assignedToArray[i] = item.Name
+		}
+		payload[model.PKmrAssignedToUser] = strings.Join(assignedToArray, ", ")
+	}
+	payload[model.PKTriggeredByUser] = p.User.Name
+
+	payload[model.PKLink] = p.ObjectAttributes.Url
+
+	return model.GitEvent{
 		GitSource:   model.Gitlab,
 		ProjectId:   strconv.Itoa(p.Project.Id),
 		ProjectName: p.Project.Name,
 		HookType:    model.HookTypeMergeRequests,
 		SubType:     convertSubType(p.ObjectAttributes.Action),
+		Payload:     payload,
 	}
 }
 

@@ -86,6 +86,6 @@ type Pipeline struct {
 	} `json:"builds"`
 }
 
-func (p *Pipeline) ToModel() *model.GitEvent {
-	return &model.GitEvent{}
+func (p *Pipeline) ToModel() model.GitEvent {
+	return model.GitEvent{}
 }

@@ -27,6 +27,7 @@ type TicketProvider interface {
 	AddTicket(model.Ticket) (tickerId int32, err error)
 	AddTicketToChat(chatId int64, ticketId int32) error
 	GetTicketsToSend(repoId string, hookType model.GitHookType) ([]model.TicketChatId, error)
+	GetGitUserByTicketId(ticketId int32) (model.GitUser, error)
 }
 
 type MessagePatternProvider interface {

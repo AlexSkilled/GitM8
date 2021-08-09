@@ -67,6 +67,6 @@ type Push struct {
 	} `json:"repository"`
 }
 
-func (p *Push) ToModel() *model.GitEvent {
-	return &model.GitEvent{}
+func (p *Push) ToModel() model.GitEvent {
+	return model.GitEvent{}
 }
