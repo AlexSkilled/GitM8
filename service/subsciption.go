@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
+	"gitlab-tg-bot/service/processor"
 
 	"github.com/sirupsen/logrus"
 )
@@ -11,7 +12,8 @@ import (
 type SubscriptionService struct {
 	GitlabApi interfaces.GitApiService
 
-	ticket interfaces.TicketProvider
+	ticket   interfaces.TicketProvider
+	patterns interfaces.MessagePatternProvider
 }
 
 var _ interfaces.SubscriptionService = (*SubscriptionService)(nil)
@@ -19,8 +21,8 @@ var _ interfaces.SubscriptionService = (*SubscriptionService)(nil)
 func NewSubscription(conf interfaces.Configuration, provider interfaces.ProviderStorage,
 	gitlabApi interfaces.GitApiService) *SubscriptionService {
 	return &SubscriptionService{
-		ticket: provider.Ticket(),
-
+		ticket:    provider.Ticket(),
+		patterns:  provider.MessagePattern(),
 		GitlabApi: gitlabApi,
 	}
 }
@@ -67,15 +69,22 @@ func (s *SubscriptionService) ProcessMessage(event model.GitEvent) ([]model.Outp
 		return nil, err
 	}
 
-	var messageText string
+	messageText, additional, err := s.patterns.GetMessage("ru_RU", event.HookType, event.SubType)
+	if err != nil {
+
+	}
 
 	switch event.HookType {
 	case model.HookTypeMergeRequests:
-		messageText = ""
+		messageText = processor.ProcessMergeRequest(event, messageText, additional)
 	}
 
-	messages := make([]model.OutputMessage, 0)
-	messages[0].Msg = messageText
+	messages := make([]model.OutputMessage, len(tickets))
+
+	for i, item := range tickets {
+		messages[i].Msg = messageText
+		messages[i].ChatId = item.ChatId
+	}
 
 	return messages, nil
 }

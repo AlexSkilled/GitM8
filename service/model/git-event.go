@@ -14,6 +14,14 @@ func (g GitSource) GetUri() string {
 
 type GitEvent struct {
 	GitSource GitSource
-	ProjectId string
-	HookType  GitHookType
+
+	ProjectId   string
+	ProjectName string
+
+	HookType GitHookType
+	SubType  GitHookSubtype
+
+	Payload map[PayloadKey]string
+
+	Link string
 }

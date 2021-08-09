@@ -25,19 +25,19 @@ const (
 type GitHookSubtype string
 
 const (
-	MROpened = "opened"
-	MRClosed = "closed"
-	MRLocked = "locked"
-	MRMerged = "merged"
+	MRApproved GitHookSubtype = "approved"
+	MRClose    GitHookSubtype = "close"
+	MRMerge    GitHookSubtype = "merge"
+	MROpen     GitHookSubtype = "open"
+	MRReopen   GitHookSubtype = "reopen"
+	MRUpdated  GitHookSubtype = "update"
 
-	MRApproved = "approved"
-	MRUpdated  = "update"
-	MROpen     = "open"
+	MRUnknown GitHookSubtype = ""
 )
 
 func (g GitHookType) GetSubs() []GitHookSubtype {
 	if g == HookTypeMergeRequests {
-		return []GitHookSubtype{MROpened, MRClosed, MRLocked, MRMerged, MRApproved, MRUpdated, MROpen}
+		return []GitHookSubtype{MRApproved, MRClose, MRMerge, MROpen, MRReopen, MRUpdated}
 	}
 	return nil
 }

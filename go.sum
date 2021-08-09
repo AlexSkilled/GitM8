@@ -183,6 +183,7 @@ github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FI
 github.com/pelletier/go-toml v1.2.0 h1:T5zMGML61Wp+FlcbWjRDT7yAxhJNAiPPLOFECq181zc=
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/plouc/go-gitlab-client v2.0.0-beta.5+incompatible h1:W8vCg9ThVbO/YlY9Tly7cBwSj8Zbw4X2qgxFrLiP1Hk=
 github.com/plouc/go-gitlab-client v2.0.0-beta.5+incompatible/go.mod h1:QJGgnqLCXBqiH11EQbufKm0qz4VPbL6CZpMXAzfO/uI=

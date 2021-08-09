@@ -7,6 +7,7 @@ import (
 type ProviderStorage interface {
 	User() UserProvider
 	Ticket() TicketProvider
+	MessagePattern() MessagePatternProvider
 }
 
 type UserProvider interface {
@@ -26,4 +27,8 @@ type TicketProvider interface {
 	AddTicket(model.Ticket) (tickerId int32, err error)
 	AddTicketToChat(chatId int64, ticketId int32) error
 	GetTicketsToSend(repoId string, hookType model.GitHookType) ([]model.TicketChatId, error)
+}
+
+type MessagePatternProvider interface {
+	GetMessage(lang string, hookType model.GitHookType, subType model.GitHookSubtype) (string, map[string]string, error)
 }

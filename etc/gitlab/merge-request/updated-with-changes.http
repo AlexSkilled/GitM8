@@ -1,0 +1,150 @@
+POST /gitlab HTTP/1.1
+Host: tg-bot-catch.requestcatcher.com
+Connection: close
+Connection: close
+Content-Length: 3555
+Content-Type: application/json
+X-Gitlab-Event: Merge Request Hook
+X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
+
+{
+  "object_kind": "merge_request",
+  "event_type": "merge_request",
+  "user": {
+    "name": "alex",
+    "username": "skilled",
+    "avatar_url": "https://secure.gravatar.com/avatar/d336181e889aca632406b2f01dd61114?s=80\u0026d=identicon",
+    "email": "olegthander@yandex.ru"
+  },
+  "project": {
+    "id": 1692,
+    "name": "dummyproj",
+    "description": "",
+    "web_url": "https://gitlab.ru/skilled/dummyproj",
+    "avatar_url": null,
+    "git_ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
+    "git_http_url": "https://gitlab.ru/skilled/dummyproj.git",
+    "namespace": "alex",
+    "visibility_level": 0,
+    "path_with_namespace": "skilled/dummyproj",
+    "default_branch": "master",
+    "ci_config_path": null,
+    "homepage": "https://gitlab.ru/skilled/dummyproj",
+    "url": "git@gitlab.ru:skilled/dummyproj.git",
+    "ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
+    "http_url": "https://gitlab.ru/skilled/dummyproj.git"
+  },
+  "object_attributes": {
+    "assignee_id": null,
+    "author_id": 2039,
+    "created_at": "2021-08-08 10:29:29 UTC",
+    "description": "",
+    "head_pipeline_id": 4338,
+    "id": 1858,
+    "iid": 3,
+    "last_edited_at": "2021-08-08 10:33:07 UTC",
+    "last_edited_by_id": 2039,
+    "merge_commit_sha": null,
+    "merge_error": null,
+    "merge_params": {
+      "force_remove_source_branch": "1"
+    },
+    "merge_status": "can_be_merged",
+    "merge_user_id": null,
+    "merge_when_pipeline_succeeds": false,
+    "milestone_id": null,
+    "source_branch": "Test-1",
+    "source_project_id": 1692,
+    "state_id": 1,
+    "target_branch": "master",
+    "target_project_id": 1692,
+    "time_estimate": 0,
+    "title": "Test 1",
+    "updated_at": "2021-08-08 10:33:07 UTC",
+    "updated_by_id": 2039,
+    "url": "https://gitlab.ru/skilled/dummyproj/-/merge_requests/3",
+    "source": {
+      "id": 1692,
+      "name": "dummyproj",
+      "description": "",
+      "web_url": "https://gitlab.ru/skilled/dummyproj",
+      "avatar_url": null,
+      "git_ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
+      "git_http_url": "https://gitlab.ru/skilled/dummyproj.git",
+      "namespace": "alex",
+      "visibility_level": 0,
+      "path_with_namespace": "skilled/dummyproj",
+      "default_branch": "master",
+      "ci_config_path": null,
+      "homepage": "https://gitlab.ru/skilled/dummyproj",
+      "url": "git@gitlab.ru:skilled/dummyproj.git",
+      "ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
+      "http_url": "https://gitlab.ru/skilled/dummyproj.git"
+    },
+    "target": {
+      "id": 1692,
+      "name": "dummyproj",
+      "description": "",
+      "web_url": "https://gitlab.ru/skilled/dummyproj",
+      "avatar_url": null,
+      "git_ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
+      "git_http_url": "https://gitlab.ru/skilled/dummyproj.git",
+      "namespace": "alex",
+      "visibility_level": 0,
+      "path_with_namespace": "skilled/dummyproj",
+      "default_branch": "master",
+      "ci_config_path": null,
+      "homepage": "https://gitlab.ru/skilled/dummyproj",
+      "url": "git@gitlab.ru:skilled/dummyproj.git",
+      "ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
+      "http_url": "https://gitlab.ru/skilled/dummyproj.git"
+    },
+    "last_commit": {
+      "id": "cce2ad0cabc9ada497d11855a71864ae65439dfe",
+      "message": "Update main.go",
+      "title": "Update main.go",
+      "timestamp": "2021-08-08T10:31:48+00:00",
+      "url": "https://gitlab.ru/skilled/dummyproj/-/commit/cce2ad0cabc9ada497d11855a71864ae65439dfe",
+      "author": {
+        "name": "alex",
+        "email": "olegthander@yandex.ru"
+      }
+    },
+    "work_in_progress": false,
+    "total_time_spent": 0,
+    "human_total_time_spent": null,
+    "human_time_estimate": null,
+    "assignee_ids": [],
+    "state": "opened",
+    "action": "update"
+  },
+  "labels": [],
+  "changes": {
+    "last_edited_at": {
+      "previous": null,
+      "current": "2021-08-08 10:33:07 UTC"
+    },
+    "last_edited_by_id": {
+      "previous": null,
+      "current": 2039
+    },
+    "title": {
+      "previous": "Draft: Test 1",
+      "current": "Test 1"
+    },
+    "updated_at": {
+      "previous": "2021-08-08 10:31:50 UTC",
+      "current": "2021-08-08 10:33:07 UTC"
+    },
+    "updated_by_id": {
+      "previous": null,
+      "current": 2039
+    }
+  },
+  "repository": {
+    "name": "dummyproj",
+    "url": "git@gitlab.ru:skilled/dummyproj.git",
+    "description": "",
+    "homepage": "https://gitlab.ru/skilled/dummyproj"
+  }
+}

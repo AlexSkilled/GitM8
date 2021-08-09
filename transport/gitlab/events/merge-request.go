@@ -183,8 +183,29 @@ type MergeRequest struct {
 
 func (p *MergeRequest) ToModel() *model.GitEvent {
 	return &model.GitEvent{
-		GitSource: model.Gitlab,
-		ProjectId: strconv.Itoa(p.Project.Id),
-		HookType:  "",
+		GitSource:   model.Gitlab,
+		ProjectId:   strconv.Itoa(p.Project.Id),
+		ProjectName: p.Project.Name,
+		HookType:    model.HookTypeMergeRequests,
+		SubType:     convertSubType(p.ObjectAttributes.Action),
 	}
+}
+
+// Маппим действия (action) хуков гитлаба в наши
+func convertSubType(subType string) model.GitHookSubtype {
+	switch subType {
+	case "approved":
+		return model.MRApproved
+	case "close":
+		return model.MRClose
+	case "merge":
+		return model.MRMerge
+	case "open":
+		return model.MROpen
+	case "reopen":
+		return model.MRReopen
+	case "update":
+		return model.MRUpdated
+	}
+	return model.MRUnknown
 }

@@ -56,9 +56,10 @@ CREATE TYPE message_type_pattern_enum AS ENUM (
 
 CREATE TABLE message_pattern
 (
-    hook_type message_type_pattern_enum,
-    lang      TEXT,
-    patterns  JSONB,
+    hook_type           message_type_pattern_enum,
+    lang                TEXT,
+    patterns            JSONB,
+    additional_patterns JSONB,
 
     UNIQUE (hook_type, lang)
 )
