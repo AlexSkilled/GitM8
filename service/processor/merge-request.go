@@ -7,38 +7,41 @@ import (
 )
 
 func ProcessMergeRequest(event model.GitEvent, messageText string, additional map[string]string) string {
-	sb := strings.Builder{}
+	sb := &strings.Builder{}
 
 	mergeRequestNameWithLink := "[" + event.Payload[model.PKHeader] + "](" + event.Payload[model.PKLink] + ")"
 
-	sb.WriteString(
-		fmt.Sprintf(messageText,
-			event.ProjectName,
-			mergeRequestNameWithLink,
-			event.Payload[model.PKSourceBranch],
-			event.Payload[model.PKTargetBranch],
-			event.Payload[model.PKCreatedByUser]))
+	//utils.AppendWithPattern(sb, messageText, event.ProjectName, mergeRequestNameWithLink)
+
+	sb.WriteString("\n" + fmt.Sprintf(messageText, event.ProjectName, mergeRequestNameWithLink))
+
+	sb.WriteString("\n" + fmt.Sprintf(additional[model.MRPattern_Branches],
+
+		event.Payload[model.PKSourceBranch],
+		event.Payload[model.PKTargetBranch]))
+
+	sb.WriteString("\n" + fmt.Sprintf(additional[model.MRPattern_OpenedBy], event.Payload[model.PKCreatedByUser]))
 
 	if assignedToUser, ok := event.Payload[model.PKmrAssignedToUser]; ok {
-		sb.WriteString(fmt.Sprintf(additional[model.MRSubInfoKey_AssignedTo], assignedToUser))
+		sb.WriteString(fmt.Sprintf(additional[model.MRPattern_AssignedTo], assignedToUser))
 	}
 
 	switch event.SubType {
 	case model.MRApproved:
 		sb.WriteString(
-			fmt.Sprintf(additional[model.MRSubInfoKey_ApprovedBy],
+			fmt.Sprintf(additional[model.MRPattern_ApprovedBy],
 				event.Payload[model.PKTriggeredByUser]))
 	case model.MRClose:
 		sb.WriteString(
-			fmt.Sprintf(additional[model.MRSubInfoKey_ClosedBy],
+			fmt.Sprintf(additional[model.MRPattern_ClosedBy],
 				event.Payload[model.PKmrClosedBy]))
 	case model.MRMerge:
 		sb.WriteString(
-			fmt.Sprintf(additional[model.MRSubInfoKey_MergedBy],
+			fmt.Sprintf(additional[model.MRPattern_MergedBy],
 				event.Payload[model.PKTriggeredByUser]))
 	case model.MRUpdated:
 		sb.WriteString(
-			fmt.Sprintf(additional[model.MRSubInfoKey_UpdatedBy],
+			fmt.Sprintf(additional[model.MRPattern_UpdatedBy],
 				event.Payload[model.PKmrUpdatedBy]))
 	case model.MRUnknown:
 

@@ -1,7 +1,10 @@
 package utils
 
 import (
+	"fmt"
 	"strings"
+
+	"github.com/sirupsen/logrus"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -20,6 +23,14 @@ func NewTgMessageButtonsMarkup(buttons []tgbotapi.InlineKeyboardButton, buttonsI
 	}
 
 	return tgbotapi.InlineKeyboardMarkup{InlineKeyboard: finalButtonsSet}
+}
+
+func AppendWithPattern(sb *strings.Builder, pattern string, replaces ...string) *strings.Builder {
+	if strings.Count(pattern, "%s") != len(replaces) {
+		logrus.Error("Для шаблона " + pattern + " не хватает данных, для подстановки")
+	}
+	sb.WriteString("\n" + fmt.Sprintf(pattern, replaces))
+	return sb
 }
 
 func EscapeLinkSymbols(in string) (out string) {

@@ -18,10 +18,12 @@ const (
 )
 
 const (
-	MRSubInfoKey_AssignedTo = "assigned_to"
-	MRSubInfoKey_ApprovedBy = "approved_by"
-	MRSubInfoKey_ClosedBy   = "closed_by"
-	MRSubInfoKey_MergedBy   = "merged_by"
-	MRSubInfoKey_UpdatedBy  = "updated_by"
-	MRSubInfoKey_PipeLink   = "pipeline_link"
+	MRPattern_Branches   = "branches"
+	MRPattern_OpenedBy   = "opened_by"
+	MRPattern_AssignedTo = "assigned_to"
+	MRPattern_ApprovedBy = "approved_by"
+	MRPattern_ClosedBy   = "closed_by"
+	MRPattern_MergedBy   = "merged_by"
+	MRPattern_UpdatedBy  = "updated_by"
+	MRPattern_PipeLink   = "pipeline_link"
 )
