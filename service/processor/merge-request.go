@@ -45,7 +45,7 @@ func ProcessMergeRequest(event model.GitEvent, messageText string, patterns map[
 		message.WriteStringNF(
 			fmt.Sprintf(patterns[mergereq.Pattern_UpdatedBy], event.TriggeredByName))
 		message.WriteStringNF(
-			extractChanges(event.Payload[payload.Main], patterns))
+			extractChanges(event.Payload[payload.Changes], patterns))
 
 	case model.MRUnknown:
 	}
