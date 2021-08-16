@@ -29,27 +29,27 @@ func (s *MessageService) ProcessMessage(event model.GitEvent) ([]model.OutputMes
 		return nil, err
 	}
 
-	messageText, additional, err := s.patterns.GetMessage("ru_RU", event.HookType, event.SubType)
+	messageText, patterns, err := s.patterns.GetMessage("ru_RU", event.HookType, event.SubType)
 	if err != nil {
 		return nil, err
 	}
 
-	if val, ok := event.Payload[model.PKCreatedByUser]; ok {
+	if len(event.AuthorId) != 0 {
 		gitUser, err := s.ticket.GetGitUserByTicketId(tickets[0].TicketId)
 		if err != nil {
 			return nil, err
 		}
 
-		user, err := s.GitApiService.GetUser(gitUser, val)
+		user, err := s.GitApiService.GetUser(gitUser, event.AuthorId)
 		if err != nil {
 			return nil, err
 		}
-		event.Payload[model.PKCreatedByUser] = user.Name
+		event.AuthorName = user.Name
 	}
 
 	switch event.HookType {
 	case model.HookTypeMergeRequests:
-		messageText = processor.ProcessMergeRequest(event, messageText, additional)
+		messageText, err = processor.ProcessMergeRequest(event, messageText, patterns)
 	}
 
 	messages := make([]model.OutputMessage, len(tickets))

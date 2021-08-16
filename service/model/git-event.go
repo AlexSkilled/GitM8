@@ -1,5 +1,7 @@
 package model
 
+import "encoding/json"
+
 const (
 	Gitlab GitSource = "gitlab" // на этот URI будут регистрироваться хуки для гита.
 
@@ -21,7 +23,11 @@ type GitEvent struct {
 	HookType GitHookType
 	SubType  GitHookSubtype
 
-	Payload map[PayloadKey]string
+	ActualPayload json.RawMessage
+
+	AuthorId        string
+	AuthorName      string
+	TriggeredByName string
 
 	Link string
 }

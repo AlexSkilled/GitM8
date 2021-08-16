@@ -1,7 +1,9 @@
 package events
 
 import (
+	"encoding/json"
 	"gitlab-tg-bot/service/model"
+	"gitlab-tg-bot/service/payload/mergereq"
 	"strconv"
 	"strings"
 	"time"
@@ -27,7 +29,7 @@ type MergeRequest struct {
 		GitSshUrl         string      `json:"git_ssh_url"`
 		GitHttpUrl        string      `json:"git_http_url"`
 		Namespace         string      `json:"namespace"`
-		VisibilityLevel   int         `json:"visibility_level"`
+		VisibilityLevel   int32       `json:"visibility_level"`
 		PathWithNamespace string      `json:"path_with_namespace"`
 		DefaultBranch     string      `json:"default_branch"`
 		CiConfigPath      interface{} `json:"ci_config_path"`
@@ -37,13 +39,13 @@ type MergeRequest struct {
 		HttpUrl           string      `json:"http_url"`
 	} `json:"project"`
 	ObjectAttributes struct {
-		AssigneeId     int         `json:"assignee_id"`
+		AssigneeId     int32       `json:"assignee_id"`
 		AuthorId       int         `json:"author_id"`
 		CreatedAt      string      `json:"created_at"`
 		Description    string      `json:"description"`
 		HeadPipelineId interface{} `json:"head_pipeline_id"`
-		Id             int         `json:"id"`
-		Iid            int         `json:"iid"`
+		Id             int32       `json:"id"`
+		Iid            int32       `json:"iid"`
 		LastEditedAt   interface{} `json:"last_edited_at"`
 		LastEditedById interface{} `json:"last_edited_by_id"`
 		MergeCommitSha interface{} `json:"merge_commit_sha"`
@@ -56,17 +58,17 @@ type MergeRequest struct {
 		MergeWhenPipelineSucceeds bool        `json:"merge_when_pipeline_succeeds"`
 		MilestoneId               interface{} `json:"milestone_id"`
 		SourceBranch              string      `json:"source_branch"`
-		SourceProjectId           int         `json:"source_project_id"`
-		StateId                   int         `json:"state_id"`
+		SourceProjectId           int32       `json:"source_project_id"`
+		StateId                   int32       `json:"state_id"`
 		TargetBranch              string      `json:"target_branch"`
-		TargetProjectId           int         `json:"target_project_id"`
-		TimeEstimate              int         `json:"time_estimate"`
+		TargetProjectId           int32       `json:"target_project_id"`
+		TimeEstimate              int32       `json:"time_estimate"`
 		Title                     string      `json:"title"`
 		UpdatedAt                 string      `json:"updated_at"`
 		UpdatedById               interface{} `json:"updated_by_id"`
 		Url                       string      `json:"url"`
 		Source                    struct {
-			Id                int         `json:"id"`
+			Id                int32       `json:"id"`
 			Name              string      `json:"name"`
 			Description       string      `json:"description"`
 			WebUrl            string      `json:"web_url"`
@@ -74,7 +76,7 @@ type MergeRequest struct {
 			GitSshUrl         string      `json:"git_ssh_url"`
 			GitHttpUrl        string      `json:"git_http_url"`
 			Namespace         string      `json:"namespace"`
-			VisibilityLevel   int         `json:"visibility_level"`
+			VisibilityLevel   int32       `json:"visibility_level"`
 			PathWithNamespace string      `json:"path_with_namespace"`
 			DefaultBranch     string      `json:"default_branch"`
 			CiConfigPath      interface{} `json:"ci_config_path"`
@@ -84,7 +86,7 @@ type MergeRequest struct {
 			HttpUrl           string      `json:"http_url"`
 		} `json:"source"`
 		Target struct {
-			Id                int         `json:"id"`
+			Id                int32       `json:"id"`
 			Name              string      `json:"name"`
 			Description       string      `json:"description"`
 			WebUrl            string      `json:"web_url"`
@@ -92,7 +94,7 @@ type MergeRequest struct {
 			GitSshUrl         string      `json:"git_ssh_url"`
 			GitHttpUrl        string      `json:"git_http_url"`
 			Namespace         string      `json:"namespace"`
-			VisibilityLevel   int         `json:"visibility_level"`
+			VisibilityLevel   int32       `json:"visibility_level"`
 			PathWithNamespace string      `json:"path_with_namespace"`
 			DefaultBranch     string      `json:"default_branch"`
 			CiConfigPath      interface{} `json:"ci_config_path"`
@@ -113,7 +115,7 @@ type MergeRequest struct {
 			} `json:"author"`
 		} `json:"last_commit"`
 		WorkInProgress      bool          `json:"work_in_progress"`
-		TotalTimeSpent      int           `json:"total_time_spent"`
+		TotalTimeSpent      int32         `json:"total_time_spent"`
 		HumanTotalTimeSpent interface{}   `json:"human_total_time_spent"`
 		HumanTimeEstimate   interface{}   `json:"human_time_estimate"`
 		AssigneeIds         []interface{} `json:"assignee_ids"`
@@ -124,7 +126,7 @@ type MergeRequest struct {
 	Changes struct {
 		AuthorId struct {
 			Previous interface{} `json:"previous"`
-			Current  int         `json:"current"`
+			Current  int32       `json:"current"`
 		} `json:"author_id"`
 		CreatedAt struct {
 			Previous interface{} `json:"previous"`
@@ -136,11 +138,11 @@ type MergeRequest struct {
 		} `json:"description"`
 		Id struct {
 			Previous interface{} `json:"previous"`
-			Current  int         `json:"current"`
+			Current  int32       `json:"current"`
 		} `json:"id"`
 		Iid struct {
 			Previous interface{} `json:"previous"`
-			Current  int         `json:"current"`
+			Current  int32       `json:"current"`
 		} `json:"iid"`
 		MergeParams struct {
 			Previous struct {
@@ -155,7 +157,7 @@ type MergeRequest struct {
 		} `json:"source_branch"`
 		SourceProjectId struct {
 			Previous interface{} `json:"previous"`
-			Current  int         `json:"current"`
+			Current  int32       `json:"current"`
 		} `json:"source_project_id"`
 		TargetBranch struct {
 			Previous interface{} `json:"previous"`
@@ -163,7 +165,7 @@ type MergeRequest struct {
 		} `json:"target_branch"`
 		TargetProjectId struct {
 			Previous interface{} `json:"previous"`
-			Current  int         `json:"current"`
+			Current  int32       `json:"current"`
 		} `json:"target_project_id"`
 		Title struct {
 			Previous interface{} `json:"previous"`
@@ -190,30 +192,35 @@ type MergeRequest struct {
 }
 
 func (p *MergeRequest) ToModel() model.GitEvent {
-	payload := make(map[model.PayloadKey]string)
-	payload[model.PKHeader] = p.ObjectAttributes.Title
-	payload[model.PKSourceBranch] = p.ObjectAttributes.SourceBranch
-	payload[model.PKTargetBranch] = p.ObjectAttributes.TargetBranch
-	payload[model.PKCreatedByUser] = strconv.Itoa(p.ObjectAttributes.AuthorId)
+	pl := mergereq.MergeRequest{
+		Name:         p.ObjectAttributes.Title,
+		Link:         p.ObjectAttributes.Url,
+		SourceBranch: p.ObjectAttributes.SourceBranch,
+		TargetBranch: p.ObjectAttributes.TargetBranch,
+	}
 
 	if p.Assignees != nil {
 		assignedToArray := make([]string, len(p.Assignees))
 		for i, item := range p.Assignees {
 			assignedToArray[i] = item.Name
 		}
-		payload[model.PKmrAssignedToUser] = strings.Join(assignedToArray, ", ")
+		pl.AssignedTo = strings.Join(assignedToArray, ", ")
 	}
-	payload[model.PKTriggeredByUser] = p.User.Name
 
-	payload[model.PKLink] = p.ObjectAttributes.Url
+	payloadBytes, err := json.Marshal(pl)
+	if err != nil {
+		// TODO
+	}
 
 	return model.GitEvent{
-		GitSource:   model.Gitlab,
-		ProjectId:   strconv.Itoa(p.Project.Id),
-		ProjectName: p.Project.Name,
-		HookType:    model.HookTypeMergeRequests,
-		SubType:     convertSubType(p.ObjectAttributes.Action),
-		Payload:     payload,
+		GitSource:       model.Gitlab,
+		ProjectId:       strconv.Itoa(p.Project.Id),
+		ProjectName:     p.Project.Name,
+		HookType:        model.HookTypeMergeRequests,
+		SubType:         convertSubType(p.ObjectAttributes.Action),
+		ActualPayload:   payloadBytes,
+		TriggeredByName: p.User.Name,
+		AuthorId:        strconv.Itoa(p.ObjectAttributes.AuthorId),
 	}
 }
 

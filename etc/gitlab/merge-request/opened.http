@@ -2,7 +2,7 @@ POST /gitlab HTTP/1.1
 Host: tg-bot-catch.requestcatcher.com
 Connection: close
 Connection: close
-Content-Length: 3859
+Content-Length: 4094
 Content-Type: application/json
 X-Gitlab-Event: Merge Request Hook
 X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
@@ -11,10 +11,10 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
   "object_kind": "merge_request",
   "event_type": "merge_request",
   "user": {
-    "name": "alex",
-    "username": "skilled",
-    "avatar_url": "https://secure.gravatar.com/avatar/d336181e889aca632406b2f01dd61114?s=80\u0026d=identicon",
-    "email": "olegthander@yandex.ru"
+    "name": "test user alex b",
+    "username": "alex_2",
+    "avatar_url": "https://secure.gravatar.com/avatar/7e32b3a05e16b0d551a164ea404bd19e?s=80\u0026d=identicon",
+    "email": "aleks-bukov@mail.ru"
   },
   "project": {
     "id": 1692,
@@ -35,13 +35,13 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
     "http_url": "https://gitlab.ru/skilled/dummyproj.git"
   },
   "object_attributes": {
-    "assignee_id": null,
-    "author_id": 2039,
-    "created_at": "2021-08-08 10:29:29 UTC",
+    "assignee_id": 2533,
+    "author_id": 2533,
+    "created_at": "2021-08-16 12:06:15 UTC",
     "description": "",
     "head_pipeline_id": null,
-    "id": 1858,
-    "iid": 3,
+    "id": 1979,
+    "iid": 5,
     "last_edited_at": null,
     "last_edited_by_id": null,
     "merge_commit_sha": null,
@@ -53,16 +53,16 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
     "merge_user_id": null,
     "merge_when_pipeline_succeeds": false,
     "milestone_id": null,
-    "source_branch": "Test-1",
+    "source_branch": "teest-braanch",
     "source_project_id": 1692,
     "state_id": 1,
     "target_branch": "master",
     "target_project_id": 1692,
     "time_estimate": 0,
-    "title": "Draft: Test 1",
-    "updated_at": "2021-08-08 10:29:29 UTC",
+    "title": "Teest braanch",
+    "updated_at": "2021-08-16 12:06:15 UTC",
     "updated_by_id": null,
-    "url": "https://gitlab.ru/skilled/dummyproj/-/merge_requests/3",
+    "url": "https://gitlab.ru/skilled/dummyproj/-/merge_requests/5",
     "source": {
       "id": 1692,
       "name": "dummyproj",
@@ -100,21 +100,23 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
       "http_url": "https://gitlab.ru/skilled/dummyproj.git"
     },
     "last_commit": {
-      "id": "5a55a81c0037e9d1c5a2bd1e0b8059d527d3f125",
+      "id": "fe37ff706561c8dc9727aa28ea5a6544dce4d653",
       "message": "Update README.md",
       "title": "Update README.md",
-      "timestamp": "2021-08-03T06:15:09+00:00",
-      "url": "https://gitlab.ru/skilled/dummyproj/-/commit/5a55a81c0037e9d1c5a2bd1e0b8059d527d3f125",
+      "timestamp": "2021-08-16T12:05:48+00:00",
+      "url": "https://gitlab.ru/skilled/dummyproj/-/commit/fe37ff706561c8dc9727aa28ea5a6544dce4d653",
       "author": {
-        "name": "alex",
-        "email": "olegthander@yandex.ru"
+        "name": "test user alex b",
+        "email": "aleks-bukov@mail.ru"
       }
     },
-    "work_in_progress": true,
+    "work_in_progress": false,
     "total_time_spent": 0,
     "human_total_time_spent": null,
     "human_time_estimate": null,
-    "assignee_ids": [],
+    "assignee_ids": [
+      2533
+    ],
     "state": "opened",
     "action": "open"
   },
@@ -122,11 +124,11 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
   "changes": {
     "author_id": {
       "previous": null,
-      "current": 2039
+      "current": 2533
     },
     "created_at": {
       "previous": null,
-      "current": "2021-08-08 10:29:29 UTC"
+      "current": "2021-08-16 12:06:15 UTC"
     },
     "description": {
       "previous": null,
@@ -134,11 +136,11 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
     },
     "id": {
       "previous": null,
-      "current": 1858
+      "current": 1979
     },
     "iid": {
       "previous": null,
-      "current": 3
+      "current": 5
     },
     "merge_params": {
       "previous": {},
@@ -148,7 +150,7 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
     },
     "source_branch": {
       "previous": null,
-      "current": "Test-1"
+      "current": "teest-braanch"
     },
     "source_project_id": {
       "previous": null,
@@ -164,11 +166,11 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
     },
     "title": {
       "previous": null,
-      "current": "Draft: Test 1"
+      "current": "Teest braanch"
     },
     "updated_at": {
       "previous": null,
-      "current": "2021-08-08 10:29:29 UTC"
+      "current": "2021-08-16 12:06:15 UTC"
     }
   },
   "repository": {
@@ -176,5 +178,13 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
     "url": "git@gitlab.ru:skilled/dummyproj.git",
     "description": "",
     "homepage": "https://gitlab.ru/skilled/dummyproj"
-  }
+  },
+  "assignees": [
+    {
+      "name": "test user alex b",
+      "username": "alex_2",
+      "avatar_url": "https://secure.gravatar.com/avatar/7e32b3a05e16b0d551a164ea404bd19e?s=80\u0026d=identicon",
+      "email": "aleks-bukov@mail.ru"
+    }
+  ]
 }
