@@ -17,7 +17,11 @@ VALUES ('MergeRequestsEvents', 'ru_RU',
           "approved_by":"Одобрено пользователем: %s",
           "closed_by": "Закрыто пользователем: %s",
           "merged_by": "Слияние произведено пользователем: %s",
-          "updated_by": "Обновлено пользователем: %s"
+          "updated_by": "Обновлено пользователем: %s",
+
+          "rename": "Переименование запроса на слияние %s -> %s",
+          "update": "Коммит: %s",
+          "reAssignee": "Ответственный переназначен %s -> %s"
         }')
 ON CONFLICT (hook_type, lang) DO UPDATE SET
 patterns = excluded.patterns,

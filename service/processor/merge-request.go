@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"gitlab-tg-bot/service/model"
+	"gitlab-tg-bot/service/payload"
 	"gitlab-tg-bot/service/payload/mergereq"
 	"gitlab-tg-bot/utils"
 )
@@ -11,7 +12,7 @@ import (
 func ProcessMergeRequest(event model.GitEvent, messageText string, patterns map[string]string) (string, error) {
 	var pl mergereq.MergeRequest
 
-	err := json.Unmarshal(event.Payload, &pl)
+	err := json.Unmarshal(event.Payload[payload.Main], &pl)
 	if err != nil {
 		panic(err) // TODO
 	}
@@ -43,7 +44,27 @@ func ProcessMergeRequest(event model.GitEvent, messageText string, patterns map[
 	case model.MRUpdated:
 		message.WriteStringNF(
 			fmt.Sprintf(patterns[mergereq.Pattern_UpdatedBy], event.TriggeredByName))
+		message.WriteStringNF(
+			extractChanges(event.Payload[payload.Main], patterns))
+
 	case model.MRUnknown:
 	}
 	return message.String()
+}
+
+func extractChanges(change []byte, patterns map[string]string) string {
+	var update mergereq.Change
+	err := json.Unmarshal(change, &update)
+	if err != nil {
+		panic(err) // TODO
+	}
+	switch update.Type {
+	case mergereq.Rename:
+		return fmt.Sprintf(patterns[mergereq.Pattern_Rename], update.Old, update.New)
+	case mergereq.Update:
+		return fmt.Sprintf(patterns[mergereq.Pattern_Update], "["+update.Old+"]("+update.New+")")
+	case mergereq.ReAssignee:
+		return fmt.Sprintf(patterns[mergereq.Pattern_ReAssignee], update.Old, update.New)
+	}
+	return ""
 }

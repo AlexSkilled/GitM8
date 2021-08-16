@@ -8,4 +8,7 @@ const (
 	Pattern_ClosedBy   = "closed_by"
 	Pattern_MergedBy   = "merged_by"
 	Pattern_UpdatedBy  = "updated_by"
+	Pattern_Update     = "update"
+	Pattern_Rename     = "rename"
+	Pattern_ReAssignee = "reAssignee"
 )

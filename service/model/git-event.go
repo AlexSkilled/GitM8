@@ -1,6 +1,9 @@
 package model
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"gitlab-tg-bot/service/payload"
+)
 
 const (
 	Gitlab GitSource = "gitlab" // на этот URI будут регистрироваться хуки для гита.
@@ -23,7 +26,7 @@ type GitEvent struct {
 	HookType GitHookType
 	SubType  GitHookSubtype
 
-	Payload json.RawMessage
+	Payload
 
 	AuthorId        string
 	AuthorName      string
@@ -31,3 +34,5 @@ type GitEvent struct {
 
 	Link string
 }
+
+type Payload map[payload.Key]json.RawMessage

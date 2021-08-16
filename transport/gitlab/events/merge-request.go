@@ -3,10 +3,13 @@ package events
 import (
 	"encoding/json"
 	"gitlab-tg-bot/service/model"
+	"gitlab-tg-bot/service/payload"
 	"gitlab-tg-bot/service/payload/mergereq"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 const MergeRequestHeader = "Merge Request Hook"
@@ -39,20 +42,11 @@ type MergeRequest struct {
 		HttpUrl           string      `json:"http_url"`
 	} `json:"project"`
 	ObjectAttributes struct {
-		AssigneeId     int32       `json:"assignee_id"`
-		AuthorId       int         `json:"author_id"`
-		CreatedAt      string      `json:"created_at"`
-		Description    string      `json:"description"`
-		HeadPipelineId interface{} `json:"head_pipeline_id"`
-		Id             int32       `json:"id"`
-		Iid            int32       `json:"iid"`
-		LastEditedAt   interface{} `json:"last_edited_at"`
-		LastEditedById interface{} `json:"last_edited_by_id"`
-		MergeCommitSha interface{} `json:"merge_commit_sha"`
-		MergeError     interface{} `json:"merge_error"`
-		MergeParams    struct {
-			ForceRemoveSourceBranch string `json:"force_remove_source_branch"`
-		} `json:"merge_params"`
+		AssigneeId                int32       `json:"assignee_id"`
+		AuthorId                  int         `json:"author_id"`
+		CreatedAt                 string      `json:"created_at"`
+		Description               string      `json:"description"`
+		HeadPipelineId            interface{} `json:"head_pipeline_id"`
 		MergeStatus               string      `json:"merge_status"`
 		MergeUserId               interface{} `json:"merge_user_id"`
 		MergeWhenPipelineSucceeds bool        `json:"merge_when_pipeline_succeeds"`
@@ -114,68 +108,30 @@ type MergeRequest struct {
 				Email string `json:"email"`
 			} `json:"author"`
 		} `json:"last_commit"`
-		WorkInProgress      bool          `json:"work_in_progress"`
-		TotalTimeSpent      int32         `json:"total_time_spent"`
-		HumanTotalTimeSpent interface{}   `json:"human_total_time_spent"`
-		HumanTimeEstimate   interface{}   `json:"human_time_estimate"`
-		AssigneeIds         []interface{} `json:"assignee_ids"`
-		State               string        `json:"state"`
-		Action              string        `json:"action"`
+		State  string  `json:"state"`
+		Action string  `json:"action"`
+		Oldrev *string `json:"oldrev"`
 	} `json:"object_attributes"`
 	Labels  []interface{} `json:"labels"`
 	Changes struct {
-		AuthorId struct {
-			Previous interface{} `json:"previous"`
-			Current  int32       `json:"current"`
-		} `json:"author_id"`
-		CreatedAt struct {
-			Previous interface{} `json:"previous"`
-			Current  string      `json:"current"`
-		} `json:"created_at"`
-		Description struct {
-			Previous interface{} `json:"previous"`
-			Current  string      `json:"current"`
-		} `json:"description"`
-		Id struct {
-			Previous interface{} `json:"previous"`
-			Current  int32       `json:"current"`
-		} `json:"id"`
-		Iid struct {
-			Previous interface{} `json:"previous"`
-			Current  int32       `json:"current"`
-		} `json:"iid"`
-		MergeParams struct {
-			Previous struct {
-			} `json:"previous"`
-			Current struct {
-				ForceRemoveSourceBranch string `json:"force_remove_source_branch"`
-			} `json:"current"`
-		} `json:"merge_params"`
-		SourceBranch struct {
-			Previous interface{} `json:"previous"`
-			Current  string      `json:"current"`
-		} `json:"source_branch"`
-		SourceProjectId struct {
-			Previous interface{} `json:"previous"`
-			Current  int32       `json:"current"`
-		} `json:"source_project_id"`
-		TargetBranch struct {
-			Previous interface{} `json:"previous"`
-			Current  string      `json:"current"`
-		} `json:"target_branch"`
-		TargetProjectId struct {
-			Previous interface{} `json:"previous"`
-			Current  int32       `json:"current"`
-		} `json:"target_project_id"`
-		Title struct {
-			Previous interface{} `json:"previous"`
-			Current  string      `json:"current"`
+		Title *struct {
+			Previous string `json:"previous"`
+			Current  string `json:"current"`
 		} `json:"title"`
-		UpdatedAt struct {
-			Previous interface{} `json:"previous"`
-			Current  string      `json:"current"`
-		} `json:"updated_at"`
-		Oldrev string `json:"oldrev"`
+		Assignees *struct {
+			Previous []struct {
+				Name      string `json:"name"`
+				Username  string `json:"username"`
+				AvatarUrl string `json:"avatar_url"`
+				Email     string `json:"email"`
+			} `json:"previous"`
+			Current []struct {
+				Name      string `json:"name"`
+				Username  string `json:"username"`
+				AvatarUrl string `json:"avatar_url"`
+				Email     string `json:"email"`
+			} `json:"current"`
+		} `json:"assignees"`
 	} `json:"changes"`
 	Repository struct {
 		Name        string `json:"name"`
@@ -192,6 +148,8 @@ type MergeRequest struct {
 }
 
 func (p *MergeRequest) ToModel() model.GitEvent {
+	payloadMap := make(model.Payload)
+
 	pl := mergereq.MergeRequest{
 		Name:         p.ObjectAttributes.Title,
 		Link:         p.ObjectAttributes.Url,
@@ -207,7 +165,12 @@ func (p *MergeRequest) ToModel() model.GitEvent {
 		pl.AssignedTo = strings.Join(assignedToArray, ", ")
 	}
 
-	payloadBytes, _ := json.Marshal(pl)
+	payloadMap[payload.Main], _ = json.Marshal(pl)
+
+	update := p.getUpdate()
+	if update != nil {
+		payloadMap[payload.Changes] = update
+	}
 
 	return model.GitEvent{
 		GitSource:   model.Gitlab,
@@ -220,7 +183,7 @@ func (p *MergeRequest) ToModel() model.GitEvent {
 		TriggeredByName: p.User.Name,
 		AuthorId:        strconv.Itoa(p.ObjectAttributes.AuthorId),
 
-		Payload: payloadBytes,
+		Payload: payloadMap,
 	}
 }
 
@@ -241,4 +204,39 @@ func convertSubType(subType string) model.GitHookSubtype {
 		return model.MRUpdated
 	}
 	return model.MRUnknown
+}
+
+func (p *MergeRequest) getUpdate() []byte {
+	var update *mergereq.Change
+
+	if p.Changes.Assignees != nil {
+		update = &mergereq.Change{
+			Old:  p.Changes.Assignees.Previous[0].Name,
+			New:  p.Changes.Assignees.Current[0].Name,
+			Type: mergereq.ReAssignee,
+		}
+	} else if p.Changes.Title != nil {
+		update = &mergereq.Change{
+			Old:  p.Changes.Title.Previous,
+			New:  p.Changes.Title.Current,
+			Type: mergereq.Rename,
+		}
+	} else if p.ObjectAttributes.Oldrev != nil {
+		update = &mergereq.Change{
+			Old:  p.ObjectAttributes.LastCommit.Url,
+			New:  p.ObjectAttributes.LastCommit.Title,
+			Type: mergereq.Update,
+		}
+	}
+	if update == nil {
+		return nil
+	}
+
+	out, err := json.Marshal(update)
+	if err != nil {
+		logrus.Error(err)
+		return nil
+	}
+
+	return out
 }
