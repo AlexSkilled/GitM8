@@ -23,7 +23,7 @@ type GitEvent struct {
 	HookType GitHookType
 	SubType  GitHookSubtype
 
-	ActualPayload json.RawMessage
+	Payload json.RawMessage
 
 	AuthorId        string
 	AuthorName      string

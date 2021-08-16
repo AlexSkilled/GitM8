@@ -213,14 +213,17 @@ func (p *MergeRequest) ToModel() model.GitEvent {
 	}
 
 	return model.GitEvent{
-		GitSource:       model.Gitlab,
-		ProjectId:       strconv.Itoa(p.Project.Id),
-		ProjectName:     p.Project.Name,
-		HookType:        model.HookTypeMergeRequests,
-		SubType:         convertSubType(p.ObjectAttributes.Action),
-		ActualPayload:   payloadBytes,
+		GitSource:   model.Gitlab,
+		ProjectId:   strconv.Itoa(p.Project.Id),
+		ProjectName: p.Project.Name,
+
+		HookType: model.HookTypeMergeRequests,
+		SubType:  convertSubType(p.ObjectAttributes.Action),
+
 		TriggeredByName: p.User.Name,
 		AuthorId:        strconv.Itoa(p.ObjectAttributes.AuthorId),
+
+		Payload: payloadBytes,
 	}
 }
 
