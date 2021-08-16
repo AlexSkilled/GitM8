@@ -207,10 +207,7 @@ func (p *MergeRequest) ToModel() model.GitEvent {
 		pl.AssignedTo = strings.Join(assignedToArray, ", ")
 	}
 
-	payloadBytes, err := json.Marshal(pl)
-	if err != nil {
-		// TODO
-	}
+	payloadBytes, _ := json.Marshal(pl)
 
 	return model.GitEvent{
 		GitSource:   model.Gitlab,
