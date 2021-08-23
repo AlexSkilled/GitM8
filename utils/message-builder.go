@@ -11,6 +11,10 @@ type MessageBuilder struct {
 	values []interface{}
 }
 
+func (m *MessageBuilder) WriteStringN(text string) {
+	m.sb.WriteString("\n" + text)
+}
+
 func (m *MessageBuilder) WriteStringNF(text string, value ...interface{}) {
 	m.sb.WriteString("\n" + text)
 	m.values = append(m.values, value...)

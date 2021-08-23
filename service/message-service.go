@@ -1,6 +1,7 @@
 package service
 
 import (
+	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
 	"gitlab-tg-bot/service/processor"
@@ -28,7 +29,9 @@ func (s *MessageService) ProcessMessage(event model.GitEvent) ([]model.OutputMes
 	if err != nil {
 		return nil, err
 	}
-
+	if len(tickets) == 0 {
+		return nil, internal.NoTickets
+	}
 	messageText, patterns, err := s.patterns.GetMessage("ru_RU", event.HookType, event.SubType)
 	if err != nil {
 		return nil, err

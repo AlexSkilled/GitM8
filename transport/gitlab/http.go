@@ -2,6 +2,7 @@ package gitlab
 
 import (
 	"encoding/json"
+	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/transport/gitlab/events"
 	"io/ioutil"
@@ -55,6 +56,9 @@ func (h *Handler) ServeHTTP(_ http.ResponseWriter, req *http.Request) {
 
 	msg, err := h.messageService.ProcessMessage(dto)
 	if err != nil {
+		if err == internal.NoTickets {
+			return
+		}
 		logrus.Errorf("Ошибка при маршалинге тела запроса: %v", err)
 		return
 	}

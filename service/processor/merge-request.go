@@ -33,19 +33,14 @@ func ProcessMergeRequest(event model.GitEvent, messageText string, patterns map[
 
 	switch event.SubType {
 	case model.MRApproved:
-		message.WriteStringNF(
-			fmt.Sprintf(patterns[mergereq.Pattern_ApprovedBy], event.TriggeredByName))
+		message.WriteStringNF(patterns[mergereq.Pattern_ApprovedBy], event.TriggeredByName)
 	case model.MRClose:
-		message.WriteStringNF(
-			fmt.Sprintf(patterns[mergereq.Pattern_ClosedBy], event.TriggeredByName))
+		message.WriteStringNF(patterns[mergereq.Pattern_ClosedBy], event.TriggeredByName)
 	case model.MRMerge:
-		message.WriteStringNF(
-			fmt.Sprintf(patterns[mergereq.Pattern_MergedBy], event.TriggeredByName))
+		message.WriteStringNF(patterns[mergereq.Pattern_MergedBy], event.TriggeredByName)
 	case model.MRUpdated:
-		message.WriteStringNF(
-			fmt.Sprintf(patterns[mergereq.Pattern_UpdatedBy], event.TriggeredByName))
-		message.WriteStringNF(
-			extractChanges(event.Payload[payload.Changes], patterns))
+		message.WriteStringNF(patterns[mergereq.Pattern_UpdatedBy], event.TriggeredByName)
+		message.WriteStringN(extractChanges(event.Payload[payload.Changes], patterns))
 
 	case model.MRUnknown:
 	}
@@ -58,6 +53,7 @@ func extractChanges(change []byte, patterns map[string]string) string {
 	if err != nil {
 		panic(err) // TODO
 	}
+
 	switch update.Type {
 	case mergereq.Rename:
 		return fmt.Sprintf(patterns[mergereq.Pattern_Rename], update.Old, update.New)
