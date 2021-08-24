@@ -7,8 +7,9 @@ import (
 
 	"github.com/go-pg/pg/v9"
 
-	"github.com/ory/dockertest"
-	"github.com/ory/dockertest/docker"
+	_ "github.com/lib/pq"
+	"github.com/ory/dockertest/v3"
+	"github.com/ory/dockertest/v3/docker"
 )
 
 const (
@@ -16,16 +17,18 @@ const (
 	dialect  = "postgres"
 	idleConn = 25
 	maxConn  = 25
+
+	containerName = "gitlab_tests"
 )
 
-type Config struct {
+type DockerConfig struct {
 	User   string
 	Pass   string
 	DbName string
 	Port   string
 }
 
-func CreateDocker(conf Config) (db *pg.DB, clearFunc func(), err error) {
+func CreateDocker(conf DockerConfig) (db *pg.DB, clearFunc func(), err error) {
 	pool, err := dockertest.NewPool("")
 	if err != nil {
 		return
@@ -33,7 +36,22 @@ func CreateDocker(conf Config) (db *pg.DB, clearFunc func(), err error) {
 
 	opts := getOptions(conf)
 
-	resource, err := pool.RunWithOptions(&opts)
+	resource, ok := pool.ContainerByName(containerName)
+	if ok {
+		// Если такой контейнер уже существует (тесты были прерваны пользователем) удаляем и создаём на его месте новый
+		pool.Purge(resource)
+	}
+
+	resource, err = pool.RunWithOptions(&opts)
+
+	clearFunc = func() { pool.Purge(resource) }
+
+	defer func() {
+		if err != nil {
+			clearFunc()
+		}
+	}()
+
 	if err != nil {
 		return
 	}
@@ -50,8 +68,6 @@ func CreateDocker(conf Config) (db *pg.DB, clearFunc func(), err error) {
 		log.Fatalf("Could not connect to docker: %s", err.Error())
 	}
 
-	clearFunc = func() { pool.Purge(resource) }
-
 	db = pg.Connect(&pg.Options{
 		Addr:     "localhost:" + conf.Port,
 		User:     conf.User,
@@ -62,8 +78,9 @@ func CreateDocker(conf Config) (db *pg.DB, clearFunc func(), err error) {
 	return
 }
 
-func getOptions(conf Config) dockertest.RunOptions {
+func getOptions(conf DockerConfig) dockertest.RunOptions {
 	return dockertest.RunOptions{
+		Name:       containerName,
 		Repository: "postgres",
 		Tag:        "alpine",
 		Env: []string{
@@ -73,7 +90,7 @@ func getOptions(conf Config) dockertest.RunOptions {
 		},
 		ExposedPorts: []string{"5432"},
 		PortBindings: map[docker.Port][]docker.PortBinding{
-			"993": {
+			"5432": {
 				{
 					HostIP: "0.0.0.0", HostPort: conf.Port,
 				},
