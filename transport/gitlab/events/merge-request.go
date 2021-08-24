@@ -15,9 +15,7 @@ import (
 const MergeRequestHeader = "Merge Request Hook"
 
 type MergeRequest struct {
-	ObjectKind string `json:"object_kind"`
-	EventType  string `json:"event_type"`
-	User       struct {
+	User struct {
 		Name      string `json:"name"`
 		Username  string `json:"username"`
 		AvatarUrl string `json:"avatar_url"`
@@ -112,7 +110,6 @@ type MergeRequest struct {
 		Action string  `json:"action"`
 		Oldrev *string `json:"oldrev"`
 	} `json:"object_attributes"`
-	Labels  []interface{} `json:"labels"`
 	Changes struct {
 		Title *struct {
 			Previous string `json:"previous"`

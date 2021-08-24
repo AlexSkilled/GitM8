@@ -41,6 +41,7 @@ func (h *Handler) ServeHTTP(_ http.ResponseWriter, req *http.Request) {
 	if !ok {
 		logrus.Errorf("Ошибка при попытке спарсить заголовок %s для Gitlab хука", eventType)
 	}
+
 	b, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		logrus.Errorf("Ошибка при чтении тела запроса: %v", err)
@@ -52,9 +53,8 @@ func (h *Handler) ServeHTTP(_ http.ResponseWriter, req *http.Request) {
 		logrus.Errorf("Ошибка при маршалинге тела запроса: %v", err)
 		return
 	}
-	dto := event.ToModel()
 
-	msg, err := h.messageService.ProcessMessage(dto)
+	msg, err := h.messageService.ProcessMessage(event.ToModel())
 	if err != nil {
 		if err == internal.NoTickets {
 			return
