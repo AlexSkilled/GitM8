@@ -3,8 +3,6 @@ package main
 import (
 	"gitlab-tg-bot/app"
 	configuration "gitlab-tg-bot/conf"
-
-	"github.com/go-pg/pg/v9"
 )
 
 func main() {
@@ -12,12 +10,7 @@ func main() {
 
 	application := app.NewApp(conf)
 
-	app.CheckMigration(pg.Connect(&pg.Options{
-		Addr:     conf.GetString(configuration.DbHost) + conf.GetString(configuration.DbPort),
-		User:     conf.GetString(configuration.DbUser),
-		Password: conf.GetString(configuration.DbPassword),
-		Database: conf.GetString(configuration.DbName),
-	}))
+	app.CheckMigration(conf)
 
 	application.Start()
 }
