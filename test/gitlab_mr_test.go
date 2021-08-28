@@ -4,13 +4,11 @@ import (
 	"gitlab-tg-bot/service/model"
 	"gitlab-tg-bot/test/utils"
 	"gitlab-tg-bot/transport/gitlab"
-	"io/ioutil"
+	"net/http"
 	"net/http/httptest"
 	"os"
 	"strings"
 	"testing"
-
-	"github.com/sirupsen/logrus"
 
 	"github.com/stretchr/testify/suite"
 )
@@ -28,7 +26,10 @@ type httpGitHookTypeKey struct {
 }
 
 func (g *GitlabMergeRequestSuite) Test_OpenMergeRequest() {
-
+	_, err := http.Post(g.server.URL+model.Gitlab.GetUri(), "", nil)
+	if err != nil {
+		g.T().Fatal(err)
+	}
 }
 
 func TestGitlabMergeRequest(t *testing.T) {
@@ -38,18 +39,12 @@ func TestGitlabMergeRequest(t *testing.T) {
 	gitlabMergeRequestSuite.server = httptest.NewServer(handler)
 
 	dir, _ := os.Getwd()
-	dir += "/../etc/gitlab/merge-request"
+	dir += "/../etc/gitlab/merge-request/"
 
-	filesMigrations, err := ioutil.ReadDir(dir)
-	if err != nil {
-		logrus.Fatal(err)
-	}
-	files := make([]string, 0, len(filesMigrations))
-	for _, f := range filesMigrations {
-		name := f.Name()
-		if strings.Contains(name, ".http") {
-			files = append(files, name)
-		}
+	files := utils.GetFiles(dir)
+
+	for i, item := range files {
+		files[i] = item[strings.Index(item, "{"):]
 	}
 
 	suite.Run(t, gitlabMergeRequestSuite)
