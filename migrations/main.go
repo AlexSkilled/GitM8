@@ -70,10 +70,8 @@ func main() {
 }
 
 func Connect() *pg.DB {
-	conf, err := config.NewConfiguration()
-	if err != nil {
+	conf := config.NewConfiguration()
 
-	}
 	loginOption := &pg.Options{
 		Addr:     conf.GetString(config.DbConnectionString),
 		User:     conf.GetString(config.DbUser),

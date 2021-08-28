@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	dsn      = "postgres://%s:%s@localhost:%s/%s?sslmode=disable"
+	dsn      = "postgres://%s:%s@localhost%s/%s?sslmode=disable"
 	dialect  = "postgres"
 	idleConn = 25
 	maxConn  = 25
@@ -69,7 +69,7 @@ func CreateDocker(conf DockerConfig) (db *pg.DB, clearFunc func(), err error) {
 	}
 
 	db = pg.Connect(&pg.Options{
-		Addr:     "localhost:" + conf.Port,
+		Addr:     "localhost" + conf.Port,
 		User:     conf.User,
 		Password: conf.Pass,
 		Database: conf.DbName,
@@ -92,7 +92,7 @@ func getOptions(conf DockerConfig) dockertest.RunOptions {
 		PortBindings: map[docker.Port][]docker.PortBinding{
 			"5432": {
 				{
-					HostIP: "0.0.0.0", HostPort: conf.Port,
+					HostIP: "0.0.0.0", HostPort: conf.Port[1:],
 				},
 			},
 		},
