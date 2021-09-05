@@ -36,7 +36,7 @@ func (u *UserProvider) Get(id int64) (model.User, error) {
 }
 
 func (u *UserProvider) GetWithGitlabUsers(id int64) (model.User, error) {
-	var gitlabEntities entity.GitlabUsers
+	var gitlabEntities entity.GitUsers
 
 	err := u.Model(&gitlabEntities).Where("user_id = ?", id).Select()
 	if err != nil {

@@ -2,9 +2,11 @@ package service
 
 import (
 	config "gitlab-tg-bot/conf"
+	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
 	"strconv"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 
@@ -66,8 +68,12 @@ func (g *GitlabApiService) GetUser(git model.GitUser, userId string) (model.GitU
 	client := gapi.NewGitlab(git.Domain, StandardApiLevel, git.Token)
 	user, _, err := client.User(userId)
 	if err != nil {
-		return model.GitUserInfo{}, nil
+		if strings.Contains(err.Error(), "<401>") {
+			return model.GitUserInfo{}, internal.ErrorAccessDenied
+		}
+		return model.GitUserInfo{}, err
 	}
+
 	return model.GitUserInfo{
 		Id:   int32(user.Id),
 		Name: user.Name,

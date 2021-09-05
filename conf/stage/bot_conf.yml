@@ -8,7 +8,7 @@ IsDebugging: false
 WebHookUrl: https://tg-bot-catch.requestcatcher.com
 
 Db:
-  ConnectionString: "postgres:5432"
+  ConnectionString: "postgres:1001"
   User: "gitlab_bot"
-  Password: "gitlab_bot_pass"
+  Password: "9_9"
   Name: "gitlab_bot"

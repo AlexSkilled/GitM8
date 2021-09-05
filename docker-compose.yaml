@@ -1,8 +1,8 @@
-version: '3.7'
+version: '2.1'
 
 services:
   db:
-    image: postgres:13-alpine
+    image: postgres
     restart: always
     environment:
       - POSTGRES_DB=gitlab_bot
@@ -11,7 +11,7 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "1001:5432"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U gitlab_bot" ]
       interval: 1s
@@ -26,10 +26,9 @@ services:
     image: fenglc/pgadmin4:2.1-python2.7-alpine
     restart: always
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     ports:
-      - 9999:5050
+      - "9999:5050"
     environment:
       DEFAULT_PASSWORD: gitlab_bot_pass
       DEFAULT_USER: gitlab_bot
@@ -38,11 +37,10 @@ services:
 
   migration:
     build:
-      context: .
+      dockerfile: Dockerfile.migrate
     restart: on-failure
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     command: "./migration"
     networks:
       - tgbot
@@ -52,10 +50,9 @@ services:
       context: .
     restart: always
     ports:
-      - 10010:10010
+      - "10010:10010"
     depends_on:
-      migration:
-        condition: service_started
+      - migration
     command: "./main"
     networks:
       tgbot:

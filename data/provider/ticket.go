@@ -2,6 +2,7 @@ package provider
 
 import (
 	"gitlab-tg-bot/data/entity"
+	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
 
@@ -93,10 +94,31 @@ AND        t.hook_types->> ? = 'true'`, repoId, hookType)
 	if err != nil {
 		return nil, err
 	}
+	if len(tickets) == 0 {
+		return nil, internal.ErrorNoTickets
+	}
+
 	return tickets.ToDto(), nil
 }
 
-func (t *TicketProvider) GetGitUserByTicketId(ticketId int32) (model.GitUser, error) {
+func (t *TicketProvider) GetGitUsersByTicketId(ticketId int32) ([]model.GitUser, error) {
+	var git entity.GitUsers
+
+	_, err := t.DB.Query(&git, `
+			SELECT
+			       git_user.*
+			FROM   git_user
+
+			INNER  JOIN tickets_chat_id t 
+		  	ON          git_user.user_id = t.chat_id
+			WHERE       t.id        = ?`, ticketId)
+	if err != nil {
+		return nil, err
+	}
+	return git.ToModel(), nil
+}
+
+func (t *TicketProvider) GetOwnerByTicketId(ticketId int32) (model.GitUser, error) {
 	var git entity.GitUser
 
 	_, err := t.DB.Query(&git, `

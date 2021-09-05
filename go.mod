@@ -1,6 +1,6 @@
 module gitlab-tg-bot
 
-go 1.16
+go 1.13
 
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
@@ -13,7 +13,7 @@ require (
 	github.com/go-pg/pg/v9 v9.2.1
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.0.0-rc1.0.20210608165722-fb1de2fb48dd
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/lib/pq v1.10.2 // indirect
+	github.com/lib/pq v1.10.2
 	github.com/opencontainers/runc v1.0.2 // indirect
 	github.com/ory/dockertest/v3 v3.7.0
 	github.com/plouc/go-gitlab-client v2.0.0-beta.5+incompatible

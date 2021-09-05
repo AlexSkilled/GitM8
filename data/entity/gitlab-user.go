@@ -4,9 +4,9 @@ import (
 	"gitlab-tg-bot/service/model"
 )
 
-type GitlabUsers []GitUser
+type GitUsers []GitUser
 
-func (u *GitlabUsers) ToModel() []model.GitUser {
+func (u *GitUsers) ToModel() []model.GitUser {
 	out := make([]model.GitUser, len(*u))
 	for i, item := range *u {
 		out[i] = item.ToModel()

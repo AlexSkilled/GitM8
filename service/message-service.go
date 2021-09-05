@@ -1,10 +1,11 @@
 package service
 
 import (
-	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
 	"gitlab-tg-bot/service/processor"
+
+	"github.com/sirupsen/logrus"
 )
 
 type MessageService struct {
@@ -29,25 +30,15 @@ func (s *MessageService) ProcessMessage(event model.GitEvent) ([]model.OutputMes
 	if err != nil {
 		return nil, err
 	}
-	if len(tickets) == 0 {
-		return nil, internal.NoTickets
-	}
+
 	messageText, patterns, err := s.patterns.GetMessage("ru_RU", event.HookType, event.SubType)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(event.AuthorId) != 0 {
-		gitUser, err := s.ticket.GetGitUserByTicketId(tickets[0].TicketId)
-		if err != nil {
-			return nil, err
-		}
-
-		user, err := s.GitApiService.GetUser(gitUser, event.AuthorId)
-		if err != nil {
-			return nil, err
-		}
-		event.AuthorName = user.Name
+	event.AuthorName, err = s.findAuthor(event.AuthorId, tickets)
+	if err != nil {
+		return nil, err
 	}
 
 	switch event.HookType {
@@ -63,4 +54,35 @@ func (s *MessageService) ProcessMessage(event model.GitEvent) ([]model.OutputMes
 	}
 
 	return messages, nil
+}
+
+func (s *MessageService) findAuthor(authorId string, tickets []model.TicketChatId) (authorName string, err error) {
+	if len(authorId) == 0 {
+		return "", nil
+	}
+	failedToAccess := make([]model.GitUser, 0)
+
+	gitUsers := make([]model.GitUser, 0)
+
+	for _, item := range tickets {
+		gits, err := s.ticket.GetGitUsersByTicketId(item.TicketId)
+		if err != nil {
+			logrus.Errorf("Ошибка при попытке получить пользователей с помощью тикета(#%d):%v", item.TicketId, err)
+			continue
+		}
+		gitUsers = append(gitUsers, gits...)
+	}
+
+	for _, gitUser := range gitUsers {
+		user, err := s.GitApiService.GetUser(gitUser, authorId)
+		if err != nil {
+			failedToAccess = append(failedToAccess, gitUser)
+			logrus.Error(err)
+			continue
+		}
+		authorName = user.Name
+		break
+	}
+
+	return authorName, nil
 }

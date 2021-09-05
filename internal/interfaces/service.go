@@ -47,3 +47,9 @@ type Configuration interface {
 type MessageService interface {
 	ProcessMessage(event model.GitEvent) (msg []model.OutputMessage, err error)
 }
+
+type TokenExpiration interface {
+	Start()
+	AddGitIds(gits []model.GitUser)
+	Stop()
+}

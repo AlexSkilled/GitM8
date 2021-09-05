@@ -56,7 +56,7 @@ func (h *Handler) ServeHTTP(_ http.ResponseWriter, req *http.Request) {
 
 	msg, err := h.messageService.ProcessMessage(event.ToModel())
 	if err != nil {
-		if err == internal.NoTickets {
+		if err == internal.ErrorNoTickets {
 			return
 		}
 		logrus.Errorf("Ошибка при маршалинге тела запроса: %v", err)

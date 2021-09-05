@@ -3,5 +3,6 @@ package internal
 import "errors"
 
 var (
-	NoTickets = errors.New("отсутствуют билеты по этому хуку")
+	ErrorNoTickets    = errors.New("отсутствуют билеты по этому хуку")
+	ErrorAccessDenied = errors.New("время жизни токена закончилось или токен негоден")
 )
