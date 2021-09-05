@@ -15,7 +15,6 @@ import (
 )
 
 func main() {
-	logrus.Error("fuck this docker")
 	db := Connect()
 	var err error
 

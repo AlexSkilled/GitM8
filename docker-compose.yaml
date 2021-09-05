@@ -7,7 +7,7 @@ services:
     environment:
       - POSTGRES_DB=gitlab_bot
       - POSTGRES_USER=gitlab_bot
-      - POSTGRES_PASSWORD=gitlab_bot_pass
+      - POSTGRES_PASSWORD=9_9
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     ports:
@@ -37,7 +37,7 @@ services:
 
   migration:
     build:
-      dockerfile: Dockerfile.migrate
+      context: .
     restart: on-failure
     depends_on:
       - db
