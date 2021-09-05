@@ -1,0 +1,12 @@
+Token: 1111111111:AAAaaaA1AaAAAa1AaaaAaa1AAAAAA_aAAaA
+ServerUrl: :10010
+SecretKey: mysecretkey
+
+WebHookUrl: https://tg-bot-catch.requestcatcher.com
+
+Db:
+  Host: "localhost"
+  Port: ":997"
+  User: "gitlab_bot"
+  Password: "9_9"
+  Name: "gitlab_bot"

@@ -1,6 +1,8 @@
 package app
 
 import (
+	configuration "gitlab-tg-bot/conf"
+	"gitlab-tg-bot/internal/interfaces"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -10,7 +12,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func CheckMigration(db *pg.DB) {
+func CheckMigration(conf interfaces.Configuration) {
+	db := pg.Connect(&pg.Options{
+		Addr:     conf.GetString(configuration.DbHost) + conf.GetString(configuration.DbPort),
+		User:     conf.GetString(configuration.DbUser),
+		Password: conf.GetString(configuration.DbPassword),
+		Database: conf.GetString(configuration.DbName),
+	})
+
 	newVersion, targetVersion, err :=
 		int64(0), int64(0), error(nil)
 

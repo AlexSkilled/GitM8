@@ -3,16 +3,14 @@ package main
 import (
 	"gitlab-tg-bot/app"
 	configuration "gitlab-tg-bot/conf"
-
-	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	conf, err := configuration.NewConfiguration()
-	if err != nil {
-		logrus.Errorln("Ошибка при конфигурации приложения.")
-		panic(err)
-	}
+	conf := configuration.NewConfiguration()
+
 	application := app.NewApp(conf)
+
+	app.CheckMigration(conf)
+
 	application.Start()
 }

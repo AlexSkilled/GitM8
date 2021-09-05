@@ -1,36 +1,45 @@
 package test
 
 import (
+	"gitlab-tg-bot/app"
+	configuration "gitlab-tg-bot/conf"
+	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/test/utils"
 	"io/ioutil"
 	"log"
 	"os"
-	"os/signal"
 	"sort"
 	"strconv"
 	"strings"
 	"testing"
 
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/pflag"
 
 	"github.com/go-pg/pg/v9"
 )
 
 type TestEnv struct {
 	*pg.DB
+	application app.App
+	conf        interfaces.Configuration
 }
 
 var testEnvironment TestEnv
 
 func TestMain(m *testing.M) {
-	sigs := make(chan os.Signal, 1)
-	signal.Notify(sigs, os.Interrupt)
+	dir, _ := os.Getwd()
+	dir += "/../conf/bot-conf-test.yml"
+	_ = pflag.String("conf-path", dir, "Path to configuration file")
+	pflag.Parse()
+
+	testEnvironment.conf = configuration.NewConfiguration()
 
 	conf := utils.DockerConfig{
-		User:   "gitlab_bot",
-		Pass:   "9_9",
-		DbName: "gitlab_bot",
-		Port:   "997",
+		User:   testEnvironment.conf.GetString(configuration.DbUser),
+		Pass:   testEnvironment.conf.GetString(configuration.DbPassword),
+		DbName: testEnvironment.conf.GetString(configuration.DbName),
+		Port:   testEnvironment.conf.GetString(configuration.DbPort),
 	}
 
 	db, closer, err := utils.CreateDocker(conf)
@@ -41,6 +50,8 @@ func TestMain(m *testing.M) {
 
 	testEnvironment.DB = db
 	testEnvironment.migrate()
+
+	testEnvironment.application = app.NewApp(testEnvironment.conf)
 
 	m.Run()
 }
