@@ -20,11 +20,11 @@ const (
 	Debug      = "IsDebugging"
 	WebHookUrl = "WebHookUrl"
 
-	DbHost     = "Db.Host"
-	DbPort     = "Db.Port"
-	DbUser     = "Db.User"
-	DbPassword = "Db.Password"
-	DbName     = "Db.Name"
+	DbConnectionString = "Db.ConnectionString"
+	DbPort             = "Db.Port"
+	DbUser             = "Db.User"
+	DbPassword         = "Db.Password"
+	DbName             = "Db.Name"
 )
 
 func NewConfiguration() interfaces.Configuration {

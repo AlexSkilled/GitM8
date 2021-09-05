@@ -5,7 +5,7 @@ SecretKey: mysecretkey
 WebHookUrl: https://tg-bot-catch.requestcatcher.com
 
 Db:
-  Host: "localhost"
+  ConnectionString: "localhost"
   Port: ":997"
   User: "gitlab_bot"
   Password: "9_9"
