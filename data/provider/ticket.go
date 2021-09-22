@@ -111,7 +111,7 @@ func (t *TicketProvider) GetGitUsersByTicketId(ticketId int32) ([]model.GitUser,
 
 			INNER  JOIN tickets_chat_id t 
 		  	ON          git_user.user_id = t.chat_id
-			WHERE       t.id        = ?`, ticketId)
+			WHERE       t.ticket_id      = ?`, ticketId)
 	if err != nil {
 		return nil, err
 	}
