@@ -37,10 +37,10 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
     "id": 1756,
     "name": "tn-cicd-tg-bot",
     "description": "",
-    "web_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
+    "web_url": "https://gitlab.com/skilled/tn-cicd-tg-bot",
     "avatar_url": null,
-    "git_ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
-    "git_http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git",
+    "git_ssh_url": "git@gitlab.com:skilled/tn-cicd-tg-bot.git",
+    "git_http_url": "https://gitlab.com/skilled/tn-cicd-tg-bot.git",
     "namespace": "alex",
     "visibility_level": 0,
     "path_with_namespace": "skilled/tn-cicd-tg-bot",
@@ -52,7 +52,7 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
     "message": "Промежуточный коммит\n\n",
     "title": "Промежуточный коммит",
     "timestamp": "2021-06-10T12:13:05+03:00",
-    "url": "https://gitlab.ru/skilled/tn-cicd-tg-bot/-/commit/912fe5ae6e9b2420465a484659ebbc06d557850e",
+    "url": "https://gitlab.com/skilled/tn-cicd-tg-bot/-/commit/912fe5ae6e9b2420465a484659ebbc06d557850e",
     "author": {
       "name": "Alexander",
       "email": "g.a.androidjc2@ya.ru"

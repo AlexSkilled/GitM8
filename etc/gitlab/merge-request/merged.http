@@ -20,19 +20,19 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
     "id": 1692,
     "name": "dummyproj",
     "description": "",
-    "web_url": "https://gitlab.ru/skilled/dummyproj",
+    "web_url": "https://gitlab.com/skilled/dummyproj",
     "avatar_url": null,
-    "git_ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
-    "git_http_url": "https://gitlab.ru/skilled/dummyproj.git",
+    "git_ssh_url": "git@gitlab.com:skilled/dummyproj.git",
+    "git_http_url": "https://gitlab.com/skilled/dummyproj.git",
     "namespace": "alex",
     "visibility_level": 0,
     "path_with_namespace": "skilled/dummyproj",
     "default_branch": "master",
     "ci_config_path": null,
-    "homepage": "https://gitlab.ru/skilled/dummyproj",
-    "url": "git@gitlab.ru:skilled/dummyproj.git",
-    "ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
-    "http_url": "https://gitlab.ru/skilled/dummyproj.git"
+    "homepage": "https://gitlab.com/skilled/dummyproj",
+    "url": "git@gitlab.com:skilled/dummyproj.git",
+    "ssh_url": "git@gitlab.com:skilled/dummyproj.git",
+    "http_url": "https://gitlab.com/skilled/dummyproj.git"
   },
   "object_attributes": {
     "assignee_id": null,
@@ -62,49 +62,49 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
     "title": "Test 1",
     "updated_at": "2021-08-08 10:37:18 UTC",
     "updated_by_id": 2039,
-    "url": "https://gitlab.ru/skilled/dummyproj/-/merge_requests/3",
+    "url": "https://gitlab.com/skilled/dummyproj/-/merge_requests/3",
     "source": {
       "id": 1692,
       "name": "dummyproj",
       "description": "",
-      "web_url": "https://gitlab.ru/skilled/dummyproj",
+      "web_url": "https://gitlab.com/skilled/dummyproj",
       "avatar_url": null,
-      "git_ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
-      "git_http_url": "https://gitlab.ru/skilled/dummyproj.git",
+      "git_ssh_url": "git@gitlab.com:skilled/dummyproj.git",
+      "git_http_url": "https://gitlab.com/skilled/dummyproj.git",
       "namespace": "alex",
       "visibility_level": 0,
       "path_with_namespace": "skilled/dummyproj",
       "default_branch": "master",
       "ci_config_path": null,
-      "homepage": "https://gitlab.ru/skilled/dummyproj",
-      "url": "git@gitlab.ru:skilled/dummyproj.git",
-      "ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
-      "http_url": "https://gitlab.ru/skilled/dummyproj.git"
+      "homepage": "https://gitlab.com/skilled/dummyproj",
+      "url": "git@gitlab.com:skilled/dummyproj.git",
+      "ssh_url": "git@gitlab.com:skilled/dummyproj.git",
+      "http_url": "https://gitlab.com/skilled/dummyproj.git"
     },
     "target": {
       "id": 1692,
       "name": "dummyproj",
       "description": "",
-      "web_url": "https://gitlab.ru/skilled/dummyproj",
+      "web_url": "https://gitlab.com/skilled/dummyproj",
       "avatar_url": null,
-      "git_ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
-      "git_http_url": "https://gitlab.ru/skilled/dummyproj.git",
+      "git_ssh_url": "git@gitlab.com:skilled/dummyproj.git",
+      "git_http_url": "https://gitlab.com/skilled/dummyproj.git",
       "namespace": "alex",
       "visibility_level": 0,
       "path_with_namespace": "skilled/dummyproj",
       "default_branch": "master",
       "ci_config_path": null,
-      "homepage": "https://gitlab.ru/skilled/dummyproj",
-      "url": "git@gitlab.ru:skilled/dummyproj.git",
-      "ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
-      "http_url": "https://gitlab.ru/skilled/dummyproj.git"
+      "homepage": "https://gitlab.com/skilled/dummyproj",
+      "url": "git@gitlab.com:skilled/dummyproj.git",
+      "ssh_url": "git@gitlab.com:skilled/dummyproj.git",
+      "http_url": "https://gitlab.com/skilled/dummyproj.git"
     },
     "last_commit": {
       "id": "cce2ad0cabc9ada497d11855a71864ae65439dfe",
       "message": "Update main.go",
       "title": "Update main.go",
       "timestamp": "2021-08-08T10:31:48+00:00",
-      "url": "https://gitlab.ru/skilled/dummyproj/-/commit/cce2ad0cabc9ada497d11855a71864ae65439dfe",
+      "url": "https://gitlab.com/skilled/dummyproj/-/commit/cce2ad0cabc9ada497d11855a71864ae65439dfe",
       "author": {
         "name": "alex",
         "email": "olegthander@yandex.ru"
@@ -131,8 +131,8 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
   },
   "repository": {
     "name": "dummyproj",
-    "url": "git@gitlab.ru:skilled/dummyproj.git",
+    "url": "git@gitlab.com:skilled/dummyproj.git",
     "description": "",
-    "homepage": "https://gitlab.ru/skilled/dummyproj"
+    "homepage": "https://gitlab.com/skilled/dummyproj"
   }
 }

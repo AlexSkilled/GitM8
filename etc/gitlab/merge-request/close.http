@@ -2,46 +2,48 @@ POST /gitlab HTTP/1.1
 Host: tg-bot-catch.requestcatcher.com
 Connection: close
 Connection: close
-Content-Length: 3571
+Content-Length: 3581
 Content-Type: application/json
+User-Agent: GitLab/14.3.0-pre
 X-Gitlab-Event: Merge Request Hook
-X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
+X-Gitlab-Token: 9zorsUdpmRV2gSpDtML8
 
 {
   "object_kind": "merge_request",
   "event_type": "merge_request",
   "user": {
-    "name": "alex",
-    "username": "skilled",
-    "avatar_url": "https://secure.gravatar.com/avatar/d336181e889aca632406b2f01dd61114?s=80\u0026d=identicon",
-    "email": "olegthander@yandex.ru"
+    "id": 9778012,
+    "name": "Avokad 1",
+    "username": "yalublypisi",
+    "avatar_url": "https://secure.gravatar.com/avatar/cfcb220aae8407eabff0d89f57c37d19?s=80&d=identicon",
+    "email": "yalublypisi@gmail.com"
   },
   "project": {
-    "id": 1692,
-    "name": "dummyproj",
+    "id": 29555520,
+    "name": "Dummyproj",
     "description": "",
-    "web_url": "https://gitlab.ru/skilled/dummyproj",
+    "web_url": "https://gitlab.com/AlexSkilled/dummyproj",
     "avatar_url": null,
-    "git_ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
-    "git_http_url": "https://gitlab.ru/skilled/dummyproj.git",
-    "namespace": "alex",
+    "git_ssh_url": "git@gitlab.com:AlexSkilled/dummyproj.git",
+    "git_http_url": "https://gitlab.com/AlexSkilled/dummyproj.git",
+    "namespace": "AlexSkilled",
     "visibility_level": 0,
-    "path_with_namespace": "skilled/dummyproj",
+    "path_with_namespace": "AlexSkilled/dummyproj",
     "default_branch": "master",
-    "ci_config_path": null,
-    "homepage": "https://gitlab.ru/skilled/dummyproj",
-    "url": "git@gitlab.ru:skilled/dummyproj.git",
-    "ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
-    "http_url": "https://gitlab.ru/skilled/dummyproj.git"
+    "ci_config_path": "",
+    "homepage": "https://gitlab.com/AlexSkilled/dummyproj",
+    "url": "git@gitlab.com:AlexSkilled/dummyproj.git",
+    "ssh_url": "git@gitlab.com:AlexSkilled/dummyproj.git",
+    "http_url": "https://gitlab.com/AlexSkilled/dummyproj.git"
   },
   "object_attributes": {
-    "assignee_id": 2533,
-    "author_id": 2533,
-    "created_at": "2021-08-16 12:06:15 UTC",
+    "assignee_id": null,
+    "author_id": 8344330,
+    "created_at": "2021-09-21 06:36:44 UTC",
     "description": "",
-    "head_pipeline_id": 4752,
-    "id": 1979,
-    "iid": 5,
+    "head_pipeline_id": null,
+    "id": 117671392,
+    "iid": 1,
     "last_edited_at": null,
     "last_edited_by_id": null,
     "merge_commit_sha": null,
@@ -53,70 +55,70 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
     "merge_user_id": null,
     "merge_when_pipeline_succeeds": false,
     "milestone_id": null,
-    "source_branch": "teest-braanch",
-    "source_project_id": 1692,
+    "source_branch": "test2",
+    "source_project_id": 29555520,
     "state_id": 2,
     "target_branch": "master",
-    "target_project_id": 1692,
+    "target_project_id": 29555520,
     "time_estimate": 0,
-    "title": "Teest braanch",
-    "updated_at": "2021-08-16 12:14:18 UTC",
+    "title": "Test2",
+    "updated_at": "2021-09-21 06:41:28 UTC",
     "updated_by_id": null,
-    "url": "https://gitlab.ru/skilled/dummyproj/-/merge_requests/5",
+    "url": "https://gitlab.com/AlexSkilled/dummyproj/-/merge_requests/1",
     "source": {
-      "id": 1692,
-      "name": "dummyproj",
+      "id": 29555520,
+      "name": "Dummyproj",
       "description": "",
-      "web_url": "https://gitlab.ru/skilled/dummyproj",
+      "web_url": "https://gitlab.com/AlexSkilled/dummyproj",
       "avatar_url": null,
-      "git_ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
-      "git_http_url": "https://gitlab.ru/skilled/dummyproj.git",
-      "namespace": "alex",
+      "git_ssh_url": "git@gitlab.com:AlexSkilled/dummyproj.git",
+      "git_http_url": "https://gitlab.com/AlexSkilled/dummyproj.git",
+      "namespace": "AlexSkilled",
       "visibility_level": 0,
-      "path_with_namespace": "skilled/dummyproj",
+      "path_with_namespace": "AlexSkilled/dummyproj",
       "default_branch": "master",
-      "ci_config_path": null,
-      "homepage": "https://gitlab.ru/skilled/dummyproj",
-      "url": "git@gitlab.ru:skilled/dummyproj.git",
-      "ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
-      "http_url": "https://gitlab.ru/skilled/dummyproj.git"
+      "ci_config_path": "",
+      "homepage": "https://gitlab.com/AlexSkilled/dummyproj",
+      "url": "git@gitlab.com:AlexSkilled/dummyproj.git",
+      "ssh_url": "git@gitlab.com:AlexSkilled/dummyproj.git",
+      "http_url": "https://gitlab.com/AlexSkilled/dummyproj.git"
     },
     "target": {
-      "id": 1692,
-      "name": "dummyproj",
+      "id": 29555520,
+      "name": "Dummyproj",
       "description": "",
-      "web_url": "https://gitlab.ru/skilled/dummyproj",
+      "web_url": "https://gitlab.com/AlexSkilled/dummyproj",
       "avatar_url": null,
-      "git_ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
-      "git_http_url": "https://gitlab.ru/skilled/dummyproj.git",
-      "namespace": "alex",
+      "git_ssh_url": "git@gitlab.com:AlexSkilled/dummyproj.git",
+      "git_http_url": "https://gitlab.com/AlexSkilled/dummyproj.git",
+      "namespace": "AlexSkilled",
       "visibility_level": 0,
-      "path_with_namespace": "skilled/dummyproj",
+      "path_with_namespace": "AlexSkilled/dummyproj",
       "default_branch": "master",
-      "ci_config_path": null,
-      "homepage": "https://gitlab.ru/skilled/dummyproj",
-      "url": "git@gitlab.ru:skilled/dummyproj.git",
-      "ssh_url": "git@gitlab.ru:skilled/dummyproj.git",
-      "http_url": "https://gitlab.ru/skilled/dummyproj.git"
+      "ci_config_path": "",
+      "homepage": "https://gitlab.com/AlexSkilled/dummyproj",
+      "url": "git@gitlab.com:AlexSkilled/dummyproj.git",
+      "ssh_url": "git@gitlab.com:AlexSkilled/dummyproj.git",
+      "http_url": "https://gitlab.com/AlexSkilled/dummyproj.git"
     },
     "last_commit": {
-      "id": "fe37ff706561c8dc9727aa28ea5a6544dce4d653",
+      "id": "e98e0038ab298d7bcd18f095ba41c34fc57d6cd1",
       "message": "Update README.md",
       "title": "Update README.md",
-      "timestamp": "2021-08-16T12:05:48+00:00",
-      "url": "https://gitlab.ru/skilled/dummyproj/-/commit/fe37ff706561c8dc9727aa28ea5a6544dce4d653",
+      "timestamp": "2021-08-16T15:04:39+00:00",
+      "url": "https://gitlab.com/AlexSkilled/dummyproj/-/commit/e98e0038ab298d7bcd18f095ba41c34fc57d6cd1",
       "author": {
-        "name": "test user alex b",
-        "email": "aleks-bukov@mail.ru"
+        "name": "alex",
+        "email": "olegthander@yandex.ru"
       }
     },
     "work_in_progress": false,
     "total_time_spent": 0,
+    "time_change": 0,
     "human_total_time_spent": null,
+    "human_time_change": null,
     "human_time_estimate": null,
-    "assignee_ids": [
-      2533
-    ],
+    "assignee_ids": [],
     "state": "closed",
     "action": "close"
   },
@@ -127,22 +129,14 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
       "current": 2
     },
     "updated_at": {
-      "previous": "2021-08-16 12:06:15 UTC",
-      "current": "2021-08-16 12:14:18 UTC"
+      "previous": "2021-09-21 06:36:44 UTC",
+      "current": "2021-09-21 06:41:28 UTC"
     }
   },
   "repository": {
-    "name": "dummyproj",
-    "url": "git@gitlab.ru:skilled/dummyproj.git",
+    "name": "Dummyproj",
+    "url": "git@gitlab.com:AlexSkilled/dummyproj.git",
     "description": "",
-    "homepage": "https://gitlab.ru/skilled/dummyproj"
-  },
-  "assignees": [
-    {
-      "name": "test user alex b",
-      "username": "alex_2",
-      "avatar_url": "https://secure.gravatar.com/avatar/7e32b3a05e16b0d551a164ea404bd19e?s=80\u0026d=identicon",
-      "email": "aleks-bukov@mail.ru"
-    }
-  ]
+    "homepage": "https://gitlab.com/AlexSkilled/dummyproj"
+  }
 }

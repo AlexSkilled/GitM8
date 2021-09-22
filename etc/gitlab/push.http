@@ -25,19 +25,19 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
     "id": 1756,
     "name": "tn-cicd-tg-bot",
     "description": "",
-    "web_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
+    "web_url": "https://gitlab.com/skilled/tn-cicd-tg-bot",
     "avatar_url": null,
-    "git_ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
-    "git_http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git",
+    "git_ssh_url": "git@gitlab.com:skilled/tn-cicd-tg-bot.git",
+    "git_http_url": "https://gitlab.com/skilled/tn-cicd-tg-bot.git",
     "namespace": "alex",
     "visibility_level": 0,
     "path_with_namespace": "skilled/tn-cicd-tg-bot",
     "default_branch": "master",
     "ci_config_path": null,
-    "homepage": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
-    "url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
-    "ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
-    "http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git"
+    "homepage": "https://gitlab.com/skilled/tn-cicd-tg-bot",
+    "url": "git@gitlab.com:skilled/tn-cicd-tg-bot.git",
+    "ssh_url": "git@gitlab.com:skilled/tn-cicd-tg-bot.git",
+    "http_url": "https://gitlab.com/skilled/tn-cicd-tg-bot.git"
   },
   "commits": [
     {
@@ -45,7 +45,7 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
       "message": "Merge branch 'tg-interface'\n",
       "title": "Merge branch 'tg-interface'",
       "timestamp": "2021-06-10T10:44:16+03:00",
-      "url": "https://gitlab.ru/skilled/tn-cicd-tg-bot/-/commit/63c5117c20263339991a0a27f28363afbab70b6a",
+      "url": "https://gitlab.com/skilled/tn-cicd-tg-bot/-/commit/63c5117c20263339991a0a27f28363afbab70b6a",
       "author": {
         "name": "Alexander",
         "email": "g.a.androidjc2@ya.ru"
@@ -71,7 +71,7 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
       "message": "Интерфейсы и сущности\n",
       "title": "Интерфейсы и сущности",
       "timestamp": "2021-06-10T01:48:08+03:00",
-      "url": "https://gitlab.ru/skilled/tn-cicd-tg-bot/-/commit/069a154c43ede6d08db9ef643c43b7e75ce6bed7",
+      "url": "https://gitlab.com/skilled/tn-cicd-tg-bot/-/commit/069a154c43ede6d08db9ef643c43b7e75ce6bed7",
       "author": {
         "name": "Alexander",
         "email": "g.a.androidjc2@ya.ru"
@@ -97,7 +97,7 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
       "message": "клиент для бота\n",
       "title": "клиент для бота",
       "timestamp": "2021-06-10T00:43:02+03:00",
-      "url": "https://gitlab.ru/skilled/tn-cicd-tg-bot/-/commit/5b4bdc6ab89d790b36b63d767f1de7f64183b87d",
+      "url": "https://gitlab.com/skilled/tn-cicd-tg-bot/-/commit/5b4bdc6ab89d790b36b63d767f1de7f64183b87d",
       "author": {
         "name": "Буков Александр Викторович (DigitalSpirit)",
         "email": "olegthander@yander.ru"
@@ -134,11 +134,11 @@ X-Gitlab-Token: CsWEX7bHAQAs3kaKHsna
   "push_options": {},
   "repository": {
     "name": "tn-cicd-tg-bot",
-    "url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+    "url": "git@gitlab.com:skilled/tn-cicd-tg-bot.git",
     "description": "",
-    "homepage": "https://gitlab.ru/skilled/tn-cicd-tg-bot",
-    "git_http_url": "https://gitlab.ru/skilled/tn-cicd-tg-bot.git",
-    "git_ssh_url": "git@gitlab.ru:skilled/tn-cicd-tg-bot.git",
+    "homepage": "https://gitlab.com/skilled/tn-cicd-tg-bot",
+    "git_http_url": "https://gitlab.com/skilled/tn-cicd-tg-bot.git",
+    "git_ssh_url": "git@gitlab.com:skilled/tn-cicd-tg-bot.git",
     "visibility_level": 0
   }
 }
