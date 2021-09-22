@@ -208,9 +208,11 @@ func (p *MergeRequest) getUpdate() []byte {
 
 	if p.Changes.Assignees != nil {
 		update = &mergereq.Change{
-			Old:  p.Changes.Assignees.Previous[0].Name,
 			New:  p.Changes.Assignees.Current[0].Name,
 			Type: mergereq.ReAssignee,
+		}
+		if len(p.Changes.Assignees.Previous) != 0 {
+			update.Old = p.Changes.Assignees.Previous[0].Name
 		}
 	} else if p.Changes.Title != nil {
 		update = &mergereq.Change{
