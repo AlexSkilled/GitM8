@@ -2,6 +2,7 @@ package conf
 
 import (
 	"gitlab-tg-bot/internal/interfaces"
+	"strings"
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -29,6 +30,12 @@ const (
 
 func NewConfiguration() interfaces.Configuration {
 	conf := viper.New()
+
+	conf.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	conf.SetEnvPrefix("TGBOT")
+	conf.AutomaticEnv()
+
+	_ = pflag.String("conf-path", "", "Путь к файлу конфигурации")
 
 	pflag.Parse()
 
