@@ -97,6 +97,10 @@ func (t *Worker) Start() {
 
 		var message *tgbotapi.Message
 
+		if update.EditedMessage != nil {
+			continue
+		}
+
 		if update.Message != nil {
 			message = update.Message
 		} else if update.CallbackQuery.Message != nil {
