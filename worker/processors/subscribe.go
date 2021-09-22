@@ -3,7 +3,7 @@ package processors
 import (
 	"context"
 	"fmt"
-	"gitlab-tg-bot/internal"
+	"gitlab-tg-bot/internal/emoji"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
 	"gitlab-tg-bot/utils"
@@ -77,7 +77,7 @@ func NewSubscribeProcessor(services interfaces.ServiceStorage) *SubscribeProcess
 	return &SubscribeProcessor{
 		service:        services,
 		subscribeForms: map[int64]*subscribeForm{},
-		whiteCheck:     internal.GetEmoji(internal.WhiteCheckMark),
+		whiteCheck:     emoji.GetEmoji(emoji.WhiteCheckMark),
 	}
 }
 

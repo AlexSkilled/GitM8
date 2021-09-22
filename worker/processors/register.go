@@ -4,6 +4,7 @@ import (
 	"context"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
+	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/sirupsen/logrus"
@@ -57,7 +58,7 @@ func (r *Register) Process(ctx context.Context, message *tgbotapi.Message, bot *
 	switch registration.CurrentStep {
 	case StepToken:
 		registration.GitlabToken = messageText
-		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Введите домен Gitlab (стандартный gitlab.ru)"))
+		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Введите домен Gitlab (стандартный gitlab.com)"))
 	case StepDomain:
 		registration.Domain = messageText
 	}
@@ -66,10 +67,17 @@ func (r *Register) Process(ctx context.Context, message *tgbotapi.Message, bot *
 
 	if registration.CurrentStep >= StepEnd {
 		err := r.services.User().AddGitAccount(message.From.ID, registration.ToDto())
+		response := "Успешная регистрация!"
 		if err != nil {
-			// TODO обработать
+			response = "Ошибка при регистрации!"
+			if strings.Contains(err.Error(), "<401>") {
+				response += "Авторизация не прошла. Скорее всего токен не годный"
+			} else {
+				response += "Неизвестная ошибка. Повторите попытку позже"
+				logrus.Errorln(err)
+			}
 		}
-		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Успешная регистрация!"))
+		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, response))
 		delete(r.dialogContext, message.From.ID)
 		return true
 	}
