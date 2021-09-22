@@ -14,7 +14,7 @@ import (
 
 func CheckMigration(conf interfaces.Configuration) {
 	db := pg.Connect(&pg.Options{
-		Addr:     conf.GetString(configuration.DbHost) + conf.GetString(configuration.DbPort),
+		Addr:     conf.GetString(configuration.DbConnectionString),
 		User:     conf.GetString(configuration.DbUser),
 		Password: conf.GetString(configuration.DbPassword),
 		Database: conf.GetString(configuration.DbName),

@@ -23,7 +23,7 @@ type App struct {
 
 func NewApp(conf interfaces.Configuration) App {
 	db := pg.Connect(&pg.Options{
-		Addr:     conf.GetString(config.DbHost) + conf.GetString(config.DbPort),
+		Addr:     conf.GetString(config.DbConnectionString),
 		User:     conf.GetString(config.DbUser),
 		Password: conf.GetString(config.DbPassword),
 		Database: conf.GetString(config.DbName),
@@ -54,7 +54,7 @@ func (a *App) printConfig() {
 	logrus.Infof("Секретный ключ для хуков %s", a.Conf.GetString(config.SecretKey))
 	logrus.Infof("Ссылка на перехватчик хуков %s", a.Conf.GetString(config.WebHookUrl))
 	logrus.Infof("Подключение к базе. Connection string: %s, Username: %s, Password: %s, DbName: %s",
-		a.Conf.GetString(config.DbHost)+a.Conf.GetString(config.DbPort),
+		a.Conf.GetString(config.DbConnectionString),
 		a.Conf.GetString(config.DbUser),
 		a.Conf.GetString(config.DbPassword),
 		a.Conf.GetString(config.DbName))
