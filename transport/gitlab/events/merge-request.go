@@ -16,6 +16,7 @@ const MergeRequestHeader = "Merge Request Hook"
 
 type MergeRequest struct {
 	User struct {
+		Id        int    `json:"id"`
 		Name      string `json:"name"`
 		Username  string `json:"username"`
 		AvatarUrl string `json:"avatar_url"`
@@ -178,7 +179,7 @@ func (p *MergeRequest) ToModel() model.GitEvent {
 		SubType:  convertSubType(p.ObjectAttributes.Action),
 
 		TriggeredByName: p.User.Name,
-		AuthorId:        strconv.Itoa(p.ObjectAttributes.AuthorId),
+		AuthorId:        strconv.Itoa(p.User.Id),
 
 		Payload: payloadMap,
 	}

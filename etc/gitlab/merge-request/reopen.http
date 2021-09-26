@@ -2,7 +2,7 @@ POST /gitlab HTTP/1.1
 Host: tg-bot-catch.requestcatcher.com
 Connection: close
 Connection: close
-Content-Length: 3585
+Content-Length: 3834
 Content-Type: application/json
 User-Agent: GitLab/14.3.0-pre
 X-Gitlab-Event: Merge Request Hook
@@ -12,11 +12,11 @@ X-Gitlab-Token: 9zorsUdpmRV2gSpDtML8
   "object_kind": "merge_request",
   "event_type": "merge_request",
   "user": {
-    "id": 8344330,
-    "name": "AlexSkilled",
-    "username": "AlexSkilled",
-    "avatar_url": "https://secure.gravatar.com/avatar/d336181e889aca632406b2f01dd61114?s=80&d=identicon",
-    "email": "olegthander@yandex.ru"
+    "id": 9778012,
+    "name": "Avokad 1",
+    "username": "yalublypisi",
+    "avatar_url": "https://secure.gravatar.com/avatar/cfcb220aae8407eabff0d89f57c37d19?s=80&d=identicon",
+    "email": "yalublypisi@gmail.com"
   },
   "project": {
     "id": 29555520,
@@ -37,15 +37,15 @@ X-Gitlab-Token: 9zorsUdpmRV2gSpDtML8
     "http_url": "https://gitlab.com/AlexSkilled/dummyproj.git"
   },
   "object_attributes": {
-    "assignee_id": null,
+    "assignee_id": 9778012,
     "author_id": 8344330,
     "created_at": "2021-09-21 06:36:44 UTC",
     "description": "",
-    "head_pipeline_id": null,
+    "head_pipeline_id": 374223905,
     "id": 117671392,
     "iid": 1,
-    "last_edited_at": null,
-    "last_edited_by_id": null,
+    "last_edited_at": "2021-09-21 06:46:41 UTC",
+    "last_edited_by_id": 8344330,
     "merge_commit_sha": null,
     "merge_error": null,
     "merge_params": {
@@ -61,9 +61,9 @@ X-Gitlab-Token: 9zorsUdpmRV2gSpDtML8
     "target_branch": "master",
     "target_project_id": 29555520,
     "time_estimate": 0,
-    "title": "Test2",
-    "updated_at": "2021-09-21 06:42:13 UTC",
-    "updated_by_id": null,
+    "title": "new name",
+    "updated_at": "2021-09-22 09:15:51 UTC",
+    "updated_by_id": 8344330,
     "url": "https://gitlab.com/AlexSkilled/dummyproj/-/merge_requests/1",
     "source": {
       "id": 29555520,
@@ -102,13 +102,13 @@ X-Gitlab-Token: 9zorsUdpmRV2gSpDtML8
       "http_url": "https://gitlab.com/AlexSkilled/dummyproj.git"
     },
     "last_commit": {
-      "id": "e98e0038ab298d7bcd18f095ba41c34fc57d6cd1",
-      "message": "Update README.md",
-      "title": "Update README.md",
-      "timestamp": "2021-08-16T15:04:39+00:00",
-      "url": "https://gitlab.com/AlexSkilled/dummyproj/-/commit/e98e0038ab298d7bcd18f095ba41c34fc57d6cd1",
+      "id": "0ab3a3fb20e5640d54ee597a52674f7a45b9cd8a",
+      "message": "Update main.go",
+      "title": "Update main.go",
+      "timestamp": "2021-09-21T06:52:52+00:00",
+      "url": "https://gitlab.com/AlexSkilled/dummyproj/-/commit/0ab3a3fb20e5640d54ee597a52674f7a45b9cd8a",
       "author": {
-        "name": "alex",
+        "name": "AlexSkilled",
         "email": "olegthander@yandex.ru"
       }
     },
@@ -118,7 +118,9 @@ X-Gitlab-Token: 9zorsUdpmRV2gSpDtML8
     "human_total_time_spent": null,
     "human_time_change": null,
     "human_time_estimate": null,
-    "assignee_ids": [],
+    "assignee_ids": [
+      9778012
+    ],
     "state": "opened",
     "action": "reopen"
   },
@@ -129,8 +131,8 @@ X-Gitlab-Token: 9zorsUdpmRV2gSpDtML8
       "current": 1
     },
     "updated_at": {
-      "previous": "2021-09-21 06:41:28 UTC",
-      "current": "2021-09-21 06:42:13 UTC"
+      "previous": "2021-09-22 09:15:03 UTC",
+      "current": "2021-09-22 09:15:51 UTC"
     }
   },
   "repository": {
@@ -138,5 +140,14 @@ X-Gitlab-Token: 9zorsUdpmRV2gSpDtML8
     "url": "git@gitlab.com:AlexSkilled/dummyproj.git",
     "description": "",
     "homepage": "https://gitlab.com/AlexSkilled/dummyproj"
-  }
+  },
+  "assignees": [
+    {
+      "id": 9778012,
+      "name": "Avokad 1",
+      "username": "yalublypisi",
+      "avatar_url": "https://secure.gravatar.com/avatar/cfcb220aae8407eabff0d89f57c37d19?s=80&d=identicon",
+      "email": "yalublypisi@gmail.com"
+    }
+  ]
 }
