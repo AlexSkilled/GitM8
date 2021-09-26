@@ -1,5 +1,7 @@
 FROM golang as builder
 
+# RUN apk --no-cache add ca-certificates
+
 WORKDIR /app
 COPY . .
 
@@ -13,8 +15,9 @@ COPY ./migrations/ /deploy/server/migration/
 FROM scratch
 
 WORKDIR /
-
 COPY --from=builder ./deploy/server/ .
 ENV TGBOT_CONFPATH=bot_conf.yml
+
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 10010
