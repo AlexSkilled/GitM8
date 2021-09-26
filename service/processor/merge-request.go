@@ -40,13 +40,13 @@ func ProcessMergeRequest(event model.GitEvent, messageText string, patterns map[
 func writeMrPayload(event model.GitEvent, message *utils.NoticeMessage, patterns map[string]string) {
 	switch event.SubType {
 	case model.MRApproved:
-		message.TriggeredByUserName.WriteWithEmoji(emoji.Man, patterns[mergereq.Pattern_ApprovedBy], event.TriggeredByName)
+		message.TriggeredByUserName = utils.NewMessageRawWithEmoji(emoji.Man, patterns[mergereq.Pattern_ApprovedBy], event.TriggeredByName)
 	case model.MRClose:
-		message.TriggeredByUserName.WriteWithEmoji(emoji.Man, patterns[mergereq.Pattern_ClosedBy], event.TriggeredByName)
+		message.TriggeredByUserName = utils.NewMessageRawWithEmoji(emoji.Man, patterns[mergereq.Pattern_ClosedBy], event.TriggeredByName)
 	case model.MRMerge:
-		message.TriggeredByUserName.WriteWithEmoji(emoji.Man, patterns[mergereq.Pattern_MergedBy], event.TriggeredByName)
+		message.TriggeredByUserName = utils.NewMessageRawWithEmoji(emoji.Man, patterns[mergereq.Pattern_MergedBy], event.TriggeredByName)
 	case model.MRUpdated:
-		message.TriggeredByUserName.WriteWithEmoji(emoji.Man, patterns[mergereq.Pattern_UpdatedBy], event.TriggeredByName)
+		message.TriggeredByUserName = utils.NewMessageRawWithEmoji(emoji.Man, patterns[mergereq.Pattern_UpdatedBy], event.TriggeredByName)
 		message.SubInfo = utils.NewMessageRawWithEmoji(extractChanges(event.Payload[payload.Changes], patterns))
 
 	case model.MRUnknown:

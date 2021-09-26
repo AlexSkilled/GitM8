@@ -10,7 +10,7 @@ type NoticeMessage struct {
 	MainInfo MessageRow
 	Author   MessageRow
 
-	TriggeredByUserName MessageRow
+	TriggeredByUserName *MessageRow
 	AssignedToUserName  *MessageRow
 	SubInfo             *MessageRow
 }
@@ -20,10 +20,13 @@ func (n *NoticeMessage) Print() string {
 	sb.WriteString(n.Header.Print() + "\n")
 	sb.WriteString(n.MainInfo.Print() + "\n")
 	sb.WriteString(n.Author.Print() + "\n")
-
 	switch {
+	case n.TriggeredByUserName != nil:
+		sb.WriteString(n.TriggeredByUserName.Print() + "\n")
 	case n.AssignedToUserName != nil:
 		sb.WriteString(n.AssignedToUserName.Print() + "\n")
+	case n.SubInfo != nil:
+		sb.WriteString(n.SubInfo.Print() + "\n")
 	}
 	return sb.String()
 }
@@ -35,8 +38,12 @@ func (n *NoticeMessage) PrintWithEmoji() string {
 	sb.WriteString(n.Author.PrintWithEmoji() + "\n")
 
 	switch {
+	case n.TriggeredByUserName != nil:
+		sb.WriteString(n.TriggeredByUserName.PrintWithEmoji() + "\n")
 	case n.AssignedToUserName != nil:
 		sb.WriteString(n.AssignedToUserName.PrintWithEmoji() + "\n")
+	case n.SubInfo != nil:
+		sb.WriteString(n.SubInfo.PrintWithEmoji() + "\n")
 	}
 	return sb.String()
 }
