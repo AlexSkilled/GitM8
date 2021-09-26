@@ -18,44 +18,42 @@ func ProcessMergeRequest(event model.GitEvent, messageText string, patterns map[
 		panic(err) // TODO
 	}
 
-	message := &utils.MessageBuilder{}
-
-	messageText = mrMessagePreAppend[event.SubType] + messageText
+	message := &utils.NoticeMessage{}
 
 	mergeRequestNameWithLink := "[" + pl.Name + "](" + pl.Link + ")"
 
-	message.WriteStringNF(fmt.Sprintf(messageText, event.ProjectName, mergeRequestNameWithLink))
+	message.Header.WriteWithEmoji(mrMessageEmoji[event.SubType], messageText, event.ProjectName, mergeRequestNameWithLink)
 
-	message.WriteStringNF("🔀" + fmt.Sprintf(patterns[mergereq.Pattern_Branches], pl.SourceBranch, pl.TargetBranch))
+	message.MainInfo.WriteWithEmoji(emoji.Branches, patterns[mergereq.Pattern_Branches], pl.SourceBranch, pl.TargetBranch)
 
-	message.WriteStringNF(emoji.Man + fmt.Sprintf(patterns[mergereq.Pattern_OpenedBy], event.AuthorName))
+	message.Author.WriteWithEmoji(emoji.Man, patterns[mergereq.Pattern_OpenedBy], event.AuthorName)
 
 	if len(pl.AssignedTo) != 0 && event.SubType != model.MRApproved {
-		message.WriteStringNF("👁‍🗨" + fmt.Sprintf(patterns[mergereq.Pattern_AssignedTo], pl.AssignedTo))
+		message.AssignedToUserName = utils.NewMessageRawWithEmoji(emoji.EyeWatch, patterns[mergereq.Pattern_AssignedTo], pl.AssignedTo)
 	}
 
 	writeMrPayload(event, message, patterns)
 
-	return message.String()
+	return message.PrintWithEmoji(), nil
 }
 
-func writeMrPayload(event model.GitEvent, message *utils.MessageBuilder, patterns map[string]string) {
+func writeMrPayload(event model.GitEvent, message *utils.NoticeMessage, patterns map[string]string) {
 	switch event.SubType {
 	case model.MRApproved:
-		message.WriteStringNF(emoji.Man+patterns[mergereq.Pattern_ApprovedBy], event.TriggeredByName)
+		message.TriggeredByUserName.WriteWithEmoji(emoji.Man, patterns[mergereq.Pattern_ApprovedBy], event.TriggeredByName)
 	case model.MRClose:
-		message.WriteStringNF(emoji.Man+patterns[mergereq.Pattern_ClosedBy], event.TriggeredByName)
+		message.TriggeredByUserName.WriteWithEmoji(emoji.Man, patterns[mergereq.Pattern_ClosedBy], event.TriggeredByName)
 	case model.MRMerge:
-		message.WriteStringNF(emoji.Man+patterns[mergereq.Pattern_MergedBy], event.TriggeredByName)
+		message.TriggeredByUserName.WriteWithEmoji(emoji.Man, patterns[mergereq.Pattern_MergedBy], event.TriggeredByName)
 	case model.MRUpdated:
-		message.WriteStringNF(emoji.Man+patterns[mergereq.Pattern_UpdatedBy], event.TriggeredByName)
-		message.WriteStringN(extractChanges(event.Payload[payload.Changes], patterns))
+		message.TriggeredByUserName.WriteWithEmoji(emoji.Man, patterns[mergereq.Pattern_UpdatedBy], event.TriggeredByName)
+		message.SubInfo = utils.NewMessageRawWithEmoji(extractChanges(event.Payload[payload.Changes], patterns))
 
 	case model.MRUnknown:
 	}
 }
 
-func extractChanges(change []byte, patterns map[string]string) string {
+func extractChanges(change []byte, patterns map[string]string) (emo string, mes string) {
 	var update mergereq.Change
 	err := json.Unmarshal(change, &update)
 	if err != nil {
@@ -64,16 +62,16 @@ func extractChanges(change []byte, patterns map[string]string) string {
 
 	switch update.Type {
 	case mergereq.Rename:
-		return fmt.Sprintf("🆕"+patterns[mergereq.Pattern_Rename], update.Old, update.New)
+		return emoji.New, fmt.Sprintf(patterns[mergereq.Pattern_Rename], update.Old, update.New)
 	case mergereq.Update:
-		return fmt.Sprintf("🆕"+patterns[mergereq.Pattern_Update], "["+update.Old+"]("+update.New+")")
+		return emoji.New, fmt.Sprintf(patterns[mergereq.Pattern_Update], "["+update.Old+"]("+update.New+")")
 	case mergereq.ReAssignee:
-		return fmt.Sprintf("🆕"+patterns[mergereq.Pattern_ReAssignee], update.Old, update.New)
+		return emoji.New, fmt.Sprintf(patterns[mergereq.Pattern_ReAssignee], update.Old, update.New)
 	}
-	return ""
+	return "", ""
 }
 
-var mrMessagePreAppend = map[model.GitHookSubtype]string{
+var mrMessageEmoji = map[model.GitHookSubtype]string{
 	model.MRApproved: "✅",
 	model.MRClose:    "🛑",
 	model.MRMerge:    "🔀",

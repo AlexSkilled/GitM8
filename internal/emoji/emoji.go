@@ -11,8 +11,12 @@ const (
 	YellowLargeSquare = 0x1F7E8
 	RedLargeSquare    = 0x1F7E5
 	GreenLargeSquare  = 0x1F7E9
-	GrayLargeSquare   = "⬜"
-	Man               = "🙎🏼\u200d♂️"
+
+	GrayLargeSquare = "⬜"
+	Man             = "🙎🏼\u200d♂️"
+	Branches        = "🔀"
+	EyeWatch        = "👁‍🗨"
+	New             = "🆕"
 
 	WhiteLargeCircle  = 0x26AA
 	OrangeLargeCircle = 0x1F7E0
