@@ -4,6 +4,8 @@ import (
 	"gitlab-tg-bot/internal/interfaces"
 	"strings"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
@@ -43,12 +45,15 @@ func NewConfiguration() interfaces.Configuration {
 	confPath := conf.GetString(ConfPath)
 
 	if confPath != "" {
+		logrus.Println(confPath)
 		conf.SetConfigFile(confPath)
 		err := conf.ReadInConfig()
 
 		if err != nil {
 			panic(err)
 		}
+	} else {
+		logrus.Println("Путь к конфигу пуст!")
 	}
 
 	return conf

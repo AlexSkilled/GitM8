@@ -1,12 +1,20 @@
-FROM golang
+FROM golang as builder
 
 WORKDIR /app
-
 COPY . .
-ENV BOT_CONFPATH=conf/stage/bot_conf.yml
 
-RUN go build -o migration migrations/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /deploy/server/migration/main ./migrations/main.go
 
-RUN go build -o main cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /deploy/server/main ./cmd/main.go
+
+COPY ./conf/stage/bot_conf.yml /deploy/server/bot_conf.yml
+COPY ./migrations/ /deploy/server/migration/
+
+FROM scratch
+
+WORKDIR /
+
+COPY --from=builder ./deploy/server/ .
+ENV TGBOT_CONFPATH=bot_conf.yml
 
 EXPOSE 10010

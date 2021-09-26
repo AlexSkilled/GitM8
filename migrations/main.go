@@ -20,27 +20,24 @@ func main() {
 
 	oldVersion, newVersion, err := migrations.Run(db, pflag.Args()...)
 	if err != nil {
-		if len(err.Error()) > 38 && err.Error()[0:38] == "table \"gopg_migrations\" does not exist" {
+		if strings.Contains(err.Error(), "\"gopg_migrations\" does not exist") {
 			args := []string{"init"}
 			_, _, err = migrations.Run(db, args...)
 			if err != nil {
+				panic(err)
 			}
-			fmt.Print("Initialized! Version is 0.\n")
-		} else {
 		}
 		oldVersion, newVersion, err = migrations.Run(db, pflag.Args()...)
 		if err != nil {
-
+			fmt.Printf("Ошибка при накатке миграции! %s", err.Error())
+			os.Exit(1)
 		}
 	}
-	if err != nil {
-		fmt.Printf("%s\n", err.Error())
-		os.Exit(1)
-	}
+
 	fmt.Println(oldVersion, " -> ", newVersion)
 
 	wd, _ := os.Getwd()
-	wd += "\\migrations\\message-patterns-data\\"
+	wd += "/migrations/message-patterns-data/"
 	patterns, err := ioutil.ReadDir(wd)
 	if err != nil {
 		logrus.Error(err)

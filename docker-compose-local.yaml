@@ -28,7 +28,20 @@ services:
     restart: on-failure
     depends_on:
       - db
-    command: "./migration/main"
+    command: "./migration"
+    networks:
+      - tgbot
+
+  pgadmin:
+    image: fenglc/pgadmin4:2.1-python2.7-alpine
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "9999:5050"
+    environment:
+      DEFAULT_PASSWORD: gitlab_bot_pass
+      DEFAULT_USER: gitlab_bot
     networks:
       - tgbot
 
