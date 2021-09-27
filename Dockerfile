@@ -5,19 +5,17 @@ FROM golang as builder
 WORKDIR /app
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /deploy/server/migration/main ./migrations/main.go
-
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /deploy/server/main ./cmd/main.go
+RUN apt install ca-certificates && \
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /deploy/server/migrations/main ./migrations/main.go &&\
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /deploy/server/main ./cmd/main.go
 
 COPY ./conf/stage/bot_conf.yml /deploy/server/bot_conf.yml
-COPY ./migrations/ /deploy/server/migration/
+COPY ./migrations/ /deploy/server/migrations/
 
 FROM scratch
 
-WORKDIR /
+WORKDIR /app
 COPY --from=builder ./deploy/server/ .
 ENV TGBOT_CONFPATH=bot_conf.yml
-
-COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 10010

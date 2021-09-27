@@ -28,7 +28,7 @@ services:
     restart: on-failure
     depends_on:
       - db
-    command: "./migration/main"
+    command: "./migrations/main"
     networks:
       - tgbot
 
