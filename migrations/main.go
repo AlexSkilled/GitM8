@@ -5,6 +5,7 @@ import (
 	config "gitlab-tg-bot/conf"
 	"io/ioutil"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/sirupsen/logrus"
@@ -37,7 +38,7 @@ func main() {
 	fmt.Println(oldVersion, " -> ", newVersion)
 
 	wd, _ := os.Getwd()
-	wd += "/migrations/message-patterns-data/"
+	wd = path.Join(wd, "migrations", "message-patterns-data")
 	patterns, err := ioutil.ReadDir(wd)
 	if err != nil {
 		logrus.Error(err)
@@ -48,8 +49,8 @@ func main() {
 
 	for _, f := range patterns {
 		name := f.Name()
-		if strings.Contains(name, ".sql") {
-			file, err := ioutil.ReadFile(wd + name)
+		if strings.HasSuffix(name, ".sql") {
+			file, err := ioutil.ReadFile(path.Join(wd, name))
 			if err != nil {
 				logrus.Error(err)
 				continue
