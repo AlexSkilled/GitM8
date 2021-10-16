@@ -1,12 +1,13 @@
 package service
 
 import (
+	"strconv"
+	"strings"
+
 	config "gitlab-tg-bot/conf"
 	"gitlab-tg-bot/internal"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
-	"strconv"
-	"strings"
 
 	"github.com/sirupsen/logrus"
 
