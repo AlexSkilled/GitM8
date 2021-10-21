@@ -12,7 +12,7 @@ type PublicNotifier interface {
 
 type TgProcessor interface {
 	IsInterceptor() bool
-	Process(ctx context.Context, message *tgbotapi.Message, bot *tgbotapi.BotAPI) (isEnd bool)
+	Handle(ctx context.Context, message *tgbotapi.Message, bot *tgbotapi.BotAPI) (isEnd bool)
 }
 
 type PublicProcessor interface {

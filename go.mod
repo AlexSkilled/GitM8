@@ -3,6 +3,7 @@ module gitlab-tg-bot
 go 1.13
 
 require (
+	github.com/AlexSkilled/go_telegram v0.0.0-20211016125822-82c123a0518b
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
@@ -21,5 +22,6 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
-	github.com/urakozz/go-emoji v0.0.0-20200127103110-a37fee94b407
 )
+
+replace github.com/AlexSkilled/go_telegram => E:\workspace\pet\telegram_botificator

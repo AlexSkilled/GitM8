@@ -2,18 +2,18 @@ package processors
 
 import (
 	"context"
-	"gitlab-tg-bot/internal/interfaces"
-	"gitlab-tg-bot/service/model"
 	"strings"
 
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"gitlab-tg-bot/internal/interfaces"
+	"gitlab-tg-bot/service/model"
+
+	tgmodel "github.com/AlexSkilled/go_telegram/pkg/model"
 	"github.com/sirupsen/logrus"
 )
 
 const (
 	StepToken interfaces.StepName = iota
 	StepDomain
-	StepEnd
 )
 
 type Register struct {
@@ -36,8 +36,6 @@ func (r *registrationProcess) ToDto() model.GitUser {
 	}
 }
 
-var _ interfaces.Interceptor = (*Register)(nil)
-
 func NewRegisterProcessor(services interfaces.ServiceStorage) *Register {
 	return &Register{
 		services:      services,
@@ -45,43 +43,43 @@ func NewRegisterProcessor(services interfaces.ServiceStorage) *Register {
 	}
 }
 
-func (r *Register) Process(ctx context.Context, message *tgbotapi.Message, bot *tgbotapi.BotAPI) (isEnd bool) {
+func (r *Register) Handle(_ context.Context, message *tgmodel.MessageIn) (out *tgmodel.MessageOut) {
 	registration, ok := r.dialogContext[message.From.ID]
 	if !ok {
 		r.dialogContext[message.From.ID] = &registrationProcess{
 			CurrentStep: StepToken,
 		}
-		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Введите токен для  Gitlab (необходимы права на использование API)"))
-		return false
+		return &tgmodel.MessageOut{
+			Text: "Введите токен для  Gitlab (необходимы права на использование API)",
+		}
 	}
-	messageText := message.Text
+
 	switch registration.CurrentStep {
 	case StepToken:
-		registration.GitlabToken = messageText
-		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, "Введите домен Gitlab (стандартный gitlab.com)"))
-	case StepDomain:
-		registration.Domain = messageText
-	}
-	logrus.Info("Для шага ", registration.CurrentStep, ". Используется значение:", messageText)
-	registration.CurrentStep++
-
-	if registration.CurrentStep >= StepEnd {
-		err := r.services.User().AddGitAccount(message.From.ID, registration.ToDto())
-		response := "Успешная регистрация!"
-		if err != nil {
-			response = "Ошибка при регистрации!"
-			if strings.Contains(err.Error(), "<401>") {
-				response += "Авторизация не прошла. Скорее всего токен не годный"
-			} else {
-				response += "Неизвестная ошибка. Повторите попытку позже"
-				logrus.Errorln(err)
-			}
+		registration.GitlabToken = message.Text
+		registration.CurrentStep++
+		return &tgmodel.MessageOut{
+			Text: "Введите домен Gitlab (стандартный gitlab.com)",
 		}
-		_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, response))
-		delete(r.dialogContext, message.From.ID)
-		return true
+	case StepDomain:
+		registration.Domain = message.Text
 	}
-	return false
+
+	err := r.services.User().AddGitAccount(message.From.ID, registration.ToDto())
+	response := "Успешная регистрация!"
+	if err != nil {
+		response = "Ошибка при регистрации!"
+		if strings.Contains(err.Error(), "<401>") {
+			response += "Авторизация не прошла. Скорее всего токен не годный"
+		} else {
+			response += "Неизвестная ошибка. Повторите попытку позже"
+			logrus.Errorln(err)
+		}
+	}
+	delete(r.dialogContext, message.From.ID)
+	return &tgmodel.MessageOut{
+		Text: response,
+	}
 }
 
 func (r *Register) IsInterceptor() bool {

@@ -2,16 +2,19 @@ package processors
 
 import (
 	"context"
-	"gitlab-tg-bot/internal/interfaces"
 
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"gitlab-tg-bot/internal/interfaces"
+	"gitlab-tg-bot/worker/commands"
+
+	tg "github.com/AlexSkilled/go_telegram/pkg"
+	tgmodel "github.com/AlexSkilled/go_telegram/pkg/model"
 )
 
 type Start struct {
 	services interfaces.ServiceStorage
 }
 
-var _ interfaces.TgProcessor = (*Start)(nil)
+var _ tg.CommandHandler = (*Start)(nil)
 
 func NewStartProcessor(services interfaces.ServiceStorage) *Start {
 	return &Start{
@@ -23,9 +26,13 @@ func (s *Start) IsInterceptor() bool {
 	return false
 }
 
-func (s *Start) Process(ctx context.Context, message *tgbotapi.Message, bot *tgbotapi.BotAPI) (isEnd bool) {
-	messageText := "Новый профиль телеграм добавлен."
-	_, _ = bot.Send(tgbotapi.NewMessage(message.Chat.ID, messageText))
+func (s *Start) Handle(_ context.Context, _ *tgmodel.MessageIn) (out *tgmodel.MessageOut) {
+	btns := &tgmodel.InlineKeyboard{}
+	btns.AddButton("Регистрация", commands.Register)
 
-	return true
+	return &tgmodel.MessageOut{
+		Text:          "Главное меню",
+		InlineButtons: btns,
+	}
+
 }

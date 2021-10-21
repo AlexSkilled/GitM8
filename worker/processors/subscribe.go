@@ -3,11 +3,12 @@ package processors
 import (
 	"context"
 	"fmt"
+	"strconv"
+
 	"gitlab-tg-bot/internal/emoji"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
 	"gitlab-tg-bot/utils"
-	"strconv"
 
 	"github.com/sirupsen/logrus"
 
@@ -81,7 +82,7 @@ func NewSubscribeProcessor(services interfaces.ServiceStorage) *SubscribeProcess
 	}
 }
 
-func (s *SubscribeProcessor) Process(ctx context.Context, message *tgbotapi.Message, bot *tgbotapi.BotAPI) (isEnd bool) {
+func (s *SubscribeProcessor) Handle(ctx context.Context, message *tgbotapi.Message, bot *tgbotapi.BotAPI) (isEnd bool) {
 	user, err := utils.ExtractUser(ctx)
 	if err != nil {
 		logrus.Errorln(err)
@@ -107,7 +108,7 @@ func (s *SubscribeProcessor) Process(ctx context.Context, message *tgbotapi.Mess
 	case SubscriptionStep_ObtainDomain:
 		form.currentStep++
 		form.domain = message.Text
-		return s.Process(ctx, message, bot)
+		return s.Handle(ctx, message, bot)
 	case SubscriptionStep_OfferRepository:
 		form.currentStep++
 		for _, item := range user.Gitlabs {
@@ -121,7 +122,7 @@ func (s *SubscribeProcessor) Process(ctx context.Context, message *tgbotapi.Mess
 		form.currentStep++
 		form.repositoryId = message.Text
 		s.updateRepositoryMessage(message.Chat.ID, form, bot)
-		return s.Process(ctx, message, bot)
+		return s.Handle(ctx, message, bot)
 	case SubscriptionStep_OfferType:
 		form.currentStep++
 		return s.suggestHookType(message, form, bot)
@@ -255,7 +256,7 @@ func (s *SubscribeProcessor) suggestDomains(user model.User, form *subscribeForm
 			logrus.Errorln(err)
 			return true
 		}
-		return s.Process(ctx, message, bot)
+		return s.Handle(ctx, message, bot)
 	default:
 		buttons := make([]tgbotapi.InlineKeyboardButton, len(user.Gitlabs))
 		for _, item := range user.Gitlabs {
@@ -315,7 +316,7 @@ func (s *SubscribeProcessor) suggestRepositories(form *subscribeForm, message *t
 		form.currentStep++
 		bot.Send(tgbotapi.NewMessage(message.Chat.ID,
 			fmt.Sprintf("Найден единственный репозиторий - %s.", repos[0].Name)))
-		return s.Process(ctx, message, bot)
+		return s.Handle(ctx, message, bot)
 	default:
 		buttons := make([]tgbotapi.InlineKeyboardButton, len(repos))
 		for i, item := range repos {
