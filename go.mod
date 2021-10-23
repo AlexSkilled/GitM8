@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/AlexSkilled/go_telegram v0.0.0-20211016125822-82c123a0518b
+	github.com/AlexSkilled/go_tg v0.0.0-20211023165004-4328202305eb
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
@@ -24,4 +25,4 @@ require (
 	github.com/stretchr/testify v1.7.0
 )
 
-replace github.com/AlexSkilled/go_telegram => E:\workspace\pet\telegram_botificator
+replace github.com/AlexSkilled/go_tg => E:\workspace\pet\go_tg

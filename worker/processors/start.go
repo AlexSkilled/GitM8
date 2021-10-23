@@ -6,8 +6,8 @@ import (
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/worker/commands"
 
-	tg "github.com/AlexSkilled/go_telegram/pkg"
-	tgmodel "github.com/AlexSkilled/go_telegram/pkg/model"
+	tg "github.com/AlexSkilled/go_tg/pkg"
+	tgmodel "github.com/AlexSkilled/go_tg/pkg/model"
 )
 
 type Start struct {

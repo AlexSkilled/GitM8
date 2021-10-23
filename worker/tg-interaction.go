@@ -13,8 +13,8 @@ import (
 
 	"github.com/go-pg/pg/v9"
 
-	tg "github.com/AlexSkilled/go_telegram/pkg"
-	tgmodel "github.com/AlexSkilled/go_telegram/pkg/model"
+	tg "github.com/AlexSkilled/go_tg/pkg"
+	tgmodel "github.com/AlexSkilled/go_tg/pkg/model"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/sirupsen/logrus"
 )

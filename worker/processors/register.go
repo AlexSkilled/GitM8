@@ -7,7 +7,7 @@ import (
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
 
-	tgmodel "github.com/AlexSkilled/go_telegram/pkg/model"
+	tgmodel "github.com/AlexSkilled/go_tg/pkg/model"
 	"github.com/sirupsen/logrus"
 )
 
