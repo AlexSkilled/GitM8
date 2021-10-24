@@ -168,7 +168,7 @@ func (s *SubscribeProcessor) Dump(chatId int64) {
 	delete(s.subscribeForms, chatId)
 }
 
-func (s *SubscribeProcessor) suggestDomains(user model.User, form *subscribeForm, chatId int64) *tgmodel.MessageOut {
+func (s *SubscribeProcessor) suggestDomains(user model.User, form *subscribeForm, chatId int64) tg.TgMessage {
 	switch len(user.Gitlabs) {
 	case 0:
 		s.Dump(chatId)
@@ -176,8 +176,14 @@ func (s *SubscribeProcessor) suggestDomains(user model.User, form *subscribeForm
 	case 1:
 		form.currentStep++
 		form.gitlab = user.Gitlabs[0]
-		out := s.suggestRepositories(form, chatId)
-		out.Text = fmt.Sprintf("Зарегистрирован только один домен - %s.\nЭтап пропускается.\n%s", user.Gitlabs[0].Domain, out.Text)
+		out := &tg.MultipleMessage{
+			chatId: []tg.TgMessage{
+				&tgmodel.MessageOut{
+					Text: fmt.Sprintf("Зарегистрирован только один домен - %s.\nЭтап пропускается.", user.Gitlabs[0].Domain),
+				},
+				s.suggestRepositories(form, chatId),
+			},
+		}
 		return out
 	default:
 		btns := &tgmodel.InlineKeyboard{Columns: 2}
@@ -206,7 +212,7 @@ func (s *SubscribeProcessor) updateDomains(form *subscribeForm, user model.User,
 	return tgmodel.EditMessageReply(buttons, messageId)
 }
 
-func (s *SubscribeProcessor) suggestRepositories(form *subscribeForm, chatId int64) (out *tgmodel.MessageOut) {
+func (s *SubscribeProcessor) suggestRepositories(form *subscribeForm, chatId int64) (out tg.TgMessage) {
 	repos, err := s.service.Subscription().GetRepositories(form.gitlab)
 	if err != nil {
 		logrus.Errorln(err)
@@ -220,8 +226,13 @@ func (s *SubscribeProcessor) suggestRepositories(form *subscribeForm, chatId int
 	case 1:
 		form.currentStep++
 		form.repositoryId = repos[0].Id
-		out = s.suggestHookType()
-		out.Text = fmt.Sprintf("Найден единственный репозиторий - %s.Этап пропускается\n%s", repos[0].Name, out.Text)
+
+		out = &tg.MultipleMessage{
+			chatId: []tg.TgMessage{
+				&tgmodel.MessageOut{Text: fmt.Sprintf("Найден единственный репозиторий - %s.Этап пропускается", repos[0].Name)},
+				s.suggestHookType(),
+			},
+		}
 		return out
 	default:
 		btns := &tgmodel.InlineKeyboard{Columns: 2}
