@@ -11,8 +11,8 @@ import (
 	"gitlab-tg-bot/utils"
 	"gitlab-tg-bot/worker/commands"
 
+	tg "github.com/AlexSkilled/go_tg/pkg"
 	tgmodel "github.com/AlexSkilled/go_tg/pkg/model"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,12 +21,8 @@ type SubscriptionStep int32
 const (
 	SubscriptionStep_OfferDomain SubscriptionStep = iota
 	SubscriptionStep_ObtainDomain
-	SubscriptionStep_OfferRepository
 	SubscriptionStep_ObtainRepository
-	SubscriptionStep_OfferType
 	SubscriptionStep_ObtainType
-
-	SubscriptionStepEnd
 )
 
 type HookType int
@@ -70,7 +66,6 @@ type subscribeForm struct {
 	gitlab       model.GitUser
 	currentStep  SubscriptionStep
 	hookTypes    map[HookType]bool
-	lastMessage  tgbotapi.Message
 }
 
 func NewSubscribeProcessor(services interfaces.ServiceStorage) *SubscribeProcessor {
@@ -81,50 +76,52 @@ func NewSubscribeProcessor(services interfaces.ServiceStorage) *SubscribeProcess
 	}
 }
 
-func (s *SubscribeProcessor) Handle(ctx context.Context, in *tgmodel.MessageIn) (out *tgmodel.MessageOut) {
+func (s *SubscribeProcessor) Handle(ctx context.Context, in *tgmodel.MessageIn) (out tg.TgMessage) {
 	user, err := utils.ExtractUser(ctx)
 	if err != nil {
 		logrus.Errorln(err)
 		return nil
 	}
 
-	chatId := in.Chat.ID
-
-	form, ok := s.subscribeForms[chatId]
+	form, ok := s.subscribeForms[in.Chat.ID]
 	if !ok {
-		s.subscribeForms[chatId] = &subscribeForm{
+		s.subscribeForms[in.Chat.ID] = &subscribeForm{
 			currentStep: SubscriptionStep_OfferDomain,
 			hookTypes:   map[HookType]bool{},
 			tgUserId:    in.From.ID,
 		}
-		form, _ = s.subscribeForms[chatId]
+		form, _ = s.subscribeForms[in.Chat.ID]
 	}
 
 	switch form.currentStep {
 	case SubscriptionStep_OfferDomain:
 		form.currentStep++
-		return s.suggestDomains(user, form, in, ctx)
+		return s.suggestDomains(user, form, in.Chat.ID)
 	case SubscriptionStep_ObtainDomain:
 		form.currentStep++
-		form.domain = in.Text
-		return s.Handle(ctx, in)
-	case SubscriptionStep_OfferRepository:
-		form.currentStep++
 		for _, item := range user.Gitlabs {
-			if item.Domain == form.domain {
+			if item.Domain == in.Text {
 				form.gitlab = item
 				break
 			}
 		}
-		return s.suggestRepositories(form, in, ctx)
+		multipleMessage := &tg.MultipleMessage{
+			in.Chat.ID: []tg.TgMessage{
+				s.updateDomains(form, user, in.MessageID),
+				s.suggestRepositories(form, in.Chat.ID),
+			},
+		}
+		return multipleMessage
 	case SubscriptionStep_ObtainRepository:
 		form.currentStep++
 		form.repositoryId = in.Text
-		s.updateRepositoryMessage(form)
-		return s.Handle(ctx, in)
-	case SubscriptionStep_OfferType:
-		form.currentStep++
-		return s.suggestHookType()
+		multipleMessage := &tg.MultipleMessage{
+			in.Chat.ID: []tg.TgMessage{
+				s.updateRepositoryMessage(form, in.MessageID),
+				s.suggestHookType(),
+			},
+		}
+		return multipleMessage
 	case SubscriptionStep_ObtainType:
 		typeNumber, err := strconv.ParseInt(in.Text, 10, 64)
 		if err != nil {
@@ -133,7 +130,7 @@ func (s *SubscribeProcessor) Handle(ctx context.Context, in *tgmodel.MessageIn) 
 
 		if typeNumber != int64(EndChoosingEvent) {
 			form.hookTypes[HookType(typeNumber)] = !form.hookTypes[HookType(typeNumber)]
-			return s.updateHookTypeMessage()
+			return s.updateHookTypeMessage(form, in.MessageID)
 		}
 	}
 	webhook := model.Hook{
@@ -151,7 +148,7 @@ func (s *SubscribeProcessor) Handle(ctx context.Context, in *tgmodel.MessageIn) 
 	s.finalizeChoose(form)
 	_, err = s.service.Subscription().Subscribe(form.gitlab, in.Chat.ID, webhook)
 
-	delete(s.subscribeForms, chatId)
+	delete(s.subscribeForms, in.Chat.ID)
 
 	if err != nil {
 		return &tgmodel.MessageOut{
@@ -161,91 +158,26 @@ func (s *SubscribeProcessor) Handle(ctx context.Context, in *tgmodel.MessageIn) 
 	return &tgmodel.MessageOut{
 		Text: "Успешно создан слушатель эвентов",
 	}
-
-	//if update.CallbackQuery != nil {
-	//	switch form.currentStep {
-	//	case SubscriptionStepDomain:
-	//		form.domain = update.CallbackQuery.Data
-	//		s.updateDomainMessage(user, update.CallbackQuery.Message.Chat.ID, form, bot)
-	//	case SubscriptionStepRepository:
-	//		form.repositoryId = update.CallbackQuery.Data
-	//		s.updateRepositoryMessage(update.CallbackQuery.Message.Chat.ID, form, bot)
-	//	case SubscriptionStepType:
-	//		typeNumber, err := strconv.ParseInt(update.CallbackQuery.Data, 10, 64)
-	//		if err != nil {
-	//			logrus.Errorln("Ошибка парсинга ответа!", err)
-	//		}
-	//
-	//		if typeNumber != int64(EndChoosingEvent) {
-	//			form.hookTypes[HookType(typeNumber)] = !form.hookTypes[HookType(typeNumber)]
-	//			return s.updateHookTypeMessage(update.CallbackQuery.Message.Chat.ID, form, bot)
-	//		}
-	//	}
-	//
-	//	form.currentStep++
-	//}
-	//
-	//switch form.currentStep {
-	//case SubscriptionStepDomain:
-	//	return s.suggestDomains(user, form, update, bot, ctx)
-	//case SubscriptionStepRepository:
-	//	for _, item := range user.Gitlabs {
-	//		if item.Domain == form.domain {
-	//			form.gitlab = item
-	//			break
-	//		}
-	//	}
-	//	return s.suggestRepositories(form, update, bot, ctx)
-	//case SubscriptionStepType:
-	//	return s.suggestHookType(update, form, bot)
-	//case SubscriptionStepEnd:
-	//	webhook := model.Hook{
-	//		RepoId:                   form.repositoryId,
-	//		PushEvents:               form.hookTypes[PushEvents],
-	//		IssuesEvents:             form.hookTypes[IssuesEvents],
-	//		ConfidentialIssuesEvents: form.hookTypes[ConfidentialIssuesEvents],
-	//		MergeRequestsEvents:      form.hookTypes[MergeRequestsEvents],
-	//		TagPushEvents:            form.hookTypes[TagPushEvents],
-	//		NoteEvents:               form.hookTypes[NoteEvents],
-	//		JobEvents:                form.hookTypes[JobEvents],
-	//		PipelineEvents:           form.hookTypes[PipelineEvents],
-	//		WikiPageEvents:           form.hookTypes[WikiPageEvents],
-	//	}
-	//	s.finalizeChoose(form, bot)
-	//	_, err = s.service.Subscription().Subscribe(form.gitlab, update.CallbackQuery.Message.Chat.ID, webhook)
-	//
-	//	delete(s.subscribeForms, chatId)
-	//
-	//	if err != nil {
-	//		logrus.Errorln(err)
-	//		_, _ = bot.Send(tgbotapi.NewMessage(update.CallbackQuery.Message.Chat.ID,
-	//			"Не удалось создать слушатель эвентов"+err.Error()))
-	//		return true
-	//	}
-	//	bot.Send(tgbotapi.NewMessage(update.CallbackQuery.Message.Chat.ID, "Успешно создан слушатель эвентов"))
-	//}
-
-	//return true
 }
 
 func (s *SubscribeProcessor) IsInterceptor() bool {
 	return true
 }
 
-func (s *SubscribeProcessor) DumpChatSession(chatId int64) {
+func (s *SubscribeProcessor) Dump(chatId int64) {
 	delete(s.subscribeForms, chatId)
 }
 
-func (s *SubscribeProcessor) suggestDomains(user model.User, form *subscribeForm, message *tgmodel.MessageIn, ctx context.Context) *tgmodel.MessageOut {
+func (s *SubscribeProcessor) suggestDomains(user model.User, form *subscribeForm, chatId int64) *tgmodel.MessageOut {
 	switch len(user.Gitlabs) {
 	case 0:
+		s.Dump(chatId)
 		return &tgmodel.MessageOut{Text: "Необходимо зарегестрировать аккаунт gitlab - команда " + commands.Register}
 	case 1:
-		form.domain = user.Gitlabs[0].Domain
 		form.currentStep++
-
-		out := s.Handle(ctx, message)
-		out.Text = fmt.Sprintf("Зарегистрирован только один домен - %s. Этап пропускается.\n%s", user.Gitlabs[0].Domain, out.Text)
+		form.gitlab = user.Gitlabs[0]
+		out := s.suggestRepositories(form, chatId)
+		out.Text = fmt.Sprintf("Зарегистрирован только один домен - %s.\nЭтап пропускается.\n%s", user.Gitlabs[0].Domain, out.Text)
 		return out
 	default:
 		btns := &tgmodel.InlineKeyboard{Columns: 2}
@@ -260,44 +192,36 @@ func (s *SubscribeProcessor) suggestDomains(user model.User, form *subscribeForm
 	}
 }
 
-//func (s *SubscribeProcessor) updateDomainMessage(user model.User, chatId int64, form *subscribeForm) {
-//
-//	buttons := make([]tgbotapi.InlineKeyboardButton, len(user.Gitlabs))
-//	for i, item := range user.Gitlabs {
-//		buttons[i] = tgbotapi.InlineKeyboardButton{Text: item.Domain}
-//		buttons[i].CallbackData = nil
-//
-//		if item.Domain == form.domain {
-//			buttons[i].Text += s.whiteCheck
-//		}
-//	}
-//
-//	markup := utils.NewTgMessageButtonsMarkup(buttons, 2)
-//
-//	message := tgbotapi.NewEditMessageReplyMarkup(chatId, form.lastMessage.MessageID, markup)
-//
-//	//_, err := bot.Send(message)
-//	//if err != nil {
-//	//	logrus.Error(err)
-//	//}
-//}
+func (s *SubscribeProcessor) updateDomains(form *subscribeForm, user model.User, messageId int) (out tg.TgMessage) {
+	buttons := &tgmodel.InlineKeyboard{}
+	for _, item := range user.Gitlabs {
+		text := item.Domain
+		if item.Domain == form.domain {
+			text += s.whiteCheck
+		} else {
+			buttons.AddButton(text, item.Domain)
+		}
+	}
 
-func (s *SubscribeProcessor) suggestRepositories(form *subscribeForm, message *tgmodel.MessageIn, ctx context.Context) (out *tgmodel.MessageOut) {
+	return tgmodel.EditMessageReply(buttons, messageId)
+}
+
+func (s *SubscribeProcessor) suggestRepositories(form *subscribeForm, chatId int64) (out *tgmodel.MessageOut) {
 	repos, err := s.service.Subscription().GetRepositories(form.gitlab)
 	if err != nil {
 		logrus.Errorln(err)
 	}
 	switch len(repos) {
 	case 0:
+		s.Dump(chatId)
 		return &tgmodel.MessageOut{
 			Text: fmt.Sprintf("Для домена %s отсутствуют репозитории", form.gitlab.Domain),
 		}
 	case 1:
-		form.repositoryId = repos[0].Id
 		form.currentStep++
-
-		out = s.Handle(ctx, message)
-		out.Text = fmt.Sprintf("Найден единственный репозиторий - %s.\n%s", repos[0].Name, out.Text)
+		form.repositoryId = repos[0].Id
+		out = s.suggestHookType()
+		out.Text = fmt.Sprintf("Найден единственный репозиторий - %s.Этап пропускается\n%s", repos[0].Name, out.Text)
 		return out
 	default:
 		btns := &tgmodel.InlineKeyboard{Columns: 2}
@@ -312,7 +236,7 @@ func (s *SubscribeProcessor) suggestRepositories(form *subscribeForm, message *t
 	}
 }
 
-func (s *SubscribeProcessor) updateRepositoryMessage(form *subscribeForm) (out *tgmodel.MessageOut) {
+func (s *SubscribeProcessor) updateRepositoryMessage(form *subscribeForm, messageId int) (out tg.TgMessage) {
 	repos, err := s.service.Subscription().GetRepositories(form.gitlab)
 	if err != nil {
 		logrus.Error(err)
@@ -327,10 +251,7 @@ func (s *SubscribeProcessor) updateRepositoryMessage(form *subscribeForm) (out *
 		}
 		buttons.AddButton(text, item.Id)
 	}
-
-	return &tgmodel.MessageOut{
-		InlineButtons: buttons,
-	}
+	return tgmodel.EditMessageReply(buttons, messageId)
 }
 
 func (s *SubscribeProcessor) suggestHookType() (out *tgmodel.MessageOut) {
@@ -345,16 +266,17 @@ func (s *SubscribeProcessor) suggestHookType() (out *tgmodel.MessageOut) {
 	}
 }
 
-func (s *SubscribeProcessor) updateHookTypeMessage() *tgmodel.MessageOut {
+func (s *SubscribeProcessor) updateHookTypeMessage(form *subscribeForm, messageId int) *tgmodel.MessageEdit {
 	btns := &tgmodel.InlineKeyboard{Columns: 2}
 	for i, item := range eventsNames {
-		btns.AddButton(item, strconv.Itoa(i))
+		if selected, _ := form.hookTypes[HookType(i)]; selected {
+			btns.AddButton(item+s.whiteCheck, strconv.Itoa(i))
+		} else {
+			btns.AddButton(item, strconv.Itoa(i))
+		}
 	}
 
-	return &tgmodel.MessageOut{
-		Text:          "Выберите тип подписки",
-		InlineButtons: btns,
-	}
+	return tgmodel.EditMessageReply(btns, messageId)
 }
 
 func (s *SubscribeProcessor) finalizeChoose(form *subscribeForm) *tgmodel.MessageOut {

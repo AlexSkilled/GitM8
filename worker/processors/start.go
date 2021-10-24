@@ -26,7 +26,7 @@ func (s *Start) IsInterceptor() bool {
 	return false
 }
 
-func (s *Start) Handle(_ context.Context, _ *tgmodel.MessageIn) (out *tgmodel.MessageOut) {
+func (s *Start) Handle(_ context.Context, _ *tgmodel.MessageIn) (out tg.TgMessage) {
 	btns := &tgmodel.InlineKeyboard{}
 	btns.AddButton("Регистрация", commands.Register)
 
@@ -36,3 +36,5 @@ func (s *Start) Handle(_ context.Context, _ *tgmodel.MessageIn) (out *tgmodel.Me
 	}
 
 }
+
+func (s *Start) Dump(_ int64) {}

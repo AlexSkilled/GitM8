@@ -7,6 +7,7 @@ import (
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
 
+	tg "github.com/AlexSkilled/go_tg/pkg"
 	tgmodel "github.com/AlexSkilled/go_tg/pkg/model"
 	"github.com/sirupsen/logrus"
 )
@@ -43,7 +44,7 @@ func NewRegisterProcessor(services interfaces.ServiceStorage) *Register {
 	}
 }
 
-func (r *Register) Handle(_ context.Context, message *tgmodel.MessageIn) (out *tgmodel.MessageOut) {
+func (r *Register) Handle(_ context.Context, message *tgmodel.MessageIn) (out tg.TgMessage) {
 	registration, ok := r.dialogContext[message.From.ID]
 	if !ok {
 		r.dialogContext[message.From.ID] = &registrationProcess{
@@ -86,6 +87,6 @@ func (r *Register) IsInterceptor() bool {
 	return true
 }
 
-func (r *Register) DumpChatSession(userId int64) {
+func (r *Register) Dump(userId int64) {
 	delete(r.dialogContext, userId)
 }

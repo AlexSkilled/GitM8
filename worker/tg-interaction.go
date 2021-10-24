@@ -22,8 +22,6 @@ import (
 type Worker struct {
 	interfaces.ServiceStorage
 
-	// bot          *tgbotapi.BotAPI
-
 	bt           *tg.Bot
 	conf         interfaces.Configuration
 	interceptors map[int64]interfaces.Interceptor
@@ -35,8 +33,9 @@ func NewTelegramWorker(conf interfaces.Configuration, services interfaces.Servic
 	log.Printf("Авторизация в боте %s", bot.Bot.Self.UserName)
 
 	bot.AddCommandHandler(processors.NewStartProcessor(services), commands.Start)
-
 	bot.AddCommandHandler(processors.NewRegisterProcessor(services), commands.Register)
+
+	bot.AddCommandHandler(processors.NewSubscribeProcessor(services), commands.Subscribe)
 
 	return &Worker{
 		bt:             bot,
