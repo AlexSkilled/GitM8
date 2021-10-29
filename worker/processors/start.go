@@ -22,10 +22,6 @@ func NewStartProcessor(services interfaces.ServiceStorage) *Start {
 	}
 }
 
-func (s *Start) IsInterceptor() bool {
-	return false
-}
-
 func (s *Start) Handle(_ context.Context, _ *tgmodel.MessageIn) (out tg.TgMessage) {
 	btns := &tgmodel.InlineKeyboard{}
 	btns.AddButton("Регистрация", commands.Register)

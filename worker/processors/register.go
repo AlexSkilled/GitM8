@@ -83,10 +83,6 @@ func (r *Register) Handle(_ context.Context, message *tgmodel.MessageIn) (out tg
 	}
 }
 
-func (r *Register) IsInterceptor() bool {
-	return true
-}
-
 func (r *Register) Dump(userId int64) {
 	delete(r.dialogContext, userId)
 }

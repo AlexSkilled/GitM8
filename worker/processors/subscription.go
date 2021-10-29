@@ -163,10 +163,6 @@ func (s *SubscribeProcessor) Handle(ctx context.Context, in *tgmodel.MessageIn) 
 	}
 }
 
-func (s *SubscribeProcessor) IsInterceptor() bool {
-	return true
-}
-
 func (s *SubscribeProcessor) Dump(chatId int64) {
 	delete(s.subscribeForms, chatId)
 }
