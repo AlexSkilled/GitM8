@@ -82,9 +82,6 @@ func (t *Worker) GetContext(message *tgmodel.MessageIn) (context.Context, error)
 				logrus.Errorln(err)
 				return nil, err
 			}
-			//if err == nil {
-			//t.processors[CommandStart].Handle(context.Background(), message, t.bot)
-			//}
 		}
 	}
 
