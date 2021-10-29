@@ -145,7 +145,7 @@ func (s *SubscribeProcessor) Handle(ctx context.Context, in *tgmodel.MessageIn) 
 		PipelineEvents:           form.hookTypes[PipelineEvents],
 		WikiPageEvents:           form.hookTypes[WikiPageEvents],
 	}
-	s.finalizeChoose(form)
+	editTypeButtons := s.finalizeChoose(form)
 	_, err = s.service.Subscription().Subscribe(form.gitlab, in.Chat.ID, webhook)
 
 	delete(s.subscribeForms, in.Chat.ID)
@@ -155,8 +155,11 @@ func (s *SubscribeProcessor) Handle(ctx context.Context, in *tgmodel.MessageIn) 
 			Text: "Не удалось создать слушатель эвентов" + err.Error(),
 		}
 	}
-	return &tgmodel.MessageOut{
-		Text: "Успешно создан слушатель эвентов",
+	return &tg.MultipleMessage{
+		in.Chat.ID: []tg.TgMessage{
+			&tgmodel.MessageOut{Text: "Успешно создан слушатель эвентов"},
+			editTypeButtons,
+		},
 	}
 }
 
@@ -201,11 +204,8 @@ func (s *SubscribeProcessor) suggestDomains(user model.User, form *subscribeForm
 func (s *SubscribeProcessor) updateDomains(form *subscribeForm, user model.User, messageId int) (out tg.TgMessage) {
 	buttons := &tgmodel.InlineKeyboard{}
 	for _, item := range user.Gitlabs {
-		text := item.Domain
 		if item.Domain == form.domain {
-			text += s.whiteCheck
-		} else {
-			buttons.AddButton(text, item.Domain)
+			buttons.AddButton(item.Domain+s.whiteCheck, item.Domain)
 		}
 	}
 
@@ -256,11 +256,10 @@ func (s *SubscribeProcessor) updateRepositoryMessage(form *subscribeForm, messag
 
 	buttons := &tgmodel.InlineKeyboard{}
 	for _, item := range repos {
-		text := item.Name
 		if item.Id == form.repositoryId {
-			text += s.whiteCheck
+			buttons.AddButton(item.Name+s.whiteCheck, item.Id)
 		}
-		buttons.AddButton(text, item.Id)
+
 	}
 	return tgmodel.EditMessageReply(buttons, messageId)
 }

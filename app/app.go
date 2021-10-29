@@ -18,7 +18,6 @@ type App struct {
 	ProviderStorage *data.ProviderStorage
 	ServiceStorage  interfaces.ServiceStorage
 	Conf            interfaces.Configuration
-	//Telegram       tgbotapi.BotAPI
 }
 
 func NewApp(conf interfaces.Configuration) App {

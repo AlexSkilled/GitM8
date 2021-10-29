@@ -28,8 +28,8 @@ type GitUser struct {
 func (u *GitUser) ToModel() model.GitUser {
 	return model.GitUser{
 		Id:       u.Id,
+		Username: u.Name,
 		Email:    u.Email,
-		Username: u.Email,
 		Token:    u.Token,
 		Domain:   u.Domain,
 	}
