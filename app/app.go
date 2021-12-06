@@ -4,6 +4,7 @@ import (
 	config "gitlab-tg-bot/conf"
 	"gitlab-tg-bot/data"
 	"gitlab-tg-bot/internal/interfaces"
+	"gitlab-tg-bot/internal/message-handling/langs"
 	"gitlab-tg-bot/service"
 	"gitlab-tg-bot/transport"
 	"gitlab-tg-bot/worker"
@@ -29,6 +30,8 @@ func NewApp(conf interfaces.Configuration) App {
 	})
 
 	providerStorage := data.NewProviderStorage(db)
+
+	langs.Init(conf.GetString(config.DefaultLanguage), nil)
 
 	app := App{
 		ProviderStorage: providerStorage,

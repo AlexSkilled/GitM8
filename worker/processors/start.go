@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"gitlab-tg-bot/internal/interfaces"
+	"gitlab-tg-bot/internal/message-handling/langs"
+	"gitlab-tg-bot/internal/message-handling/start"
 	"gitlab-tg-bot/worker/commands"
 
 	tg "github.com/AlexSkilled/go_tg/pkg"
@@ -22,12 +24,12 @@ func NewStartProcessor(services interfaces.ServiceStorage) *Start {
 	}
 }
 
-func (s *Start) Handle(_ context.Context, _ *tgmodel.MessageIn) (out tg.TgMessage) {
+func (s *Start) Handle(ctx context.Context, _ *tgmodel.MessageIn) (out tg.TgMessage) {
 	btns := &tgmodel.InlineKeyboard{}
-	btns.AddButton("Регистрация", commands.Register)
+	btns.AddButton(langs.Get(ctx, start.Register), commands.Register)
 
 	return &tgmodel.MessageOut{
-		Text:          "Главное меню",
+		Text:          langs.Get(ctx, start.MainMenu),
 		InlineButtons: btns,
 	}
 

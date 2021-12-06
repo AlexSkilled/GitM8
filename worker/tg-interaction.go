@@ -6,6 +6,8 @@ import (
 
 	config "gitlab-tg-bot/conf"
 	"gitlab-tg-bot/internal/interfaces"
+	"gitlab-tg-bot/internal/message-handling/langs"
+	"gitlab-tg-bot/internal/message-handling/mainm"
 	"gitlab-tg-bot/service/model"
 	"gitlab-tg-bot/utils"
 	"gitlab-tg-bot/worker/commands"
@@ -65,7 +67,9 @@ func (t *Worker) SendMessages(messages []model.OutputMessage) {
 			continue
 		}
 
-		logrus.Debugf("В чат ID=%d отправлено сообщение: \n%v ", msgConf.ChatID, message)
+		ctx := context.WithValue(context.Background(), utils.ContextKey_Locale, msg.Lang)
+
+		logrus.Debugf(langs.Get(ctx, mainm.MessageSend), msgConf.ChatID, message)
 	}
 }
 

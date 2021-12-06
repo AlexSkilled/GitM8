@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	config "gitlab-tg-bot/conf"
 	"io/ioutil"
 	"os"
 	"path"
 	"strings"
+
+	config "gitlab-tg-bot/conf"
 
 	"github.com/sirupsen/logrus"
 

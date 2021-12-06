@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"errors"
+
 	"gitlab-tg-bot/service/model"
 )
 
@@ -11,6 +12,7 @@ type ContextKey int32
 const (
 	ContextKey_User   ContextKey = 1
 	ContextKey_ChatId ContextKey = 2
+	ContextKey_Locale ContextKey = 3
 )
 
 func ExtractUser(ctx context.Context) (model.User, error) {
@@ -29,4 +31,13 @@ func ExtractChatId(ctx context.Context) (chatId int64, err error) {
 	}
 
 	return user, nil
+}
+
+func ExtractLocale(ctx context.Context) (string, error) {
+	locale, ok := ctx.Value(ContextKey_Locale).(string)
+	if !ok {
+		return "", errors.New("Не удалось получить пользователя.")
+	}
+
+	return locale, nil
 }

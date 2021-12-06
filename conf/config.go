@@ -1,8 +1,10 @@
 package conf
 
 import (
-	"gitlab-tg-bot/internal/interfaces"
+	"fmt"
 	"strings"
+
+	"gitlab-tg-bot/internal/interfaces"
 
 	"github.com/sirupsen/logrus"
 
@@ -28,6 +30,13 @@ const (
 	DbUser             = "Db.User"
 	DbPassword         = "Db.Password"
 	DbName             = "Db.Name"
+
+	CacheConnectionString = "Cache.ConnectionString"
+	CacheDb               = "Cache.Db"
+	CacheUsername         = "Cache.Username"
+	CachePassword         = "Cache.Password"
+
+	DefaultLanguage = "DefaultLanguage"
 )
 
 func NewConfiguration() interfaces.Configuration {
@@ -37,10 +46,11 @@ func NewConfiguration() interfaces.Configuration {
 	conf.SetEnvPrefix("TGBOT")
 	conf.AutomaticEnv()
 
-	_ = pflag.String("conf-path", "", "Путь к файлу конфигурации")
+	v := pflag.String("conf-path", "", "Путь к файлу конфигурации")
 
 	pflag.Parse()
-
+	v2 := pflag.Lookup("conf-path")
+	fmt.Sprintf(*v, v2)
 	_ = conf.BindPFlag(ConfPath, pflag.Lookup("conf-path"))
 	confPath := conf.GetString(ConfPath)
 

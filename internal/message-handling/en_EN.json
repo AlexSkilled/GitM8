@@ -1,0 +1,9 @@
+{
+  "main": {
+    "messageSend": "Message %v\nhas been sent to chat ID=%d"
+  },
+  "start": {
+    "register": "Register",
+    "mainMenu": "Main menu"
+  }
+}
