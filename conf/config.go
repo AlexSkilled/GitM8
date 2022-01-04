@@ -31,11 +31,6 @@ const (
 	DbPassword         = "Db.Password"
 	DbName             = "Db.Name"
 
-	CacheConnectionString = "Cache.ConnectionString"
-	CacheDb               = "Cache.Db"
-	CacheUsername         = "Cache.Username"
-	CachePassword         = "Cache.Password"
-
 	DefaultLanguage = "DefaultLanguage"
 )
 

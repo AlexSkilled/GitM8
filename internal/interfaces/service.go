@@ -8,12 +8,17 @@ type ServiceStorage interface {
 	User() UserService
 	Subscription() SubscriptionService
 	MessageHandler() MessageService
+	Settings() SettingsService
 }
 
 type UserService interface {
 	GetWithGitlabUsersById(id int64) (model.User, error)
 	Register(user model.User) (model.User, error)
 	AddGitAccount(tgId int64, gitlab model.GitUser) error
+}
+
+type SettingsService interface {
+	ChangeLanguage(userId int64, language string) error
 }
 
 type TelegramWorker interface {

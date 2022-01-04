@@ -1,9 +1,26 @@
 {
+  "about": {
+    "name": "Русский",
+    "emoji": ""
+  },
+
   "main": {
     "messageSend": "Сообщение: %v\nБыло отправлено в чат ID=%d"
   },
   "start": {
     "register": "Регистрация",
     "mainMenu": "Главное меню"
+  },
+  "menus": {
+    "main": {
+      "name": "Главное меню"
+    },
+    "settings": {
+      "name": "Настройки",
+      "language": "Язык"
+    }
+  },
+  "errors": {
+    "NotEnoughArguments": "Недостаточно аргументов в команде!"
   }
 }

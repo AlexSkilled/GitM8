@@ -9,12 +9,14 @@ type User struct {
 	Id         int64
 	Name       string
 	TgUsername string
+	Locale     string
 }
 
 func (u *User) FromModel(user model.User) {
 	u.Id = user.Id
 	u.Name = user.Name
 	u.TgUsername = user.TgUsername
+	u.Locale = user.Locale
 }
 
 func (u *User) ToModel() model.User {
@@ -22,5 +24,6 @@ func (u *User) ToModel() model.User {
 		Id:         u.Id,
 		Name:       u.Name,
 		TgUsername: u.TgUsername,
+		Locale:     u.Locale,
 	}
 }

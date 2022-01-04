@@ -16,7 +16,7 @@ type SubscriptionService struct {
 
 var _ interfaces.SubscriptionService = (*SubscriptionService)(nil)
 
-func NewSubscription(conf interfaces.Configuration, provider interfaces.ProviderStorage,
+func NewSubscription(provider interfaces.ProviderStorage,
 	gitlabApi interfaces.GitApiService) *SubscriptionService {
 	return &SubscriptionService{
 		ticket:    provider.Ticket(),

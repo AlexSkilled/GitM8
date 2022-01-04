@@ -66,3 +66,20 @@ func (u *UserProvider) AddGit(userId int64, gitlab model.GitUser) error {
 
 	return nil
 }
+
+func (u *UserProvider) Update(user model.User) error {
+	var userEnt entity.User
+	columns := make([]string, 0, 1)
+
+	if len(user.Locale) > 0 {
+		userEnt.Locale = user.Locale
+		columns = append(columns, "locale")
+	}
+
+	_, err := u.Model(&userEnt).Where("id = ?", user.Id).Column(columns...).Update()
+	if err != nil {
+		logrus.Error(err)
+		return err
+	}
+	return nil
+}

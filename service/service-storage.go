@@ -8,6 +8,7 @@ type Storage struct {
 	interfaces.UserService
 	interfaces.SubscriptionService
 	interfaces.MessageService
+	interfaces.SettingsService
 }
 
 var _ interfaces.ServiceStorage = (*Storage)(nil)
@@ -18,8 +19,9 @@ func NewStorage(providerStorage interfaces.ProviderStorage, conf interfaces.Conf
 
 	return &Storage{
 		UserService:         NewUserService(providerStorage),
-		SubscriptionService: NewSubscription(conf, providerStorage, gitlabApiService),
+		SubscriptionService: NewSubscription(providerStorage, gitlabApiService),
 		MessageService:      NewMessageService(gitlabApiService, providerStorage),
+		SettingsService:     NewSettingsService(providerStorage),
 	}
 }
 
@@ -33,4 +35,8 @@ func (s *Storage) Subscription() interfaces.SubscriptionService {
 
 func (s *Storage) MessageHandler() interfaces.MessageService {
 	return s.MessageService
+}
+
+func (s *Storage) Settings() interfaces.SettingsService {
+	return s.SettingsService
 }

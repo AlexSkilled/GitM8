@@ -11,12 +11,12 @@ import (
 	"gitlab-tg-bot/service/model"
 	"gitlab-tg-bot/utils"
 	"gitlab-tg-bot/worker/commands"
+	"gitlab-tg-bot/worker/menupatterns"
 	"gitlab-tg-bot/worker/processors"
-
-	"github.com/go-pg/pg/v9"
 
 	tg "github.com/AlexSkilled/go_tg/pkg"
 	tgmodel "github.com/AlexSkilled/go_tg/pkg/model"
+	"github.com/go-pg/pg/v9"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/sirupsen/logrus"
 )
@@ -34,10 +34,11 @@ func NewTelegramWorker(conf interfaces.Configuration, services interfaces.Servic
 
 	log.Printf("Авторизация в боте %s", bot.Bot.Self.UserName)
 
-	bot.AddCommandHandler(processors.NewStartProcessor(services), commands.Start)
 	bot.AddCommandHandler(processors.NewRegisterProcessor(services), commands.Register)
 
 	bot.AddCommandHandler(processors.NewSubscribeProcessor(services), commands.Subscribe)
+
+	bot.AddCommandHandler(processors.NewSettingsProcessor(services), commands.Settings)
 
 	return &Worker{
 		bt:             bot,
@@ -47,8 +48,32 @@ func NewTelegramWorker(conf interfaces.Configuration, services interfaces.Servic
 	}
 }
 
+func (t *Worker) addMenus(bot *tg.Bot) {
+	for _, lng := range langs.AvailableLangs {
+		menuPattern, err := menupatterns.NewLanguagesMenu(lng)
+		if err != nil {
+			logrus.Error(err)
+		} else {
+			bot.AddMenu(menuPattern)
+		}
+		menuPattern, err = menupatterns.NewSettingsMenu(lng)
+		if err != nil {
+			logrus.Error(err)
+		} else {
+			bot.AddMenu(menuPattern)
+		}
+		menuPattern, err = menupatterns.NewMainMenu(lng)
+		if err != nil {
+			logrus.Error(err)
+		} else {
+			bot.AddMenu(menuPattern)
+		}
+	}
+}
+
 func (t *Worker) Start() {
 	t.bt.EnrichContext = t
+	t.addMenus(t.bt)
 	t.bt.Start()
 }
 
@@ -91,5 +116,6 @@ func (t *Worker) GetContext(message *tgmodel.MessageIn) (context.Context, error)
 
 	ctx := context.WithValue(context.Background(), utils.ContextKey_User, user)
 	ctx = context.WithValue(ctx, utils.ContextKey_ChatId, message.Chat.ID)
+	ctx = context.WithValue(ctx, utils.ContextKey_Locale, user.Locale)
 	return ctx, nil
 }

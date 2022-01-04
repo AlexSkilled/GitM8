@@ -17,6 +17,7 @@ const (
 	Branches        = "🔀"
 	EyeWatch        = "👁‍🗨"
 	New             = "🆕"
+	Gear            = "⚙"
 
 	WhiteLargeCircle  = 0x26AA
 	OrangeLargeCircle = 0x1F7E0

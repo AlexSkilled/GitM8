@@ -15,6 +15,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var AvailableLangs []string
+
 // key - message header; value - map of translations language -> message
 var languagesHandler map[string]map[string]string
 
@@ -71,6 +73,7 @@ func Init(defaultLanguage string, langPaths []string) error {
 }
 
 func addLanguage(pathToFile string, language string) error {
+	AvailableLangs = append(AvailableLangs, language)
 	content, err := ioutil.ReadFile(pathToFile)
 	if err != nil {
 		return errors.Wrap(err, "Error while reading default language message markups")
@@ -117,8 +120,29 @@ func Get(ctx context.Context, key string) (out string) {
 	}
 	out, ok = translations[locale]
 	if !ok {
-		logrus.Warnf("Attention! Locale %s doens't exist. Extracting from default", locale)
-		translations, ok = languagesHandler[dL]
+		logrus.Warnf("Attention! For key %s Locale %s doesn't exist. Extracting from default", key, locale)
+		out, ok = translations[dL]
+		if !ok {
+			uid, _ := uuid.GenerateUUID()
+			logrus.Errorf("Error when tried to extract message with default locale: %s. Return exception key: %s", dL, uid)
+			return uid
+		}
+	}
+
+	return out
+}
+
+func GetWithLocale(locale, key string) (out string) {
+	translations, ok := languagesHandler[key]
+	if !ok {
+		uid, _ := uuid.GenerateUUID()
+		logrus.Warnf("Attention! Message key %s doesn't exist. Return exception key %s", key, uid)
+		return uid
+	}
+	out, ok = translations[locale]
+	if !ok {
+		logrus.Warnf("Attention! For key %s Locale %s doesn't exist. Extracting from default", key, locale)
+		out, ok = translations[dL]
 		if !ok {
 			uid, _ := uuid.GenerateUUID()
 			logrus.Errorf("Error when tried to extract message with default locale: %s. Return exception key: %s", dL, uid)
