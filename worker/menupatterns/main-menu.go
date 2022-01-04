@@ -13,29 +13,31 @@ import (
 )
 
 // Menu type (setting) to locale (ru_RU) to actual pattern
-var menus = make(map[string]map[string]tgmodel.MenuPattern)
+var menus = make(map[string]tgmodel.MenuPattern)
 
-func addMenu(locale string, pattern tgmodel.MenuPattern) {
-	if _, ok := menus[pattern.Name]; !ok {
-		menus[pattern.Name] = make(map[string]tgmodel.MenuPattern)
-	}
-	menus[pattern.Name][locale] = pattern
+func addMenu(command string, menu tgmodel.MenuPattern) {
+	menus[command] = menu
 }
 
-func NewMainMenu(locale string) (tgmodel.MenuPattern, error) {
-	mainMenu := tgmodel.NewMenuPattern(langs.GetWithLocale(locale, mainmenu.Name))
+func NewMainMenu() (tgmodel.MenuPattern, error) {
 
-	// TODO остальное запихать
-	settingsName := langs.GetWithLocale(locale, settingsmenu.Name)
+	mainMenu := tgmodel.NewLocalizedMenuPattern(commands.Start)
 
-	settings, ok := menus[settingsName][locale]
-	if !ok {
-		return tgmodel.MenuPattern{}, errors.New(fmt.Sprintf("Ошибка при создании главного меню. Для локали %s отсутствует меню настроек ", locale))
+	for _, locale := range langs.AvailableLangs {
+		mainMenuName := langs.GetWithLocale(locale, mainmenu.Name)
+		mainMenu.AddMenu(locale, mainMenuName)
+
+		// TODO остальное запихать
+		settingsName := langs.GetWithLocale(locale, settingsmenu.Name)
+
+		settings, ok := menus[commands.Settings]
+		if !ok {
+			return nil, errors.New(fmt.Sprintf("Ошибка при создании главного меню. Для локали %s отсутствует меню настроек ", locale))
+		}
+		mainMenu.AddMenuButton(locale, settingsName, settings.GetTransitionCommand())
 	}
-	mainMenu.AddMenuButton(settingsName, settings.GetCallCommand())
-	mainMenu.AddEntryPoint(commands.Start)
 
-	addMenu(locale, mainMenu)
+	addMenu(commands.Start, mainMenu)
 
 	return mainMenu, nil
 }

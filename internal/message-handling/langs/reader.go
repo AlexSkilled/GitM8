@@ -22,6 +22,10 @@ var languagesHandler map[string]map[string]string
 
 var dL string
 
+func GetDefaultLocale() string {
+	return dL
+}
+
 // Init - creates an instance of redis connection
 func Init(defaultLanguage string, langPaths []string) error {
 	dL = defaultLanguage

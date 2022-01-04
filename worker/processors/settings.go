@@ -4,8 +4,6 @@ import (
 	"context"
 
 	"gitlab-tg-bot/internal/interfaces"
-	"gitlab-tg-bot/internal/message-handling/info"
-	"gitlab-tg-bot/internal/message-handling/langs"
 	"gitlab-tg-bot/worker/commands"
 
 	tg "github.com/AlexSkilled/go_tg/pkg"
@@ -25,7 +23,7 @@ func NewSettingsProcessor(storage interfaces.ServiceStorage) *Settings {
 
 func (s *Settings) Handle(ctx context.Context, message *tgmodel.MessageIn) (out tg.TgMessage) {
 	if len(message.Args) == 0 {
-		return &tgmodel.MessageOut{Text: langs.Get(ctx, info.ErrorNotEnoughArguments)}
+		return &tgmodel.Callback{Command: commands.Settings, Type: tgmodel.Callback_Type_TransitToMenu}
 	}
 	switch message.Args[0] {
 	case commands.ChangeLanguage:

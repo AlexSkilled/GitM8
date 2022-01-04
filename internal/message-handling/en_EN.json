@@ -18,6 +18,9 @@
     "settings": {
       "name": "Settings",
       "language": "Language"
+    },
+    "language": {
+      "name": "Language"
     }
   }
 }

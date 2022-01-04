@@ -6,20 +6,25 @@ import (
 
 	"gitlab-tg-bot/internal/message-handling/langs"
 	"gitlab-tg-bot/internal/message-handling/menu/settingsmenu"
+	"gitlab-tg-bot/worker/commands"
 
 	tgmodel "github.com/AlexSkilled/go_tg/pkg/model"
 )
 
-func NewSettingsMenu(locale string) (tgmodel.MenuPattern, error) {
-	languagesMenu, ok := menus[langs.GetWithLocale(locale, settingsmenu.Language)][locale]
+func NewSettingsMenu() (tgmodel.MenuPattern, error) {
+	languagesMenu, ok := menus[commands.ChangeLanguage]
 	if !ok {
-		return tgmodel.MenuPattern{}, errors.New(fmt.Sprintf("Для локали %s отсутствует меню языка", locale))
+		return nil, errors.New(fmt.Sprintf("Отсутствует меню выбора языка"))
 	}
 
-	settingsMenu := tgmodel.NewMenuPattern(langs.GetWithLocale(locale, settingsmenu.Name))
-	settingsMenu.AddMenuButton(langs.GetWithLocale(locale, settingsmenu.Language), languagesMenu.GetCallCommand())
+	settingsMenu := tgmodel.NewLocalizedMenuPattern(commands.Settings)
 
-	addMenu(locale, settingsMenu)
+	for _, locale := range langs.AvailableLangs {
+		settingsMenu.AddMenu(locale, langs.GetWithLocale(locale, settingsmenu.Name))
+		settingsMenu.AddMenuButton(locale, langs.GetWithLocale(locale, settingsmenu.Language), languagesMenu.GetTransitionCommand())
+	}
+
+	addMenu(commands.Settings, settingsMenu)
 
 	return settingsMenu, nil
 }

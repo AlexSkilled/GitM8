@@ -18,6 +18,9 @@
     "settings": {
       "name": "Настройки",
       "language": "Язык"
+    },
+    "language": {
+      "name": "Язык"
     }
   },
   "errors": {

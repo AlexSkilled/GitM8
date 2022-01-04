@@ -1,5 +1,5 @@
 package commands
 
 const (
-	ChangeLanguage = "chl"
+	ChangeLanguage = "/chl"
 )

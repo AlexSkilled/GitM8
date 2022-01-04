@@ -49,25 +49,23 @@ func NewTelegramWorker(conf interfaces.Configuration, services interfaces.Servic
 }
 
 func (t *Worker) addMenus(bot *tg.Bot) {
-	for _, lng := range langs.AvailableLangs {
-		menuPattern, err := menupatterns.NewLanguagesMenu(lng)
-		if err != nil {
-			logrus.Error(err)
-		} else {
-			bot.AddMenu(menuPattern)
-		}
-		menuPattern, err = menupatterns.NewSettingsMenu(lng)
-		if err != nil {
-			logrus.Error(err)
-		} else {
-			bot.AddMenu(menuPattern)
-		}
-		menuPattern, err = menupatterns.NewMainMenu(lng)
-		if err != nil {
-			logrus.Error(err)
-		} else {
-			bot.AddMenu(menuPattern)
-		}
+	menuPattern, err := menupatterns.NewLanguagesMenu()
+	if err != nil {
+		logrus.Error(err)
+	} else {
+		bot.AddMenu(menuPattern)
+	}
+	menuPattern, err = menupatterns.NewSettingsMenu()
+	if err != nil {
+		logrus.Error(err)
+	} else {
+		bot.AddMenu(menuPattern)
+	}
+	menuPattern, err = menupatterns.NewMainMenu()
+	if err != nil {
+		logrus.Error(err)
+	} else {
+		bot.AddMenu(menuPattern)
 	}
 }
 
@@ -114,8 +112,14 @@ func (t *Worker) GetContext(message *tgmodel.MessageIn) (context.Context, error)
 		}
 	}
 
+	if len(user.Locale) == 0 {
+		user.Locale = langs.GetDefaultLocale()
+	}
+
 	ctx := context.WithValue(context.Background(), utils.ContextKey_User, user)
 	ctx = context.WithValue(ctx, utils.ContextKey_ChatId, message.Chat.ID)
 	ctx = context.WithValue(ctx, utils.ContextKey_Locale, user.Locale)
+
+	ctx = context.WithValue(ctx, tgmodel.LocaleContextKey, user.Locale)
 	return ctx, nil
 }
