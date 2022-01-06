@@ -7,7 +7,6 @@ import (
 	config "gitlab-tg-bot/conf"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/internal/message-handling/langs"
-	"gitlab-tg-bot/internal/message-handling/mainm"
 	"gitlab-tg-bot/service/model"
 	"gitlab-tg-bot/utils"
 	"gitlab-tg-bot/worker/commands"
@@ -34,11 +33,10 @@ func NewTelegramWorker(conf interfaces.Configuration, services interfaces.Servic
 
 	log.Printf("Авторизация в боте %s", bot.Bot.Self.UserName)
 
-	bot.AddCommandHandler(processors.NewRegisterProcessor(services), commands.Register)
-
-	bot.AddCommandHandler(processors.NewSubscribeProcessor(services), commands.Subscribe)
-
+	bot.AddCommandHandler(processors.NewStartProcessor(services), commands.Start)
 	bot.AddCommandHandler(processors.NewSettingsProcessor(services), commands.Settings)
+	bot.AddCommandHandler(processors.NewRegisterProcessor(services), commands.Register)
+	bot.AddCommandHandler(processors.NewSubscribeProcessor(services), commands.Subscribe)
 
 	return &Worker{
 		bt:             bot,
@@ -56,12 +54,6 @@ func (t *Worker) addMenus(bot *tg.Bot) {
 		bot.AddMenu(menuPattern)
 	}
 	menuPattern, err = menupatterns.NewSettingsMenu()
-	if err != nil {
-		logrus.Error(err)
-	} else {
-		bot.AddMenu(menuPattern)
-	}
-	menuPattern, err = menupatterns.NewMainMenu()
 	if err != nil {
 		logrus.Error(err)
 	} else {
@@ -90,9 +82,7 @@ func (t *Worker) SendMessages(messages []model.OutputMessage) {
 			continue
 		}
 
-		ctx := context.WithValue(context.Background(), utils.ContextKey_Locale, msg.Lang)
-
-		logrus.Debugf(langs.Get(ctx, mainm.MessageSend), msgConf.ChatID, message)
+		logrus.Debugf("Сообщение %v отправлено в час %d ", message, msgConf.ChatID)
 	}
 }
 

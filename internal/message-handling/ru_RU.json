@@ -8,13 +8,11 @@
     "messageSend": "Сообщение: %v\nБыло отправлено в чат ID=%d"
   },
   "start": {
+    "management": "Управление",
     "register": "Регистрация",
     "mainMenu": "Главное меню"
   },
   "menus": {
-    "main": {
-      "name": "Главное меню"
-    },
     "settings": {
       "name": "Настройки",
       "language": "Язык"

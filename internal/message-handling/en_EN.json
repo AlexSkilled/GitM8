@@ -8,13 +8,11 @@
     "messageSend": "Message %v\nhas been sent to chat ID=%d"
   },
   "start": {
+    "management": "Управление",
     "register": "Register",
     "mainMenu": "Main menu"
   },
   "menus": {
-    "main": {
-      "name": "Main menu"
-    },
     "settings": {
       "name": "Settings",
       "language": "Language"
