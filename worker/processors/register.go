@@ -2,9 +2,12 @@ package processors
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"gitlab-tg-bot/internal/interfaces"
+	"gitlab-tg-bot/internal/message-handling/langs"
+	"gitlab-tg-bot/internal/message-handling/register"
 	"gitlab-tg-bot/service/model"
 
 	tg "github.com/AlexSkilled/go_tg/pkg"
@@ -13,8 +16,8 @@ import (
 )
 
 const (
-	StepToken interfaces.StepName = iota
-	StepDomain
+	StepDomain interfaces.StepName = iota
+	StepToken
 )
 
 type Register struct {
@@ -44,39 +47,48 @@ func NewRegisterProcessor(services interfaces.ServiceStorage) *Register {
 	}
 }
 
-func (r *Register) Handle(_ context.Context, message *tgmodel.MessageIn) (out tg.TgMessage) {
+func (r *Register) Handle(ctx context.Context, message *tgmodel.MessageIn) (out tg.TgMessage) {
 	registration, ok := r.dialogContext[message.From.ID]
 	if !ok {
 		r.dialogContext[message.From.ID] = &registrationProcess{
-			CurrentStep: StepToken,
+			CurrentStep: StepDomain,
 		}
+
+		gits := &tgmodel.InlineKeyboard{Columns: 1}
+		gits.AddButton(string(model.Gitlab), string(model.Gitlab)+".com")
+
 		return &tgmodel.MessageOut{
-			Text: "Введите токен для  Gitlab (необходимы права на использование API)",
+			Text:          langs.Get(ctx, register.AskDomain),
+			InlineButtons: gits,
 		}
 	}
 
 	switch registration.CurrentStep {
-	case StepToken:
-		registration.GitlabToken = message.Text
-		registration.CurrentStep++
-		return &tgmodel.MessageOut{
-			Text: "Введите домен Gitlab (стандартный gitlab.com)",
-		}
 	case StepDomain:
 		registration.Domain = message.Text
+		registration.CurrentStep++
+
+		return &tgmodel.MessageOut{
+			Text: langs.Get(ctx, register.AskToken),
+		}
+	case StepToken:
+		registration.GitlabToken = message.Text
 	}
 
 	err := r.services.User().AddGitAccount(message.From.ID, registration.ToDto())
-	response := "Успешная регистрация!"
+	var response string
 	if err != nil {
-		response = "Ошибка при регистрации!"
+		response = langs.Get(ctx, register.Error)
 		if strings.Contains(err.Error(), "<401>") {
-			response += "Авторизация не прошла. Скорее всего токен не годный"
+			response = fmt.Sprintf(response, langs.Get(ctx, register.ErrorInvalidToken))
 		} else {
-			response += "Неизвестная ошибка. Повторите попытку позже"
+			response = fmt.Sprintf(response, fmt.Sprintf(langs.Get(ctx, register.ErrorUnknown), err.Error()))
 			logrus.Errorln(err)
 		}
+	} else {
+		response = langs.Get(ctx, register.Success)
 	}
+
 	delete(r.dialogContext, message.From.ID)
 	return &tgmodel.MessageOut{
 		Text: response,

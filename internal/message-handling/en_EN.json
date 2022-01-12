@@ -8,9 +8,19 @@
     "messageSend": "Message %v\nhas been sent to chat ID=%d"
   },
   "start": {
-    "management": "Управление",
+    "management": "Manage",
     "register": "Register",
     "mainMenu": "Main menu"
+  },
+  "register": {
+    "askDomain": "Select or enter a Git domain url:",
+    "askToken": "Enter %s token (API usage rights)",
+    "success": "Successful registration!",
+    "error" :  {
+      "text": "Error during registration %s",
+      "invalidToken": "Unauthorized. Token might be invalid",
+      "unknown":"Unknown error %s. Try again later"
+    }
   },
   "menus": {
     "settings": {
@@ -19,6 +29,18 @@
     },
     "language": {
       "name": "Language"
+    }
+  },
+
+  "errors": {
+    "NotEnoughArguments": "Command require more arguments!",
+    "SpecifyGitSource": "Specify Git Source"
+  },
+
+  "help": {
+    "defaultMessage": "",
+    "gitlab": {
+      "createToken": ""
     }
   }
 }

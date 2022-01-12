@@ -2,13 +2,15 @@ package model
 
 import (
 	"encoding/json"
+
 	"gitlab-tg-bot/service/payload"
 )
 
 const (
 	Gitlab GitSource = "gitlab" // на этот URI будут регистрироваться хуки для гита.
-
 	// т.е гит будет слать хуки на http://our.service.web/gitlab
+
+	NotImplemented
 )
 
 type GitSource string

@@ -31,6 +31,7 @@ type TelegramMessageSender interface {
 }
 
 type GitApiService interface {
+	GetGitType(string) model.GitSource
 	GetRepositories(user model.GitUser) ([]model.Repository, error)
 	AddWebHook(user model.GitUser, hookInfo model.Hook) error
 	GetUser(git model.GitUser, userId string) (model.GitUserInfo, error)

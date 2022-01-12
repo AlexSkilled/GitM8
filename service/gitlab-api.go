@@ -82,6 +82,10 @@ func (g *GitlabApiService) GetUser(git model.GitUser, userId string) (model.GitU
 	}, nil
 }
 
+func (g *GitlabApiService) GetGitType(_ string) model.GitSource {
+	return model.Gitlab
+}
+
 func (g *GitlabApiService) toModelProjects(in *gapi.ProjectCollection) []model.Repository {
 	out := make([]model.Repository, len(in.Items))
 	for i, item := range in.Items {

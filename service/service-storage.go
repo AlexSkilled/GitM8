@@ -15,12 +15,12 @@ var _ interfaces.ServiceStorage = (*Storage)(nil)
 
 func NewStorage(providerStorage interfaces.ProviderStorage, conf interfaces.Configuration) *Storage {
 	// Убираю доступ к апи как к сервису, напрямую.
-	gitlabApiService := NewGitlabApiService(conf)
+	gitApiService := NewGitManger(conf)
 
 	return &Storage{
 		UserService:         NewUserService(providerStorage),
-		SubscriptionService: NewSubscription(providerStorage, gitlabApiService),
-		MessageService:      NewMessageService(gitlabApiService, providerStorage),
+		SubscriptionService: NewSubscription(providerStorage, gitApiService),
+		MessageService:      NewMessageService(gitApiService, providerStorage),
 		SettingsService:     NewSettingsService(providerStorage),
 	}
 }
