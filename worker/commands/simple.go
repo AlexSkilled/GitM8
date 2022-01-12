@@ -1,11 +1,11 @@
 package commands
 
 const (
-	Start     string = "/start"
-	Register  string = "/register"
-	Subscribe string = "/subscribe"
+	Start     = "/start"
+	Register  = "/register"
+	Subscribe = "/subscribe"
 
-	Settings string = "/settings"
+	Settings = "/settings"
 
-	Exit string = "/exit"
+	Exit = "/exit"
 )

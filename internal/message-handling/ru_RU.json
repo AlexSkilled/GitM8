@@ -14,12 +14,16 @@
   },
   "register": {
     "askDomain": "Выберите или введите Git домен:",
-    "askToken": "Введите токен %s (необходимы права на использование API)",
     "success": "Успешная регистрация!",
+    "webhookOrToken" : "Зарегистрировать токен или получить ссылку на вебхук",
     "error" : {
       "text": "Ошибка при регистрации %s",
       "invalidToken": "Авторизация не прошла. Скорее всего токен не годный",
       "unknown":"Неизвестная ошибка %s. Повторите попытку позже"
+    },
+    "button": {
+      "token": "Выпустить новый токен",
+      "url": "Получить ссылку на вебхук"
     }
   },
   "menus": {
@@ -33,6 +37,7 @@
   },
   "errors": {
     "NotEnoughArguments": "Недостаточно аргументов в команде!",
+    "ErrorCouldNotFindDomain": "Не удалось определить каким гитом является %s",
 
     "SpecifyGitSource": "Укажите гит источник"
   },
@@ -40,7 +45,7 @@
   "help": {
     "defaultMessage": "",
     "gitlab": {
-      "createToken": "Для получения gitlab токена перейдите по ссылке:\nhttps://%s/-/profile/personal_access_tokens"
+      "createToken": "Для получения gitlab токена перейдите по ссылке:\nhttps://%s/-/profile/personal_access_tokens\nНеобходимы права api"
     }
   }
 }

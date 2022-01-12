@@ -54,3 +54,13 @@ func (g *GitManager) GetGitType(s string) model.GitSource {
 	}
 	return model.NotImplemented
 }
+
+func (g *GitManager) GetWebhookUrl(domain string) (string, error) {
+	gs := g.GetGitType(domain)
+	if api, ok := g.sourceToService[gs]; ok {
+		return api.GetWebhookUrl("")
+	} else {
+		return "", errors.New(fmt.Sprintf("Для git с доменом %s не нашлось обработчика", domain))
+	}
+
+}

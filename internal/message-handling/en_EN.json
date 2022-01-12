@@ -14,12 +14,16 @@
   },
   "register": {
     "askDomain": "Select or enter a Git domain url:",
-    "askToken": "Enter %s token (API usage rights)",
     "success": "Successful registration!",
+    "webhookOrToken" : "Register new token or get webhook URL",
     "error" :  {
       "text": "Error during registration %s",
       "invalidToken": "Unauthorized. Token might be invalid",
       "unknown":"Unknown error %s. Try again later"
+    },
+    "button": {
+      "token": "Create new token",
+      "url": "Get webhook url"
     }
   },
   "menus": {
@@ -34,13 +38,14 @@
 
   "errors": {
     "NotEnoughArguments": "Command require more arguments!",
+    "ErrorCouldNotFindDomain": "Couldn't determine which git source %s is",
     "SpecifyGitSource": "Specify Git Source"
   },
 
   "help": {
     "defaultMessage": "",
     "gitlab": {
-      "createToken": ""
+      "createToken": "Link to create gitlab token:\nhttps://%s/-/profile/personal_access_tokens\nApi rights required"
     }
   }
 }

@@ -9,6 +9,7 @@ type ServiceStorage interface {
 	Subscription() SubscriptionService
 	MessageHandler() MessageService
 	Settings() SettingsService
+	GitApi() GitApiService
 }
 
 type UserService interface {
@@ -35,6 +36,7 @@ type GitApiService interface {
 	GetRepositories(user model.GitUser) ([]model.Repository, error)
 	AddWebHook(user model.GitUser, hookInfo model.Hook) error
 	GetUser(git model.GitUser, userId string) (model.GitUserInfo, error)
+	GetWebhookUrl(domain string) (string, error)
 }
 
 type SubscriptionService interface {

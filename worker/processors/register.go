@@ -6,9 +6,12 @@ import (
 	"strings"
 
 	"gitlab-tg-bot/internal/interfaces"
+	helpGitlab "gitlab-tg-bot/internal/message-handling/help/gitlab"
+	"gitlab-tg-bot/internal/message-handling/info"
 	"gitlab-tg-bot/internal/message-handling/langs"
 	"gitlab-tg-bot/internal/message-handling/register"
 	"gitlab-tg-bot/service/model"
+	"gitlab-tg-bot/utils"
 
 	tg "github.com/AlexSkilled/go_tg/pkg"
 	tgmodel "github.com/AlexSkilled/go_tg/pkg/model"
@@ -18,6 +21,12 @@ import (
 const (
 	StepDomain interfaces.StepName = iota
 	StepToken
+	StepWebhook
+)
+
+const (
+	RegisterGetWebhookURL = "webhook"
+	RegisterToken         = "token"
 )
 
 type Register struct {
@@ -63,16 +72,48 @@ func (r *Register) Handle(ctx context.Context, message *tgmodel.MessageIn) (out 
 		}
 	}
 
+	switch message.Text {
+	case RegisterToken:
+		registration.CurrentStep = StepToken
+		return &tgmodel.MessageOut{
+			Text: fmt.Sprintf(langs.Get(ctx, helpGitlab.CreateToken), registration.Domain),
+		}
+	case RegisterGetWebhookURL:
+		registration.CurrentStep = StepWebhook
+		webhook, err := r.services.GitApi().GetWebhookUrl(registration.Domain)
+		if err != nil {
+			return &tgmodel.MessageOut{
+				Text: langs.Get(ctx, info.ErrorCouldNotFindDomain),
+			}
+		}
+		return &tgmodel.MessageOut{
+			Text: webhook, //TODO добавить описание
+		}
+	}
+
 	switch registration.CurrentStep {
 	case StepDomain:
 		registration.Domain = message.Text
 		registration.CurrentStep++
 
+		locale, err := utils.ExtractLocale(ctx)
+		if err != nil {
+			locale = langs.GetDefaultLocale()
+		}
+
+		registerMenu := &tgmodel.InlineKeyboard{Columns: 2}
+
+		registerMenu.AddButton(langs.GetWithLocale(locale, register.ButtonToken), RegisterToken)
+		registerMenu.AddButton(langs.GetWithLocale(locale, register.ButtonUrl), RegisterGetWebhookURL)
+
 		return &tgmodel.MessageOut{
-			Text: langs.Get(ctx, register.AskToken),
+			Text:          langs.Get(ctx, register.WebhookOrTokenMessage),
+			InlineButtons: registerMenu,
 		}
 	case StepToken:
 		registration.GitlabToken = message.Text
+	case StepWebhook:
+
 	}
 
 	err := r.services.User().AddGitAccount(message.From.ID, registration.ToDto())
