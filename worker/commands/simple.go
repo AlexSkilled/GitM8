@@ -8,4 +8,5 @@ const (
 	Settings = "/settings"
 
 	Exit = "/exit"
+	Help = "/help"
 )

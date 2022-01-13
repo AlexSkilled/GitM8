@@ -23,7 +23,8 @@
     },
     "button": {
       "token": "Create new token",
-      "url": "Get webhook url"
+      "url": "Get webhook url",
+      "webhookInstruction":"How to setup webhook?"
     }
   },
   "menus": {
@@ -43,9 +44,10 @@
   },
 
   "help": {
-    "defaultMessage": "",
+    "defaultMessage": "Don't know such command",
     "gitlab": {
-      "createToken": "Link to create gitlab token:\nhttps://%s/-/profile/personal_access_tokens\nApi rights required"
+      "createToken": "Link to create gitlab token:\nhttps://%s/-/profile/personal_access_tokens\nApi rights required",
+      "addWebHookInstruction": "Creating webhook:\n1. Open project\n2. Go to Settings->Webhook\n3. Insert link into URL section\n4. Choose event types.\n5. Add webhook'"
     }
   }
 }

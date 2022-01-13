@@ -37,7 +37,7 @@ func NewTelegramWorker(conf interfaces.Configuration, services interfaces.Servic
 	bot.AddCommandHandler(processors.NewSettingsProcessor(services), commands.Settings)
 	bot.AddCommandHandler(processors.NewRegisterProcessor(services), commands.Register)
 	bot.AddCommandHandler(processors.NewSubscribeProcessor(services), commands.Subscribe)
-
+	bot.AddCommandHandler(&processors.HelpProcessor{}, commands.Help)
 	return &Worker{
 		bt:             bot,
 		ServiceStorage: services,
