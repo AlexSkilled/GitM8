@@ -24,7 +24,7 @@
     "button": {
       "token": "Create new token",
       "url": "Get webhook url",
-      "webhookInstruction":"How to setup webhook?"
+      "webhookInstruction":"How to setup webhook in git?"
     }
   },
   "menus": {
