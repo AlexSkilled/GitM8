@@ -10,6 +10,7 @@ type User struct {
 	Name       string
 	TgUsername string
 	Locale     string
+	Urn        string `pg:"urn"`
 }
 
 func (u *User) FromModel(user model.User) {

@@ -82,7 +82,7 @@ func (r *Register) Handle(ctx context.Context, message *tgmodel.MessageIn) (out 
 		}
 	case RegisterGetWebhookURL:
 		registration.CurrentStep = StepWebhook
-		webhook, err := r.services.GitApi().GetWebhookUrl(registration.Domain)
+		webhook, err := r.services.GitApi().GetWebhookUrl(registration.Domain, message.From.ID)
 		if err != nil {
 			return &tgmodel.MessageOut{
 				Text: langs.Get(ctx, info.ErrorCouldNotFindDomain),
@@ -119,8 +119,6 @@ func (r *Register) Handle(ctx context.Context, message *tgmodel.MessageIn) (out 
 		}
 	case StepToken:
 		registration.GitlabToken = message.Text
-	case StepWebhook:
-
 	}
 
 	err := r.services.User().AddGitAccount(message.From.ID, registration.ToDto())

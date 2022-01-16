@@ -38,7 +38,8 @@
   },
   "errors": {
     "NotEnoughArguments": "Недостаточно аргументов в команде!",
-    "ErrorCouldNotFindDomain": "Не удалось определить каким гитом является %s",
+    "CouldNotFindDomain": "Не удалось определить каким гитом является %s",
+    "AnotherAnswerExpected": "Ожидался другой ответ",
 
     "SpecifyGitSource": "Укажите гит источник"
   },

@@ -97,6 +97,6 @@ func (g *GitlabApiService) toModelProjects(in *gapi.ProjectCollection) []model.R
 	return out
 }
 
-func (g *GitlabApiService) GetWebhookUrl(_ string) (string, error) {
+func (g *GitlabApiService) GetWebhookUrl(_ string, _ int64) (string, error) {
 	return g.webHookUrl, nil
 }

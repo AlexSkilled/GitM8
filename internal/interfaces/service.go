@@ -36,7 +36,7 @@ type GitApiService interface {
 	GetRepositories(user model.GitUser) ([]model.Repository, error)
 	AddWebHook(user model.GitUser, hookInfo model.Hook) error
 	GetUser(git model.GitUser, userId string) (model.GitUserInfo, error)
-	GetWebhookUrl(domain string) (string, error)
+	GetWebhookUrl(domain string, tgUserId int64) (string, error)
 }
 
 type SubscriptionService interface {

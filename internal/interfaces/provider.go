@@ -16,6 +16,8 @@ type UserProvider interface {
 	GetWithGitlabUsers(id int64) (model.User, error)
 	AddGit(userId int64, gitlab model.GitUser) error
 	Update(user model.User) error
+	GetURN(userId int64) (string, error)
+	SetURN(userId int64, urn string) error
 }
 
 type SubscriptionProvider interface {

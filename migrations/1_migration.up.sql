@@ -4,7 +4,9 @@ CREATE TABLE IF NOT EXISTS tg_user
     name        TEXT,
 
     tg_username TEXT,
-    locale TEXT
+    locale TEXT,
+
+    urn TEXT
 );
 
 CREATE TABLE IF NOT EXISTS git_user

@@ -39,7 +39,9 @@
 
   "errors": {
     "NotEnoughArguments": "Command require more arguments!",
-    "ErrorCouldNotFindDomain": "Couldn't determine which git source %s is",
+    "CouldNotFindDomain": "Couldn't determine which git source %s is",
+    "AnotherAnswerExpected": "Another answer was expected",
+
     "SpecifyGitSource": "Specify Git Source"
   },
 

@@ -83,3 +83,18 @@ func (u *UserProvider) Update(user model.User) error {
 	}
 	return nil
 }
+
+func (u *UserProvider) GetURN(userId int64) (string, error) {
+	var user entity.User
+
+	err := u.Model(&user).Where("id = ?", userId).Column("urn").Select()
+	return user.Urn, err
+}
+
+func (u *UserProvider) SetURN(userId int64, urn string) error {
+	user := entity.User{
+		Urn: urn,
+	}
+	_, err := u.Model(&user).Where("id = ?", userId).Column("urn").Update()
+	return err
+}
