@@ -2,6 +2,7 @@ package model
 
 type Ticket struct {
 	Id                 int32
+	Name               string
 	MaintainerGitlabId int64
 	RepositoryId       string
 	HookTypes          map[GitHookType]interface{}

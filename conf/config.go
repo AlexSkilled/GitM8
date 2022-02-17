@@ -22,7 +22,6 @@ const (
 	SecretKey      = "SecretKey"
 	NoAuth         = "NoAuth"
 
-	Debug      = "IsDebugging"
 	WebHookUrl = "WebHookUrl"
 
 	DbConnectionString = "Db.ConnectionString"

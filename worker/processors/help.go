@@ -14,8 +14,7 @@ import (
 	tgmodel "github.com/AlexSkilled/go_tg/pkg/model"
 )
 
-type HelpProcessor struct {
-}
+type HelpProcessor struct{}
 
 const (
 	help_GetGitlabToken      = "how_to_get_gitlab_token"

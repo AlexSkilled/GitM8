@@ -59,3 +59,8 @@ func (s *SubscriptionService) Subscribe(gitlab model.GitUser, chatId int64, hook
 func (s *SubscriptionService) GetRepositories(user model.GitUser) ([]model.Repository, error) {
 	return s.GitlabApi.GetRepositories(user)
 }
+
+// TODO
+func (s *SubscriptionService) GetUserTickets(userId int64) (tickets []model.Ticket, err error) {
+	return nil, nil
+}

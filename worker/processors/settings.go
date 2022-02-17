@@ -16,14 +16,12 @@ type Settings struct {
 }
 
 func NewSettingsProcessor(storage interfaces.ServiceStorage) *Settings {
-	s := &Settings{storage.Settings()}
-
-	return s
+	return &Settings{storage.Settings()}
 }
 
-func (s *Settings) Handle(ctx context.Context, message *tgmodel.MessageIn) (out tg.TgMessage) {
+func (s *Settings) Handle(_ context.Context, message *tgmodel.MessageIn) (out tg.TgMessage) {
 	if len(message.Args) == 0 {
-		return &tgmodel.Callback{Command: commands.Settings, Type: tgmodel.Callback_Type_TransitToMenu}
+		return &tgmodel.Callback{Command: commands.Settings, Type: tgmodel.Callback_Type_OpenMenu}
 	}
 	switch message.Args[0] {
 	case commands.ChangeLanguage:
@@ -32,6 +30,7 @@ func (s *Settings) Handle(ctx context.Context, message *tgmodel.MessageIn) (out 
 			if err != nil {
 				logrus.Error(err)
 			}
+			return &tgmodel.Callback{Command: commands.Start, Type: tgmodel.Callback_Type_TransitToMenu}
 		}
 	}
 	return nil

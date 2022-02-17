@@ -32,14 +32,12 @@ func NewMainMenu(locale string, buttons map[string]string) (*tgmodel.InlineKeybo
 	registerButton := langs.GetWithLocale(locale, start.Register)
 	mainMenu.AddButton(registerButton, commands.Register)
 
-	settingsName := langs.GetWithLocale(locale, settingsmenu.Name)
-
 	settings, ok := menus[commands.Settings]
 	if !ok {
 		return nil, errors.New(
 			fmt.Sprintf("Ошибка при создании главного меню. Для локали %s отсутствует меню настроек ", locale))
 	}
-	mainMenu.AddStandAloneButton(settingsName, settings.GetTransitionCommand())
+	mainMenu.AddStandAloneButton(langs.GetWithLocale(locale, settingsmenu.Name), settings.GetTransitionCommand())
 
 	return &mainMenu, nil
 }

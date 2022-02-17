@@ -34,9 +34,13 @@ func NewTelegramWorker(conf interfaces.Configuration, services interfaces.Servic
 	log.Printf("Авторизация в боте %s", bot.Bot.Self.UserName)
 
 	bot.AddCommandHandler(processors.NewStartProcessor(services), commands.Start)
-	bot.AddCommandHandler(processors.NewSettingsProcessor(services), commands.Settings)
+
+	bot.AddCommandHandler(processors.NewManageProcessor(services), commands.Manage)
 	bot.AddCommandHandler(processors.NewRegisterProcessor(services), commands.Register)
+	bot.AddCommandHandler(processors.NewSettingsProcessor(services), commands.Settings)
+
 	bot.AddCommandHandler(processors.NewSubscribeProcessor(services), commands.Subscribe)
+
 	bot.AddCommandHandler(&processors.HelpProcessor{}, commands.Help)
 	return &Worker{
 		bt:             bot,

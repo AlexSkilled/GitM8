@@ -21,9 +21,10 @@ import (
 )
 
 const (
-	StepDomain interfaces.StepName = iota
+	StepChoseRegistrationType interfaces.StepName = iota
+	StepDomain
 	StepToken
-	StepWebhook
+	StepName
 )
 
 const (
@@ -37,6 +38,9 @@ type Register struct {
 }
 
 type registrationProcess struct {
+	TicketName string
+
+	Type        string
 	GitlabName  string
 	GitlabToken string
 	Domain      string
@@ -61,47 +65,13 @@ func NewRegisterProcessor(services interfaces.ServiceStorage) *Register {
 func (r *Register) Handle(ctx context.Context, message *tgmodel.MessageIn) (out tg.TgMessage) {
 	registration, ok := r.dialogContext[message.From.ID]
 	if !ok {
-		r.dialogContext[message.From.ID] = &registrationProcess{
-			CurrentStep: StepDomain,
-		}
-
-		gits := &tgmodel.InlineKeyboard{Columns: 1}
-		gits.AddButton(string(model.Gitlab), string(model.Gitlab)+".com")
-		gits.AddButton(langs.Get(ctx, start.MainMenu), commands.Start)
-		return &tgmodel.MessageOut{
-			Text:          langs.Get(ctx, register.AskDomain),
-			InlineButtons: gits,
-		}
-	}
-
-	switch message.Text {
-	case RegisterToken:
-		registration.CurrentStep = StepToken
-		return &tgmodel.MessageOut{
-			Text: fmt.Sprintf(langs.Get(ctx, helpGitlab.CreateToken), registration.Domain),
-		}
-	case RegisterGetWebhookURL:
-		registration.CurrentStep = StepWebhook
-		webhook, err := r.services.GitApi().GetWebhookUrl(registration.Domain, message.From.ID)
-		if err != nil {
-			return &tgmodel.MessageOut{
-				Text: langs.Get(ctx, info.ErrorCouldNotFindDomain),
-			}
-		}
-		webhookMenu := &tgmodel.InlineKeyboard{Columns: 1}
-
-		webhookMenu.AddButton(langs.Get(ctx, register.ButtonSetupWebhook), Help_SetupGitlab_Webhook)
-		webhookMenu.AddButton(langs.Get(ctx, start.MainMenu), commands.Start)
-		return &tgmodel.MessageOut{
-			Text:          webhook,
-			InlineButtons: webhookMenu,
-		}
+		return r.initRegistration(ctx, message)
 	}
 
 	switch registration.CurrentStep {
 	case StepDomain:
 		registration.Domain = message.Text
-		registration.CurrentStep++
+		registration.CurrentStep = StepChoseRegistrationType
 
 		locale, err := utils.ExtractLocale(ctx)
 		if err != nil {
@@ -117,8 +87,16 @@ func (r *Register) Handle(ctx context.Context, message *tgmodel.MessageIn) (out 
 			Text:          langs.Get(ctx, register.WebhookOrTokenMessage),
 			InlineButtons: registerMenu,
 		}
+	case StepChoseRegistrationType:
+		return r.selectRegistrationType(ctx, message, registration)
 	case StepToken:
 		registration.GitlabToken = message.Text
+		registration.CurrentStep++
+		return &tgmodel.MessageOut{
+			Text: langs.Get(ctx, register.EnterTicketName),
+		}
+	case StepName:
+		registration.TicketName = message.Text
 	}
 
 	err := r.services.User().AddGitAccount(message.From.ID, registration.ToDto())
@@ -128,7 +106,7 @@ func (r *Register) Handle(ctx context.Context, message *tgmodel.MessageIn) (out 
 		if strings.Contains(err.Error(), "<401>") {
 			response = fmt.Sprintf(response, langs.Get(ctx, register.ErrorInvalidToken))
 		} else {
-			response = fmt.Sprintf(response, fmt.Sprintf(langs.Get(ctx, register.ErrorUnknown), err.Error()))
+			response = fmt.Sprintf(response, fmt.Sprintf(langs.Get(ctx, info.Error), err.Error()))
 			logrus.Errorln(err)
 		}
 	} else {
@@ -139,6 +117,60 @@ func (r *Register) Handle(ctx context.Context, message *tgmodel.MessageIn) (out 
 	return &tgmodel.Callback{
 		Command: commands.Start,
 		Text:    response,
+	}
+}
+
+func (r *Register) initRegistration(ctx context.Context, message *tgmodel.MessageIn) (out tg.TgMessage) {
+	r.dialogContext[message.From.ID] = &registrationProcess{
+		CurrentStep: StepDomain,
+	}
+
+	gits := &tgmodel.InlineKeyboard{Columns: 1}
+	gits.AddButton(string(model.Gitlab), string(model.Gitlab)+".com")
+	gits.AddButton(langs.Get(ctx, start.MainMenu), commands.Start)
+	return &tgmodel.MessageOut{
+		Text:          langs.Get(ctx, register.AskDomain),
+		InlineButtons: gits,
+	}
+}
+
+func (r *Register) selectRegistrationType(ctx context.Context, message *tgmodel.MessageIn, registration *registrationProcess) (out tg.TgMessage) {
+	switch message.Text {
+	case RegisterToken:
+		registration.CurrentStep = StepToken
+		registration.Type = RegisterToken
+		return &tg.MultipleMessage{
+			message.Chat.ID: []tg.TgMessage{
+				&tgmodel.MessageOut{
+					Text: fmt.Sprintf(langs.Get(ctx, helpGitlab.CreateToken), registration.Domain),
+				},
+				&tgmodel.MessageOut{
+					Text: langs.Get(ctx, register.EnterToken),
+				},
+			},
+		}
+	case RegisterGetWebhookURL:
+		webhook, err := r.services.GitApi().GetWebhookUrl(registration.Domain, message.From.ID)
+		if err != nil {
+			return &tgmodel.MessageOut{
+				Text: langs.Get(ctx, info.ErrorCouldNotFindDomain),
+			}
+		}
+		webhookMenu := &tgmodel.InlineKeyboard{Columns: 1}
+
+		webhookMenu.AddButton(langs.Get(ctx, register.ButtonSetupWebhook), Help_SetupGitlab_Webhook)
+		webhookMenu.AddButton(langs.Get(ctx, start.MainMenu), commands.Start)
+
+		delete(r.dialogContext, message.From.ID)
+
+		return &tgmodel.MessageOut{
+			Text:          webhook,
+			InlineButtons: webhookMenu,
+		}
+	}
+
+	return &tgmodel.MessageOut{
+		Text: langs.Get(ctx, info.ErrorAnotherAnswerExpected),
 	}
 }
 

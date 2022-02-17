@@ -5,11 +5,13 @@ const (
 	Success           = "register:success"
 	Error             = "register:error:text"
 	ErrorInvalidToken = "register:error:invalidToken"
-	ErrorUnknown      = "register:error:unknown"
 
 	WebhookOrTokenMessage = "register:webhookOrToken"
 
 	HowToAddWebhook = "register:addWebHookInstruction"
+
+	EnterTicketName = "register:ticketName"
+	EnterToken      = "register:enterToken"
 
 	ButtonToken        = "register:button:token"
 	ButtonUrl          = "register:button:url"

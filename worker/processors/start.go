@@ -8,6 +8,7 @@ import (
 	"gitlab-tg-bot/internal/message-handling/langs"
 	"gitlab-tg-bot/internal/message-handling/start"
 	"gitlab-tg-bot/utils"
+	"gitlab-tg-bot/worker/commands"
 	"gitlab-tg-bot/worker/menupatterns"
 
 	tg "github.com/AlexSkilled/go_tg/pkg"
@@ -15,11 +16,13 @@ import (
 )
 
 type Start struct {
-	interfaces.UserService
+	interfaces.SubscriptionService
 }
 
 func NewStartProcessor(storage interfaces.ServiceStorage) *Start {
-	return &Start{storage.User()}
+	return &Start{
+		storage.Subscription(),
+	}
 }
 
 func (s *Start) Handle(ctx context.Context, message *tgmodel.MessageIn) (out tg.TgMessage) {
@@ -29,15 +32,15 @@ func (s *Start) Handle(ctx context.Context, message *tgmodel.MessageIn) (out tg.
 	}
 	buttons := map[string]string{}
 
-	user, err := s.UserService.GetWithGitlabUsersById(message.From.ID)
+	tickets, err := s.SubscriptionService.GetUserTickets(message.From.ID)
 	if err != nil {
 		return &tgmodel.MessageOut{
 			Text: fmt.Sprintf("Internal server error %s", err),
 		}
 	}
 
-	if user.Gitlabs != nil {
-		buttons[start.Management] = "/manage"
+	if tickets != nil {
+		buttons[start.Management] = commands.Manage
 	}
 
 	menu, err := menupatterns.NewMainMenu(locale, buttons)

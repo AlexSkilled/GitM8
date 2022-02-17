@@ -13,9 +13,9 @@ type ServiceStorage interface {
 }
 
 type UserService interface {
-	GetWithGitlabUsersById(id int64) (model.User, error)
 	Register(user model.User) (model.User, error)
 	AddGitAccount(tgId int64, gitlab model.GitUser) error
+	GetWithGitlabUsersById(id int64) (model.User, error)
 }
 
 type SettingsService interface {
@@ -42,6 +42,7 @@ type GitApiService interface {
 type SubscriptionService interface {
 	Subscribe(user model.GitUser, chatId int64, hookInfo model.Hook) (ticketId int32, err error)
 	GetRepositories(user model.GitUser) ([]model.Repository, error)
+	GetUserTickets(userId int64) (tickets []model.Ticket, err error)
 }
 
 type Configuration interface {

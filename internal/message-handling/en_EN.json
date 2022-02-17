@@ -15,17 +15,22 @@
   "register": {
     "askDomain": "Select or enter a Git domain url:",
     "success": "Successful registration!",
-    "webhookOrToken" : "Register new token or get webhook URL",
+    "webhookOrToken" : "Register new token or get webhook URL.",
+    "ticketName": "Enter ticket name.",
+    "enterToken": "Enter git token:",
     "error" :  {
       "text": "Error during registration %s",
-      "invalidToken": "Unauthorized. Token might be invalid",
-      "unknown":"Unknown error %s. Try again later"
+      "invalidToken": "Unauthorized. Token might be invalid"
     },
     "button": {
       "token": "Create new token",
       "url": "Get webhook url",
       "webhookInstruction":"How to setup webhook in git?"
     }
+  },
+  "managing": {
+    "tickets": "Available tickets",
+    "noTickets": "No  tickets available!"
   },
   "menus": {
     "settings": {
@@ -41,6 +46,7 @@
     "NotEnoughArguments": "Command require more arguments!",
     "CouldNotFindDomain": "Couldn't determine which git source %s is",
     "AnotherAnswerExpected": "Another answer was expected",
+    "unknown":"Unknown error %s. Try again later",
 
     "SpecifyGitSource": "Specify Git Source"
   },
