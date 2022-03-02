@@ -29,7 +29,7 @@ format:
 compile:
   stage: build
   script:
-    - go build ./cmd/main.go -o $CI_PROJECT_DIR/mybinary
+    - go build -o $CI_PROJECT_DIR/mybinary ./cmd/main.go
   artifacts:
     paths:
       - mybinary
