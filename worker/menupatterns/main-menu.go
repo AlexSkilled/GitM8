@@ -21,9 +21,10 @@ func addMenu(command string, menu tgmodel.MenuPattern) {
 
 // NewMainMenu :
 // arg buttons - is name path (e.g. start.MainMenu-"start:mainMenu") to command
-func NewMainMenu(locale string, buttons map[string]string) (*tgmodel.InlineKeyboard, error) {
+func NewMainMenu(locale string, buttons map[string]string) (tgmodel.Menu, error) {
 
-	mainMenu := tgmodel.InlineKeyboard{Columns: 2}
+	mainMenu := tgmodel.NewMenuPattern(commands.Start)
+	//InlineKeyboard{Columns: 2}
 
 	for k, v := range buttons {
 		mainMenu.AddButton(langs.GetWithLocale(locale, k), v)
@@ -39,5 +40,5 @@ func NewMainMenu(locale string, buttons map[string]string) (*tgmodel.InlineKeybo
 	}
 	mainMenu.AddStandAloneButton(langs.GetWithLocale(locale, settingsmenu.Name), settings.GetTransitionCommand())
 
-	return &mainMenu, nil
+	return mainMenu.Compile(), nil
 }

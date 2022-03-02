@@ -50,9 +50,10 @@ func (s *Start) Handle(ctx context.Context, message *tgmodel.MessageIn) (out tg.
 		}
 	}
 
-	return &tgmodel.MessageOut{
-		Text:          langs.GetWithLocale(locale, start.MainMenu),
-		InlineButtons: menu,
+	return &tgmodel.Callback{
+		Text: langs.GetWithLocale(locale, start.MainMenu),
+		Type: tgmodel.Callback_Type_OpenMenu,
+		Menu: menu,
 	}
 }
 
