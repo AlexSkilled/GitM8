@@ -27,5 +27,3 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
 )
-
-replace github.com/AlexSkilled/go_tg => E:\workspace\pet\go_tg
