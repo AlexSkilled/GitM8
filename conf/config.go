@@ -1,7 +1,6 @@
 package conf
 
 import (
-	"fmt"
 	"strings"
 
 	"gitlab-tg-bot/internal/interfaces"
@@ -40,11 +39,10 @@ func NewConfiguration() interfaces.Configuration {
 	conf.SetEnvPrefix("TGBOT")
 	conf.AutomaticEnv()
 
-	v := pflag.String("conf-path", "", "Путь к файлу конфигурации")
+	_ = pflag.String("conf-path", "", "Путь к файлу конфигурации")
 
 	pflag.Parse()
-	v2 := pflag.Lookup("conf-path")
-	fmt.Sprintf(*v, v2)
+
 	_ = conf.BindPFlag(ConfPath, pflag.Lookup("conf-path"))
 	confPath := conf.GetString(ConfPath)
 
