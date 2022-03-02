@@ -3,7 +3,7 @@ module gitlab-tg-bot
 go 1.13
 
 require (
-	github.com/AlexSkilled/go_tg v0.0.0-20211023165004-4328202305eb
+	github.com/AlexSkilled/go_tg v0.0.0-20220221144910-7ca154303b8f
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
