@@ -43,7 +43,7 @@ publish:
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST
   only:
-    - master
+    - main
 
 delivery:
   stage: deploy
