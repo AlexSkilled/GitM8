@@ -43,6 +43,7 @@ publish:
 delivery:
   stage: deploy
   script:
+    - cat $SSH_PRIVATE_KEY
     - chmod og= $SSH_PRIVATE_KEY
     - apk update && apk add openssh-client
     - ssh -i $SSH_PRIVATE_KEY -o StrictHostKeyChecking=no $USER@$HOST "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
