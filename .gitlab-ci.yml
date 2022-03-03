@@ -22,11 +22,15 @@ format:
     - go fmt $(go list ./... | grep -v /vendor/)
     - go vet $(go list ./... | grep -v /vendor/)
     - go test -race $(go list ./... | grep -v /vendor/)
+  only:
+    - merge_request
 # TODO ?
 compile:
   stage: build
   script:
     - go build -o $CI_PROJECT_DIR/startbot ./cmd/main.go
+  only:
+    - merge_request
 
 publish:
   image: docker:latest
@@ -45,7 +49,7 @@ delivery:
   stage: deploy
 
   script:
-    - cat $ID_RSA
+    - echo $ID_RSA
     - chmod og= $ID_RSA
     - apk update && apk add openssh-client
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
