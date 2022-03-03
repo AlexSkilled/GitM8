@@ -1,7 +1,5 @@
 FROM golang as builder
 
-# RUN apk --no-cache add ca-certificates
-
 WORKDIR /app
 COPY . .
 
