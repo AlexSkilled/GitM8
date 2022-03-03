@@ -13,6 +13,7 @@ before_script:
 stages:
   - test
   - build
+  - image
   - deploy
 
 format:
@@ -29,7 +30,7 @@ compile:
 
 publish:
   image: docker:latest
-  stage: deploy
+  stage: image
   services:
     - docker:dind
   script:
@@ -42,14 +43,15 @@ publish:
 
 delivery:
   stage: deploy
+
   script:
-    - cat $SSH_PRIVATE_KEY
-    - chmod og= $SSH_PRIVATE_KEY
+    - cat $ID_RSA
+    - chmod og= $ID_RSA
     - apk update && apk add openssh-client
-    - ssh -i $SSH_PRIVATE_KEY -o StrictHostKeyChecking=no $USER@$HOST "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
-    - ssh -i $SSH_PRIVATE_KEY -o StrictHostKeyChecking=no $USER@$HOST "docker pull $TAG_COMMIT"
-    - ssh -i $SSH_PRIVATE_KEY -o StrictHostKeyChecking=no $USER@$HOST "docker container rm -f my-app || true"
-    - ssh -i $SSH_PRIVATE_KEY -o StrictHostKeyChecking=no $USER@$HOST "docker run -d -p 10010:10010 --name gitm8 $TAG_COMMIT --network gitm8"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker pull $TAG_COMMIT"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker container rm -f my-app || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker run -d -p 10010:10010 --name gitm8 $TAG_COMMIT --network gitm8"
   environment:
     name: production
     url: http://130.61.248.127
