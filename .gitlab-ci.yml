@@ -49,7 +49,6 @@ delivery:
   stage: deploy
 
   script:
-    - echo "$SOMENEWFANCYVAR"
     - chmod og= $ID_RSA
     - apk update && apk add openssh-client
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
