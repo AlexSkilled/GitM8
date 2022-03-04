@@ -55,7 +55,7 @@ delivery:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker pull $TAG_COMMIT"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker images prune || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker container rm -f gitm8 || true"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker run -d -p 10010:10010 --network gitm8 --name gitm8 $TAG_COMMIT"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker run -d -p 10010:10010 --network gitm8_net --name gitm8 $TAG_COMMIT"
   environment:
     name: production
     url: http://130.61.248.127
