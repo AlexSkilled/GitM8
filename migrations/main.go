@@ -80,5 +80,5 @@ func Connect() *pg.DB {
 	logrus.Infof("Подключение к базе данных. Address: %s, User: %s, Password: %s, DbName: %s",
 		loginOption.Addr, loginOption.User, loginOption.Password, loginOption.Database)
 	return pg.Connect(loginOption)
-	// docker run -d --name tg-gitlab-integration -e POSTGRES_PASSWORD=9_9 -e  POSTGRES_USER=gitlab_bot -e POSTGRES_DB=gitlab_bot --restart always -p "1000:5432" postgres
+	// docker run -d --name tg-gitlab-integration -e POSTGRES_PASSWORD=9_9 -e  POSTGRES_USER=gitlab_bot -e POSTGRES_DB=gitlab_bot --restart always -p "1000:5432" --network gitm8_net postgres
 }

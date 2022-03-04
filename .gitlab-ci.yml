@@ -53,7 +53,7 @@ delivery:
     - apk update && apk add openssh-client
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker pull $TAG_COMMIT"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker container rm -f my-app || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker container rm -f gitm8 || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $USER@$HOST "docker run -d -p 10010:10010 --name gitm8 $TAG_COMMIT --network gitm8"
   environment:
     name: production
