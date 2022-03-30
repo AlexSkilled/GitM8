@@ -35,6 +35,14 @@ func (g *GitManager) GetRepositories(user model.GitUser) ([]model.Repository, er
 	}
 }
 
+func (g *GitManager) GetGroups(user model.GitUser) ([]model.Group, error) {
+	if api, ok := g.sourceToService[user.GitSource]; ok {
+		return api.GetGroups(user)
+	} else {
+		return nil, errors.New(fmt.Sprintf("Для git %s не нашлось обработчика", user.GitSource))
+	}
+}
+
 func (g *GitManager) AddWebHook(user model.GitUser, hookInfo model.Hook) error {
 	if api, ok := g.sourceToService[user.GitSource]; ok {
 		return api.AddWebHook(user, hookInfo)

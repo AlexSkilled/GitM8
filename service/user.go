@@ -11,13 +11,15 @@ import (
 
 type UserService struct {
 	UserProvider interfaces.UserProvider
+	git          interfaces.GitApiService
 }
 
 var _ interfaces.UserService = (*UserService)(nil)
 
-func NewUserService(provider interfaces.ProviderStorage) *UserService {
+func NewUserService(provider interfaces.ProviderStorage, gitManager interfaces.GitApiService) *UserService {
 	return &UserService{
 		UserProvider: provider.User(),
+		git:          gitManager,
 	}
 }
 
@@ -49,5 +51,6 @@ func (u *UserService) AddGitAccount(tgId int64, gitAccount model.GitUser) error 
 	}
 	gitAccount.Email = user.Email
 	gitAccount.Username = user.Username
+	gitAccount.GitSource = u.git.GetGitType(gitAccount.Domain)
 	return u.UserProvider.AddGit(tgId, gitAccount)
 }

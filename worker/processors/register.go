@@ -24,7 +24,6 @@ const (
 	StepChoseRegistrationType interfaces.StepName = iota
 	StepDomain
 	StepToken
-	StepName
 )
 
 const (
@@ -38,8 +37,6 @@ type Register struct {
 }
 
 type registrationProcess struct {
-	TicketName string
-
 	Type        string
 	GitlabName  string
 	GitlabToken string
@@ -92,11 +89,6 @@ func (r *Register) Handle(ctx context.Context, message *tgmodel.MessageIn) (out 
 	case StepToken:
 		registration.GitlabToken = message.Text
 		registration.CurrentStep++
-		return &tgmodel.MessageOut{
-			Text: langs.Get(ctx, register.EnterTicketName),
-		}
-	case StepName:
-		registration.TicketName = message.Text
 	}
 
 	err := r.services.User().AddGitAccount(message.From.ID, registration.ToDto())

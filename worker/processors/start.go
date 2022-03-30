@@ -21,7 +21,7 @@ type Start struct {
 
 func NewStartProcessor(storage interfaces.ServiceStorage) *Start {
 	return &Start{
-		storage.Subscription(),
+		SubscriptionService: storage.Subscription(),
 	}
 }
 

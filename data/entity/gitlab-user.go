@@ -27,11 +27,12 @@ type GitUser struct {
 
 func (u *GitUser) ToModel() model.GitUser {
 	return model.GitUser{
-		Id:       u.Id,
-		Username: u.Name,
-		Email:    u.Email,
-		Token:    u.Token,
-		Domain:   u.Domain,
+		Id:        u.Id,
+		Username:  u.Name,
+		Email:     u.Email,
+		Token:     u.Token,
+		Domain:    u.Domain,
+		GitSource: u.GitSource,
 	}
 }
 
@@ -41,4 +42,5 @@ func (u *GitUser) FromModel(id int64, user model.GitUser) {
 	u.Token = user.Token
 	u.Domain = user.Domain
 	u.Name = user.Username
+	u.GitSource = user.GitSource
 }

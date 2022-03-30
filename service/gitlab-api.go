@@ -36,7 +36,18 @@ func (g *GitlabApiService) GetRepositories(gitlabUser model.GitUser) ([]model.Re
 		return nil, err
 	}
 
-	return g.toModelProjects(list), err
+	return g.toModelRepository(list), err
+}
+
+func (g *GitlabApiService) GetGroups(user model.GitUser) ([]model.Group, error) {
+	client := gapi.NewGitlab(user.Domain, StandardApiLevel, user.Token)
+
+	list, _, err := client.Projects(&gapi.ProjectsOptions{Membership: true})
+	if err != nil {
+		return nil, err
+	}
+
+	return g.toModelGroup(list), err
 }
 
 func (g *GitlabApiService) AddWebHook(gitlabUser model.GitUser, hookInfo model.Hook) error {
@@ -86,7 +97,7 @@ func (g *GitlabApiService) GetGitType(_ string) model.GitSource {
 	return model.Gitlab
 }
 
-func (g *GitlabApiService) toModelProjects(in *gapi.ProjectCollection) []model.Repository {
+func (g *GitlabApiService) toModelRepository(in *gapi.ProjectCollection) []model.Repository {
 	out := make([]model.Repository, len(in.Items))
 	for i, item := range in.Items {
 		out[i] = model.Repository{
@@ -95,6 +106,10 @@ func (g *GitlabApiService) toModelProjects(in *gapi.ProjectCollection) []model.R
 		}
 	}
 	return out
+}
+
+func (g *GitlabApiService) toModelGroup(in *gapi.ProjectCollection) []model.Group {
+	return nil
 }
 
 func (g *GitlabApiService) GetWebhookUrl(_ string, _ int64) (string, error) {

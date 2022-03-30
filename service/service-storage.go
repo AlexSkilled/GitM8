@@ -19,7 +19,7 @@ func NewStorage(providerStorage interfaces.ProviderStorage, conf interfaces.Conf
 	gitApiService := NewGitManger(conf, providerStorage)
 
 	return &Storage{
-		UserService:         NewUserService(providerStorage),
+		UserService:         NewUserService(providerStorage, gitApiService),
 		SubscriptionService: NewSubscription(providerStorage, gitApiService),
 		MessageService:      NewMessageService(gitApiService, providerStorage),
 		SettingsService:     NewSettingsService(providerStorage),

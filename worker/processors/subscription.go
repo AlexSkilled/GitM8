@@ -155,6 +155,7 @@ func (s *SubscribeProcessor) Handle(ctx context.Context, in *tgmodel.MessageIn) 
 			Text: "Не удалось создать слушатель эвентов" + err.Error(),
 		}
 	}
+
 	return &tg.MultipleMessage{
 		in.Chat.ID: []tg.TgMessage{
 			&tgmodel.MessageOut{Text: "Успешно создан слушатель эвентов"},
