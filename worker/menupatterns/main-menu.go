@@ -24,7 +24,6 @@ func addMenu(command string, menu tgmodel.MenuPattern) {
 func NewMainMenu(locale string, buttons map[string]string) (tgmodel.Menu, error) {
 
 	mainMenu := tgmodel.NewMenuPattern(commands.Start)
-	//InlineKeyboard{Columns: 2}
 
 	for k, v := range buttons {
 		mainMenu.AddButton(langs.GetWithLocale(locale, k), v)

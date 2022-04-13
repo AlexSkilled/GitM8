@@ -66,7 +66,7 @@ func (t *Worker) addMenus(bot *tg.Bot) {
 }
 
 func (t *Worker) Start() {
-	t.bt.EnrichContext = t
+	t.bt.ExternalContext = t
 	t.addMenus(t.bt)
 	t.bt.Start()
 }

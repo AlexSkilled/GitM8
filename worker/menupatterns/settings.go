@@ -6,7 +6,6 @@ import (
 
 	"gitlab-tg-bot/internal/message-handling/langs"
 	"gitlab-tg-bot/internal/message-handling/menu/settingsmenu"
-	"gitlab-tg-bot/internal/message-handling/start"
 	"gitlab-tg-bot/worker/commands"
 
 	tgmodel "github.com/AlexSkilled/go_tg/pkg/model"
@@ -25,7 +24,7 @@ func NewSettingsMenu() (tgmodel.MenuPattern, error) {
 		settingsMenu.AddMenuButton(locale,
 			langs.GetWithLocale(locale, settingsmenu.Language),
 			languagesMenu.GetTransitionCommand())
-		settingsMenu.AddMenuButton(locale, langs.GetWithLocale(locale, start.MainMenu), commands.Start)
+		//settingsMenu.AddMenuButton(locale, langs.GetWithLocale(locale, start.MainMenu), commands.Start)
 	}
 	addMenu(commands.Settings, settingsMenu)
 
