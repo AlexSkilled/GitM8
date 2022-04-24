@@ -19,6 +19,8 @@ type App struct {
 	ProviderStorage *data.ProviderStorage
 	ServiceStorage  interfaces.ServiceStorage
 	Conf            interfaces.Configuration
+
+	tg interfaces.TelegramWorker
 }
 
 func NewApp(conf interfaces.Configuration) App {
@@ -45,10 +47,14 @@ func NewApp(conf interfaces.Configuration) App {
 }
 
 func (a *App) Start() {
-	tgIntegration := worker.NewTelegramWorker(a.Conf, a.ServiceStorage)
-	go tgIntegration.Start()
+	a.tg = worker.NewTelegramWorker(a.Conf, a.ServiceStorage)
+	go a.tg.Start()
 
-	transport.ServeHTTP(a.Conf, a.ServiceStorage, tgIntegration)
+	go transport.ServeHTTP(a.Conf, a.ServiceStorage, a.tg)
+}
+
+func (a *App) Stop() {
+	a.tg.Stop()
 }
 
 func (a *App) printConfig() {

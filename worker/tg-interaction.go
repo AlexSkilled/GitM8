@@ -50,6 +50,16 @@ func NewTelegramWorker(conf interfaces.Configuration, services interfaces.Servic
 	}
 }
 
+func (t *Worker) Start() {
+	t.bt.ExternalContext = t
+	t.addMenus(t.bt)
+	t.bt.Start()
+}
+
+func (t *Worker) Stop() {
+	t.bt.Stop()
+}
+
 func (t *Worker) addMenus(bot *tg.Bot) {
 	menuPattern, err := menupatterns.NewLanguagesMenu()
 	if err != nil {
@@ -63,12 +73,6 @@ func (t *Worker) addMenus(bot *tg.Bot) {
 	} else {
 		bot.AddMenu(menuPattern)
 	}
-}
-
-func (t *Worker) Start() {
-	t.bt.ExternalContext = t
-	t.addMenus(t.bt)
-	t.bt.Start()
 }
 
 // SendMessages TODO

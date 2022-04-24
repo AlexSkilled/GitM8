@@ -1,11 +1,12 @@
 package transport
 
 import (
+	"net/http"
+
 	configuration "gitlab-tg-bot/conf"
 	"gitlab-tg-bot/internal/interfaces"
 	"gitlab-tg-bot/service/model"
 	"gitlab-tg-bot/transport/gitlab"
-	"net/http"
 )
 
 type PublicHandler struct {
@@ -19,5 +20,8 @@ func ServeHTTP(conf interfaces.Configuration, services interfaces.ServiceStorage
 
 	http.Handle(model.Gitlab.GetUri(), gitlab.NewHandler(services, bot))
 
-	http.ListenAndServe(conf.GetString(configuration.ServerUrl), nil)
+	err := http.ListenAndServe(conf.GetString(configuration.ServerUrl), nil)
+	if err != nil {
+		panic(err)
+	}
 }

@@ -24,6 +24,7 @@ type SettingsService interface {
 
 type TelegramWorker interface {
 	Start()
+	Stop()
 	TelegramMessageSender
 }
 
