@@ -1,7 +1,6 @@
 package processors
 
 import (
-	"context"
 	"fmt"
 
 	"gitlab-tg-bot/internal/interfaces"
@@ -25,18 +24,20 @@ func NewStartProcessor(storage interfaces.ServiceStorage) *Start {
 	}
 }
 
-func (s *Start) Handle(ctx context.Context, message *tgmodel.MessageIn) (out tg.TgMessage) {
-	locale, err := utils.ExtractLocale(ctx)
+func (s *Start) Handle(in *tgmodel.MessageIn, out tg.Sender) {
+	locale, err := utils.ExtractLocale(in.Ctx)
 	if err != nil {
 		locale = langs.GetDefaultLocale()
 	}
 	buttons := map[string]string{}
 
-	tickets, err := s.SubscriptionService.GetUserTickets(message.From.ID)
+	tickets, err := s.SubscriptionService.GetUserTickets(in.From.ID)
 	if err != nil {
-		return &tgmodel.MessageOut{
-			Text: fmt.Sprintf("Internal server error %s", err),
-		}
+		in.Response(tgmodel.MessageOut{
+			Text:   fmt.Sprintf("Internal server error %s", err),
+			ChatId: in.Chat.ID,
+		})
+		return
 	}
 
 	if tickets != nil {
@@ -45,16 +46,17 @@ func (s *Start) Handle(ctx context.Context, message *tgmodel.MessageIn) (out tg.
 
 	menu, err := menupatterns.NewMainMenu(locale, buttons)
 	if err != nil {
-		return &tgmodel.MessageOut{
+		out.Send(&tgmodel.MessageOut{
 			Text: fmt.Sprintf("Internal server error %s", err),
-		}
+		})
+		return
 	}
 
-	return &tgmodel.Callback{
+	out.Send(&tgmodel.Callback{
 		Text: langs.GetWithLocale(locale, start.MainMenu),
 		Type: tgmodel.Callback_Type_OpenMenu,
 		Menu: menu,
-	}
+	})
 }
 
 func (s *Start) Dump(_ int64) {}
